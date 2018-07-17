@@ -1,0 +1,59 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../helper/sharedBehavior.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../helper/resource-header.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/google-youtube/google-youtube.html">
+
+
+<dom-module id="youtube-element">
+    <template>
+        <style include="common-styles">
+
+            .headText {
+                @apply(--paper-font-headline);
+            }
+        </style>
+        <template is="dom-if" if="[[conceptionMode]]" restamp>
+            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
+        </template>
+        <div class="resource">
+            <google-youtube video-id="[[videoId]]" height="100%" width="100%">
+            </google-youtube>
+        </div>
+    </template>
+</dom-module>
+<script>
+    (function () {
+        'use strict';
+        Polymer({
+            is: 'youtube-element',
+            behaviors: [sharedBehavior],
+
+
+            ready: function () {
+
+            },
+            properties: {
+                resourceLabel: {
+                    type: String,
+                    notify: true,
+                },
+                videoId: {
+                    type: String,
+                    notify: true,
+                },
+                conceptionMode: {
+                    type: Boolean,
+                    notify: true,
+                }
+            }
+        })
+    })();
+</script>

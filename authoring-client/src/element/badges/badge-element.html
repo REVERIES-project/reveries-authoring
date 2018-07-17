@@ -1,0 +1,72 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/marked-element/marked-element.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+
+<link rel="import" href="../helper/sharedBehavior.html">
+<dom-module id="badge-element">
+    <template>
+        <style include="common-styles">
+            .image {
+                border-radius: 50%;
+                width: 150px;
+                height: 150px;
+            }
+            .badgeText{
+                @apply(--paper-font-headline);
+            }
+            .markdown-html img {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+            }
+
+
+        </style>
+        <template is="dom-if" if="[[conceptionMode]]" restamp>
+            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
+        </template>
+        <div class="resource">
+            <div class="resourceBody">
+                <staticmedia-viewer resource-label="[[media.label]]" default-mkdown="[[defaultMkdown]]" style="display:inline-flex;" mkdown="[[media.mkdown]]"></staticmedia-viewer>
+                <div class="badgeText">{{badgeText}}</div>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+    (function () {
+        'use strict';
+        Polymer({
+            is: 'badge-element',
+            behaviors: [sharedBehavior],
+
+            ready: function () {
+                this.defaultMkdown = "![alt text](/file/5ac51372662b242d82fbbeb6?style=centerme)"
+            },
+            properties: {
+                media: {
+                    type: Object,
+                    notify: true,
+                },
+                resourceLabel: {
+                    type: String,
+                    notify: true,
+                },
+                badgeText: {
+                    type: String,
+                    notify: true,
+                },
+                itemId: {
+                    type: String,
+                    notify: true,
+                },
+                conceptionMode: {
+                    type: Boolean,
+                    notify: true,
+                }
+            }
+        })
+    })();
+</script>

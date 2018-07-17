@@ -1,0 +1,151 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../constructor-helper/save-cancel.html">
+
+<link rel="import" href="../remove-ressource/create-resource.html">
+<link rel="import" href="../helper/resource-picker-dialog.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../helper/generic-resource-viewer.html">
+<!--
+An element to design static web page using markdown. An helper button allow to pick an image from user image
+gallery.
+
+
+TODO : propose different CSS associated with the markdown
+@demo
+@author Gicquel
+-->
+
+<dom-module id="staticmedia-generator">
+<style include="common-styles">
+</style>
+    <template>
+        <resource-picker-dialog image video id="imagePicker"></resource-picker-dialog>
+        <create-resource id="creator" resource-url="/staticmedia" resource="{{resource}}"></create-resource>
+        <form class="creator" id="staticmediaConstructor" is="iron-form" method="post" action="/staticmedia">
+            <template is="dom-if" if="{{updating}}" restamp>
+                <paper-input hidden name="itemId" value="{{itemId}}"></paper-input>
+            </template>
+            <div class="formTitleWithButton">
+                <input id="status" type="hidden" value="Private" name="status" />
+            </div>
+            <paper-input id="label" name="label" value={{label}} label="Label">
+                    <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+            </paper-input>
+            <paper-textarea id="mkdownCode" name="mkdown" value={{mkdown}} rows="5" label="Contenu du document (Markdown)"></paper-textarea>
+            <paper-button on-click="showImageDialog">Ajouter une image</paper-button>
+            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+        </form>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'staticmedia-generator',
+                ready: function () {
+                    this.updating = false
+                    this.$.imagePicker.addEventListener('resourcePicked', this.setResource.bind(this))
+                },
+                edit: function (page) {
+                    this.updating = true
+                    this.mkdown = page.mkdown
+                    this.itemId = page._id
+                    this.label = page.label
+                },
+
+                setValues: function () {
+                    this.set('mediaId', this.currentid)
+                },
+                _activateObs: function (newval, oldval) {
+                    this.set('imageRequired', newval)
+                },
+                showImageDialog: function () {
+                    this.$.imagePicker.open()
+                },
+                setResource: function (message) {
+                    switch (message.detail.resourceType) {
+                        case "image":
+                            var imageURL = '/file/' + message.detail.resourceItem._id;
+                            var toAppend = '![alt text](' + imageURL + '?style=centerme)'
+                            if (this.mkdown) {
+                                this.mkdown = this.mkdown + "\n" + "\n" + toAppend;
+                            } else {
+                                this.mkdown = toAppend;
+                            }
+                            break
+                        case "video":
+                             var videoURL = '/file/' + message.detail.resourceItem._id
+                             var toAppend = '<video controls width="300" src="'+videoURL+'"></video>'
+
+                            if (this.mkdown) {
+                                this.mkdown = this.mkdown + "\n" + "\n" + toAppend;
+                            } else {
+                                this.mkdown = toAppend;
+                            }
+                            break
+
+                    }
+                },
+                resetFields: function () {
+                    this.updating = false
+                    var inputList = Polymer.dom(this.root).querySelectorAll('paper-textarea');
+                    for (var i = 0; i < inputList.length; i++) {
+                        inputList[i].value = ""
+                    }
+                },
+
+                _submit: function (event) {
+                    var json = this.$.staticmediaConstructor.serialize()
+                    this.set('resource', json)
+                    this.$.creator.createResource()
+                    this.statusString = ""
+                    this.label = ""
+                    this.mkdown = ""
+                    this.resetFields()
+                },
+                _reset: function () {
+                    this.resetFields()
+                },
+                properties: {
+                    mkdown: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    label: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    status: {
+                        type: Boolean,
+                        observer: '_statusChanged'
+                    },
+
+
+                },
+                _statusChanged: function (newval, oldval) {
+                    if (!newval) {
+                        this.statusText = "Private content, not visible for other users"
+                        this.statusString = "Private"
+                        this.statusIcon = "visibility-off"
+                    } else {
+                        this.statusText = "Public content, shared with other users"
+                        this.statusString = "Public"
+                        this.statusIcon = "visibility"
+
+                    }
+                }
+
+
+            });
+        })();
+    </script>
+</dom-module>

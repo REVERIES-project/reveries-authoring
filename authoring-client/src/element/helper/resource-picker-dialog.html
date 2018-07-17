@@ -1,0 +1,261 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="./list-generic-resource.html">
+<link rel="import" href="../../../src/element/POI/map-display.html">
+<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+<dom-module id="resource-picker-dialog">
+    <style>
+        .flexible {
+            display: inline-flex;
+            flex-wrap: wrap;
+        }
+
+        paper-fab.close {
+            float: right;
+            margin: -10px !important;
+            padding: 0;
+            background: #4caf50;
+        }
+
+        paper-dialog.selector {
+            overflow: auto;
+            left: 269px;
+            right: 87px;
+            min-width: 500px;
+            /* width: 100%; */
+            height: 50%;
+            outline: none;
+            z-index: 103;
+            position: fixed;
+            top: 132.667px;
+        }
+    </style>
+
+    <template>
+        <paper-dialog class="selector" dynamic-align id="selectorDialog">
+
+            <paper-tabs selected="{{selected}}" scrollable>
+                <template is="dom-if" if="{{image}}">
+                    <paper-tab>Images</paper-tab>
+                </template>
+                <template is="dom-if" if="{{page}}">
+                    <paper-tab>Documents multimédias</paper-tab>
+                </template>
+                <template is="dom-if" if="{{inventory}}">
+                    <paper-tab>Objets d'inventaire</paper-tab>
+                </template>
+                <template is="dom-if" if="{{badge}}">
+                    <paper-tab>Badges</paper-tab>
+                </template>
+                <template is="dom-if" if="{{video}}">
+                    <paper-tab>Video</paper-tab>
+                </template>
+                <template is="dom-if" if="{{poi}}">
+                    <paper-tab>POI</paper-tab>
+                </template>
+                <template is="dom-if" if="{{mcq}}">
+                    <paper-tab>QCM</paper-tab>
+                </template>
+                <template is="dom-if" if="{{freetext}}">
+                    <paper-tab>Questions libres</paper-tab>
+                </template>
+                <template is="dom-if" if="{{folia}}">
+                    <paper-tab>Identification botanique</paper-tab>
+                </template>
+
+            </paper-tabs>
+            <iron-pages id="resourcePicker" selected="{{selected}}">
+                <template is="dom-if" if="{{image}}" restamp>
+                    <div>
+                        <list-generic-resource lazy picker share-url='/listUserImages' id='image' resource-id='{{mediaId}}' resource-type='image'
+                            url='/listUserImages'></list-generic-resource>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{page}}" restamp>
+                    <div>
+                        <list-generic-resource lazy picker share-url='/staticmedia' id='staticmedia' resource-type='page' url='/staticmedia'></list-generic-resource>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{video}}" restamp>
+                    <div>
+                        <list-generic-resource lazy picker share-url='/listUserAudioVideo' id='video' resource-type='video' url='/listUserAudioVideo'></list-generic-resource>
+                    </div>
+                </template>
+
+                <template is="dom-if" if="{{inventory}}" restamp>
+                    <div>
+                        <list-generic-resource lazy picker share-url='/inventory' id='inventoryList' resource-type='inventory' url='/inventory'></list-generic-resource>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{poi}}">
+                    <div>
+                        <map-display id="gmap"></map-display>
+                        <list-generic-resource lazy picker share-url='/poi' id='poiList' resource-type='poi' url='/poi'></list-generic-resource>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{mcq}}">
+                    <div>
+                        <list-generic-resource lazy picker share-url='/mcq' id='mcqList' resource-type='mcq' url='/mcq'></list-generic-resource>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{freetext}}">
+                    <div>
+                        <list-generic-resource lazy picker share-url='/freetextactivity' id='freetextList' resource-type='freetext' url='/freetextActivity'></list-generic-resource>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{folia}}">
+                    <div>
+                        <list-generic-resource lazy picker share-url='/folia' id='foliaList' resource-type='folia' url='/folia'></list-generic-resource>
+                    </div>
+                </template>
+
+                <template is="dom-if" if="{{badge}}">
+                    <div>
+                        <list-generic-resource lazy picker share-url='/badge' id='badge' resource-type='badge' url='/badge'></list-generic-resource>
+                    </div>
+                </template>
+            </iron-pages>
+        </paper-dialog>
+        <paper-dialog no-cancel-on-outside-click id="dialogClose" dynamic-align style="box-shadow:none;overflow: visible;left: 269px;right: 87px;min-width: 500px;/* width: 100%; */height: 0;outline: none;z-index: 120;position: fixed;top: 132.667px;"
+            id="selectorDialog">
+            <paper-fab on-click="closeDialogs" mini class="close" src="../../../images/close.png"></paper-fab>
+
+        </paper-dialog>
+
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'resource-picker-dialog',
+                ready: function () {
+                    this.$.selectorDialog.addEventListener('change-poi-map', this.updateMap.bind(this))
+                    this.$.selectorDialog.addEventListener('resourcePickedFromList', this.resourcePicked
+                        .bind(this))
+                    this.$.dialogClose.addEventListener('iron-overlay-closed', this.closeDialogs.bind(
+                        this))
+
+                },
+                updateMap: function (event) {
+                    var data = event.detail
+                    if (data.show) {
+                        this.$$('#gmap').showPOI(data.resource)
+                    } else {
+                        this.$$('#gmap').removePOI(data.resource)
+                    }
+                },
+                setValues: function () {
+
+                },
+                closeDialogs: function () {
+                    this.$.selectorDialog.close()
+                    this.$.dialogClose.close()
+                },
+                open: function () {
+                    this.$.selectorDialog.open();
+
+                    this.$.dialogClose.open()
+                    var res = Polymer.dom(this.root).querySelectorAll('list-generic-resource')
+                    for (var i = 0; i < res.length; i++) {
+                        res[i].requestElements()
+                    }
+                },
+                resourcePicked: function (evt) {
+                    if (evt && evt.detail && evt.detail.resourceType && evt.detail.resourceItem && this
+                        .resourceViewer) {
+
+                        this.fire('resourcePicked', {
+                            resourceType: evt.detail.resourceType,
+                            resourceItem: evt.detail.resourceItem,
+                            resourceViewer: this.resourceViewer
+                        })
+                        return
+                    }
+                    if (evt && evt.detail && evt.detail.resourceType && evt.detail.resourceItem) {
+
+                        this.fire('resourcePicked', {
+                            resourceType: evt.detail.resourceType,
+                            resourceItem: evt.detail.resourceItem
+                        })
+                        return
+                    }
+
+                },
+                _openDialog:function(newval){
+                    if(newval){
+                        this.open()
+                    }
+                },
+                properties: {
+
+                    opened: {
+                        type: Boolean,
+                        value: false,
+                        observer:'_openDialog',
+                    },
+                    inventory: {
+                        type: Boolean,
+                        value: false,
+                    },
+
+                    poi: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    badge: {
+                        type: Boolean,
+                        notify: true,
+                    },
+
+                    mcq: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    image: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    video: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    page: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    freetext: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    folia:{
+                        type:Boolean,
+                        notify:true,
+                    },
+
+                    mediaId: {
+                        type: String,
+                        notify: true,
+                        value: null,
+                        reflectToAttribute: true,
+                    },
+                    mediaName: {
+                        type: String,
+                        notify: true,
+                        value: null,
+                        reflectToAttribute: true,
+                    },
+                    resourceViewer: {
+                        type: String,
+                        notify: true,
+                    },
+                }
+            });
+        })();
+    </script>
+</dom-module>

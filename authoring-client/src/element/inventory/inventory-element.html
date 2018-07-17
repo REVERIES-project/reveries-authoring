@@ -1,0 +1,83 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../helper/sharedBehavior.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../helper/resource-header.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+
+<dom-module id="inventory-element">
+    <template>
+        <style include="common-styles">
+            .image {
+                width: 150px;
+                height: 150px;
+            }
+
+            img {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+            }
+
+            .headText {
+                @apply(--paper-font-headline);
+            }
+
+        </style>
+        <template is="dom-if" if="[[conceptionMode]]" restamp>
+            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
+        </template>
+        <div class="resource">
+            <div class="resourceBody">
+                <div class="headText">{{itemText}}</div>
+                <staticmedia-viewer resource-label="[[media.label]]" default-mkdown="[[defaultMkdown]]" style="display:inline-flex;" mkdown="[[media.mkdown]]"></staticmedia-viewer>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+    (function () {
+        'use strict';
+        Polymer({
+            is: 'inventory-element',
+            behaviors: [sharedBehavior],
+
+
+            ready: function () {
+                this.defaultMkdown = "![alt text](/file/5ac5162b662b242d82fbbeba?style=centerme)"
+
+            },
+            properties: {
+                media: {
+                    type: Object,
+                    notify: true,
+                },
+                label: {
+                    type: String,
+                    notify: true,
+                },
+                itemText: {
+                    type: String,
+                    notify: true,
+                },
+                itemId: {
+                    type: String,
+                    notify: true,
+                },
+                resourceLabel: {
+                    type: String,
+                    notify: true,
+                },
+                conceptionMode: {
+                    type: Boolean,
+                    notify: true,
+                }
+            }
+        })
+    })();
+</script>

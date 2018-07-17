@@ -1,0 +1,69 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="./styles/common-styles.html">
+<link rel="import" href="./element/badges/badge-constructor.html">
+<link rel="import" href="./element/badges/badge-element.html">
+<link rel="import" href="../src/element/helper/list-generic-resource.html">
+<link rel="import" href="./element/resource-filtering/generic-header.html">
+<dom-module id="badge-view">
+    <template>
+        <style include="common-styles">
+
+        </style>
+        <div class="card">
+            <div class="topLevelInfo">
+                <h1>Badges</h1> 
+                <div>
+                Les badges sont des <b>récompenses permanentes </b>acquises à la <b>fin d'un scénario de jeu</b>
+                <br>Les badges acquis restent visibles dans le profil utilisateur 
+                </div>
+                <br> Dans cette section :
+                <ul>
+                    <li>Vous pouvez créer, éditer ou supprimer des badges</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card constructorCard">
+            <badge-constructor class="topLevelView" media={{media}} id="badgeConstructor" label="{{label}}" badge-text="{{badgeText}}">
+            </badge-constructor>
+            <badge-element class="topLevelView" id="" resource-label=[[label]] conception-mode media=[[media]] badge-text={{badgeText}}>
+            </badge-element>
+        </div>
+        <div class="card">
+            <generic-header search="{{keyword}}"></generic-header>
+            <list-generic-resource filter-search="[[keyword]]" id='badgeList' share-url="/badge" resource-type='badge' url='/badge'></list-generic-resource>
+        </div>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'badge-view',
+        ready: function() {
+            this.addEventListener('resource-operation', this.updateMedia.bind(this))
+        },
+        updateMedia: function(message) {
+            switch (message.detail.info.operation) {
+                case 'create':
+                    this.$.badgeList.requestElements()
+                    break
+                case 'update':
+                    this.$.badgeList.requestElements()
+                    break
+
+                case 'delete':
+                    this.$.badgeList.requestElements()
+                    break
+
+                case 'edit':
+                    this.$.badgeConstructor.edit(message.detail.info.resource)
+                    break
+            }
+        },
+
+    });
+    </script>
+</dom-module>

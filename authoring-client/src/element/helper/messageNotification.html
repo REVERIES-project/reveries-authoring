@@ -1,0 +1,48 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
+<dom-module id="message-notification">
+    <style type="text/css">
+    .notif:first-letter {
+        text-transform: capitalize;
+    }
+    </style>
+    <template>
+        <paper-toast id="message" class="notif" text="{{currentMessage}}"></paper-toast>
+    </template>
+    <script type="text/javascript">
+    Polymer({
+
+        is: 'message-notification',
+        ready: function() {
+            //  this.$.gameResource.addEventListener('addItem',this.addNewItem.bind(this))
+        },
+        showToast: function(message) {
+            switch (message.info.operation) {
+                case 'update':
+                    this.currentMessage = message.info.resource.typeLabel + " mis à jour"
+                    this.$.message.show()
+                    break
+                case 'edit':
+                    this.currentMessage = "Edition d'une ressource " +message.info.resource.typeLabel
+                    this.$.message.show()
+                    break
+                case 'delete':
+                    this.currentMessage = message.info.resource.typeLabel + " supprimée"
+                    this.$.message.show()
+                    break
+                case 'create':
+                    this.currentMessage = "Nouvelle " +message.info.resource.typeLabel + " créée"
+                    this.$.message.show()
+                    break
+
+            }
+        },
+
+    })
+    </script>
+</dom-module>

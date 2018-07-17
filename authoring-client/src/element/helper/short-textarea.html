@@ -1,0 +1,56 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../styles/common-styles.html">
+
+<!--
+A generic response input field to be used to define MCQ resposnses
+
+@demo
+@author Gicquel
+-->
+
+<dom-module id="short-textarea">
+    <style include="common-styles">
+        :host {
+            display: inline-flex;
+            justify-content: flex-start;
+            flex-direction: row-reverse;
+            align-items: flex-end;
+        }
+    </style>
+
+    <template>
+        <paper-textarea class="mcq-message" name="[[inputName]]" label="[[inputLabel]]" value={{inputValue}} required></paper-textarea>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'short-textarea',
+                ready: function () {},
+
+                properties: {
+                    inputValue:{
+                        type:String,
+                        notify:true,
+                        reflectToAttribute:true,
+                    },
+                    inputName: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    inputLabel: {
+                        type: String,
+                        reflectToAttribute: true,
+                        notify:true,
+                    },
+                },
+            });
+        })();
+    </script>
+</dom-module>

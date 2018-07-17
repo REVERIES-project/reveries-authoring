@@ -1,0 +1,127 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/marked-element/marked-element.html">
+<link rel="import" href="../../../bower_components/paper-badge/paper-badge.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="tutorial-dialog">
+    <template>
+        <custom-style>
+            <style is="custom-style">
+            paper-dialog.colored {
+                border: 2px solid;
+                border-color: #4caf50;
+                background-color: #f1f8e9;
+                color: #4caf50;
+            }
+
+             :host {
+                --paper-badge-height: 30px;
+                --paper-badge-width: 30px;
+                --paper-badge-background: #8D99AE;
+            }
+
+            paper-dialog.size-position {
+                position: fixed;
+                top: 16px;
+                right: 16px;
+                width: 300px;
+                height: 300px;
+                overflow: auto;
+            }
+            </style>
+        </custom-style>
+        <iron-ajax id="tutorials" url="/tutorialByReference" method="GET" handle-as="json" on-response="updateTutorial"></iron-ajax>
+        <paper-dialog opened=[[opened]] no-cancel-on-outside-click id="position" class="size-position">
+            <marked-element markdown="{{mkdown}}">
+                <div class="markdown-html"></div>
+            </marked-element>
+            <div style="display:flex;flex-direction:row-reverse;">
+                <paper-badge style="position:inherit;left:unset!important;top:unset!important;" label="[[currentPage]]/[[currentTuto.length]]"></paper-badge>
+            </div>
+            <div class="buttons">
+                <paper-button on-click="reload">Reload</paper-button>
+                <paper-button on-click="previous">Précédent</paper-button>
+                <paper-button on-click="next">Suivant</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'tutorial-dialog',
+        ready: function() {
+            this.$.tutorials.generateRequest()
+            this.currentTuto = []
+            this.currentPage = 1
+        },
+        reload: function() {
+            this.$.tutorials.generateRequest()
+
+        },
+        previous: function() {
+            if (this.currentIndex > 0) {
+                this.currentIndex = this.currentIndex - 1
+                this.currentPage = this.currentIndex + 1
+                this.mkdown = this.currentTuto[this.currentIndex].mkdown
+                this.$.position.scrollTop = 0
+
+            } 
+        },
+        next: function() {
+            if (this.currentIndex < this.currentTuto.length - 1) {
+                this.currentIndex = this.currentIndex + 1
+                this.currentPage = this.currentIndex + 1
+
+                this.mkdown = this.currentTuto[this.currentIndex].mkdown
+                this.$.position.scrollTop = 0
+
+            } 
+        },
+        updateTutorial: function(res) {
+            this.tutorial = res.detail.__data__.response
+            this.setPage(this.page)
+        },
+        setPage: function(page) {
+            this.currentIndex = 0
+            this.currentPage = 1
+            this.currentTuto = this.getTurorial(page)
+            if (this.currentTuto) {
+                this.mkdown = this.currentTuto[0].mkdown
+                this.$.position.scrollTop = 0
+            }
+
+        },
+        getTurorial: function(page) {
+            if (this.tutorial)
+                for (var i = 0; i < this.tutorial.length; i++) {
+                    if (this.tutorial[i]._id == page) {
+                        return (this.tutorial[i].tuto)
+                    }
+                }
+        },
+        showTutorial: function() {
+            this.$.position.open()
+        },
+        toggle: function() {
+            this.$.position.toggle()
+        },
+
+        properties: {
+            opened: {
+                type: Boolean,
+                reflectToAttribute: true,
+            },
+            page: {
+                type: String,
+                notify: true,
+            }
+        }
+
+
+    });
+    </script>
+</dom-module>

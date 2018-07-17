@@ -1,0 +1,62 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../styles/common-styles.html">
+<dom-module id="tutorial-viewer">
+    <!--
+An element to design static web page using markdown. An helper button allow to pick an image from user image
+gallery.
+TODO : propose different CSS associated with the markdown
+-->
+    <style include="common-styles">
+    paper-input {
+        --paper-input-container-disabled: {
+            opacity: 0.66;
+        }
+        ;
+    }
+    </style>
+    <template>
+        <form class="creator" id="tutorialForm" is="iron-form">
+            <div class="formTitleWithButton">
+                <input id="status" type="hidden" value="Private" name="status" />
+            </div>
+            <paper-input name="reference" value="[[item.reference]]" disabled label="Page" type="string">[[item.reference]]
+            </paper-input>
+            <paper-input name="order" value="[[item.order]]" disabled label="Position (laisser vide pour ajouter à la fin)" type="number">
+            </paper-input>
+            <marked-element markdown="{{item.mkdown}}">
+                <div class="markdown-html"></div>
+            </marked-element>
+        </form>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+        Polymer({
+            is: 'tutorial-viewer',
+            ready: function() {},
+            properties: {
+                item: {
+                    type: Object,
+                    notify: true,
+                },
+                label: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute: true,
+                },
+
+
+            },
+
+
+        });
+    })();
+    </script>
+</dom-module>

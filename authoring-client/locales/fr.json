@@ -1,0 +1,18 @@
+{"login_button": {
+    "description": "login Logout button",
+    "message": "Test different folder"
+  },
+
+  "resources_button": {
+    "description": "My resources button",
+    "message": "Mes ressources"
+  },
+  "hours": {
+    "description": "...",
+    "message": "heures"
+  },
+  "minutes": {
+    "description": "...",
+    "message": "minutes"
+  }
+}

@@ -1,0 +1,70 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="./styles/common-styles.html">
+<link rel="import" href="./element/tutorial-elements/tutorial-generator.html">
+<link rel="import" href="./element/resource-filtering/generic-header.html">
+<link rel="import" href="./element/static-media/staticmedia-generator.html">
+<link rel="import" href="../src/element/helper/generic-resource-viewer.html">
+<link rel="import" href="../src/element/helper/list-generic-resource.html">
+<dom-module id="tutorial-view">
+    <template>
+        <style include="common-styles">
+
+        </style>
+        <div class="card">
+            <div class='topLevelInfo'>
+                <h1 class="text">Mes éléments de tutoriel</h1>
+                <div class="text">Les éléments de tutoriel permettent aux <b>utilisateurs ayant le rôle administrateur</b> de créer des tutoriels personalisés pour l'utilisation de MOGGLE.</div>
+                <div class="text">Ces tutoriels sont associés à des pages et déclenchés par un clic sur le bouton d'aide (en haut a droite)</div>
+                <div class="text">La syntaxe Markdown permet la mise en forme de ces documents</div>
+                <div class="text">Dans cette section :</div>
+                <ul>
+                    <li class="text">Vous pouvez créer, partager, éditer des éléments de tutoriel</li>
+                    <li class="text">Vous pouvez créer, partager, éditer des éléments de tutoriel</li>
+
+                </ul>
+            </div>
+        </div>
+        </div>
+        <div class="card constructorCard">
+            <tutorial-generator class="topLevelView" label="{{label}}" mkdown="{{MK}}" id="tutorialGenerator"></tutorial-generator>
+            <staticmedia-viewer resource-label="[[label]]" conception-mode style="min-width:150px" class="topLevelView" mkdown="{{MK}}"></staticmedia-viewer>
+        </div>
+        <div class="card">
+            <generic-header search="{{keyword}}"></generic-header>
+            <list-generic-resource filter-search="[[keyword]]" share-url='/tutorial' id='tutorialList' resource-type='tutorial' url='/tutorial'></list-generic-resource>
+        </div>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'tutorial-view',
+        ready: function() {
+            this.addEventListener('resource-operation', this.updateMedia.bind(this))
+
+        },
+        updateMedia: function(message) {
+            switch (message.detail.info.operation) {
+                case 'create':
+                    this.$.tutorialList.requestElements()
+                    break
+                case 'update':
+                    this.$.tutorialList.requestElements()
+                    break
+
+                case 'delete':
+                    this.$.tutorialList.requestElements()
+                    break
+
+                case 'edit':
+                    this.$.tutorialGenerator.edit(message.detail.info.resource)
+                    break
+            }
+        }
+    });
+    </script>
+</dom-module>

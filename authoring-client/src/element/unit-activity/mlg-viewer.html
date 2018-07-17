@@ -1,0 +1,50 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../styles/common-styles.html">
+
+<link rel="import" href="../helper/sharedBehavior.html">
+<dom-module id="mlg-viewer">
+    <template>
+        <style include="common-styles">
+        </style>
+        <div class="resource">
+            <div class="resourceBody">
+                <ul>
+                    <li>
+                        <b>Difficulté</b> : [[item.difficulty]]
+                    </li>
+                    <li>
+                        <b>Durée</b> : [[item.duration]]
+                    </li>
+                    <li>
+                        <b>Unités de jeux</b> : [[item.unitGames.length]]
+                    </li>
+                    <li>
+                        <b>Description</b> : [[item.description]]
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+    (function () {
+        'use strict';
+        Polymer({
+            is: 'mlg-viewer',
+            behaviors: [sharedBehavior],
+
+            ready: function () {},
+            _checkdiff: function (oldv, newv) {
+                console.log(oldv)
+            },
+            observers: ['_checkdiff(item.difficulty)', '_checkduration(item.duration)'],
+            properties: {
+                item: {
+                    type: Object,
+                    notify: true,
+                },
+            }
+        })
+    })();
+</script>

@@ -1,0 +1,34 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/google-youtube/google-youtube.html">
+<dom-module id="youtube-viewer">
+    <template>
+        <style include="common-styles">
+        </style>
+        <google-youtube id="googleYouTube" playsupported="{{playSupported}}" video-id="[[videoId]]" state="{{state}}" currenttime="{{currentTime}}"
+            currenttimeformatted="{{currentTimeFormatted}}" duration="{{duration}}" durationformatted="{{durationFormatted}}"
+            fractionloaded="{{fractionLoaded}}" volume="{{volume}}" playbackrate="{{playbackRate}}" playbackquality="{{playbackQuality}}"
+            on-google-youtube-state-change="handleStateChange" on-google-youtube-error="handleYouTubeError">
+        </google-youtube>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'youtube-viewer',
+            ready: function () {},
+            handleStateChange: function (ev) {
+                this.events.push({
+                    data: ev.detail.data
+                });
+            },
+            handleYouTubeError: function (ev) {
+                console.error('YouTube playback error', ev.detail);
+            },
+            properties:{
+                videoId:{
+                    type:String,
+                    notify:true,
+                }
+            }
+        });
+    </script>
+</dom-module>

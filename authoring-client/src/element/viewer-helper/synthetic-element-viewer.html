@@ -1,0 +1,57 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+
+The synthetic element viewer is a generic container for displaying resources in a sequential way, while providing an interface for interactions
+It is aim to be used in the synthetic view, to represent a scenario as a sequence of game unit, and a game unit as a sequence of lower level 
+elements.
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="synthetic-ug.html">
+
+<dom-module id="synthetic-element-viewer">
+    <style include="common-styles">
+        .activityContent {
+            margin: 5px;
+        }
+
+        syntheticViewer{
+            display: inline-flex;
+            width: 100%;
+            height: 100%;
+            flex-wrap: wrap;
+            padding : 5px;
+
+        }
+        :host {
+            --resource-body-mixin: {
+                align-items: baseline;
+            }
+        }
+    </style>
+    <template>
+        <div class="syntheticViewer">
+            <synthetic-ug item=[[item]]></synthetic-ug>
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'synthetic-element-viewer',
+                ready: function () {
+
+                },
+                properties: {
+                    item: {
+                        type: Object,
+                        notify: true,
+                    },
+
+                }
+            });
+        })();
+    </script>
+</dom-module>

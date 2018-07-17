@@ -1,0 +1,113 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../styles/common-styles.html">
+<dom-module id="one-poi-display">
+    <template>
+        <style include="common-styles">
+            :host{
+                --resource-body-mixin:{
+                    align-items:baseline;
+                }
+            }
+            .info {
+                color: #737373;
+                font-weight: 400;
+                font-size: 16px;
+                font-family: 'Roboto', 'Noto', sans-serif;
+                display: inline-block;
+            }
+
+
+            .visible {
+                display: flex;
+                flex-direction: row;
+                align-self: stretch;
+                justify-content: space-between;
+                margin-top: 16px;
+                margin-bottom: 10px;
+                @apply --poi-map-visibility;
+            }
+        </style>
+        <template is="dom-if" if="[[conceptionMode]]" restamp>
+            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
+        </template>
+        <div class="resource">
+            <div class="resourceBody">
+                <div>Longitude :
+                    <div class="info"> {{item.longitude}}</div>
+                </div>
+                <div>Latitude :
+                    <div class="info">{{item.latitude}}</div>
+                </div>
+                <template is="dom-if" if={{item.comment}}>
+                    <div>Info :
+                        <div class="info"> {{item.comment}}</div>
+                    </div>
+                </template>
+                <template is="dom-if" if="[[!conceptionMode]]" restamp>
+                    <div style="justify-content: center" class="visible">
+                        <paper-toggle-button checked=[[onMap]] on-change="toggledMap">Afficher sur la carte</paper-toggle-button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'one-poi-display',
+
+                ready: function () {
+                    this.onMap = false
+
+                },
+                toggledMap: function () {
+                    this.onMap = !this.onMap
+                    var val = this.onMap
+                    if (val) {
+                        this.fire('change-poi-map', {
+                            show: true,
+                            resource: this.item
+                        })
+                    } else {
+                        this.fire('change-poi-map', {
+                            show: false,
+                            resource: this.item
+                        })
+                    }
+                },
+                observers: [],
+                properties: {
+                    item: {
+                        type: Object,
+                        notify: true,
+                    },
+                    resourceLabel: {
+                        type: String,
+                        notify: true,
+                    },
+                    onMap: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+                    },
+                    conceptionMode: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+
+                    }
+                },
+
+
+            })
+        })();
+    </script>
+</dom-module>

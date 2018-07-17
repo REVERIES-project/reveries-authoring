@@ -1,0 +1,41 @@
+{
+  "name": "reveries-authoring-client",
+  "version": "1.0.0",
+  "description": "ReVeRIES is an ANR project that aim to ease the construction of mobile games. Mobile game are very popular, and there is still no convincing open tools that would work cross platform. After five years of analysis, we discovered the existence of so called \"mobile web browser\" that can be used for such cross platform tools. Jokes aside, ReVeRIES allow to ease greatly the concetion of mobile serious games. I just think the web is a plus. This app is reveries-authoring-client, a web application that generate mobile serious web.",
+  "main": "service-worker.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gick/reveries-authoring-client.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gick/reveries-authoring-client/issues"
+  },
+  "homepage": "https://github.com/gick/reveries-authoring-client#readme",
+  "devDependencies": {
+    "eslint": "^4.19.0",
+    "eslint-plugin-html": "^4.0.2",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "gulp": "^3.9.1",
+    "gulp-vulcanize": "^7.0.0"
+  },
+  "dependencies": {
+    "css-slam": "^2.1.0",
+    "driver.js": "^0.3.5",
+    "eslint-plugin-polymer": "^0.2.1",
+    "gulp-html-minifier": "^0.1.8",
+    "gulp-if": "^2.0.2",
+    "gulp-uglify": "^3.0.0",
+    "polymer-build": "^1.6.0",
+    "save-dev": "^2.0.0"
+  }
+}

@@ -1,0 +1,29 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<script>
+sharedBehavior = {
+
+    properties: {
+        resourceReadonly: {
+            type: String,
+            notify: true,
+            observer: "_resourceReadonlyObserver",
+        }
+    },
+    removeElement: function() {
+        this.$.remover.genRequest();
+    },
+
+    _resourceReadonlyObserver: function(newval, oldval) {
+        if (newval == "readonly") {
+            this.isReadOnly = true
+
+        } else {
+            this.isReadOnly = false
+        }
+    },
+};
+</script>

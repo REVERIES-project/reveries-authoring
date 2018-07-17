@@ -1,0 +1,337 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../src/element/auth-manager/auth-manager.html">
+<link rel="import" href="../src/element/auth-manager/tracking-manager.html">
+<link rel="import" href="../bower_components/i18n-msg/i18n-msg.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-menu/paper-submenu.html">
+<link rel="import" href="../src/element/helper/messageNotification.html">
+<link rel="import" href="../src/element/helper/authNotification.html">
+<link rel="import" href="../src/element/tutorial-elements/tutorial-dialog.html">
+
+<dom-module id="my-app">
+    <template>
+        <style>
+            :host {
+                display: block;
+                --app-primary-color: #4285f4;
+                --app-secondary-color: black;
+            }
+
+            app-header {
+                background-color: #8D99AE;
+                color: #fff;
+            }
+
+            app-header paper-icon-button {
+                --paper-icon-button-ink-color: white;
+            }
+
+            .drawer-list {
+                margin: 0 20px;
+            }
+
+            a.firstLevel {
+                color: black;
+                text-decoration: none;
+            }
+
+            .drawer-list a {
+                display: block;
+                line-height: 40px;
+                text-decoration: none;
+                color: var(--app-secondary-color);
+            }
+
+            .sublist paper-item {
+                padding-left: 20px;
+            }
+
+            .sublist2 paper-item {
+                padding-left: 30px;
+            }
+
+            a.menuLink {
+                padding-left: 15px !important;
+            }
+
+            a.menuLinkPermanent {
+                padding-left: 30px !important;
+
+            }
+
+            .firstLevelMenu {
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .drawer-list a.iron-selected {
+                color: black;
+                font-weight: bold;
+            }
+        </style>
+
+        <driver-element></driver-element>
+        <app-location use-hash-as-path route="{{route}}"></app-location>
+        <message-notification id="toaster"></message-notification>
+        <auth-notification id="authNotif"></auth-notification>
+        <tutorial-dialog page=[[page]] id="tuto"></tutorial-dialog>
+        <auth-manager id="manager" status="{{status}}"></auth-manager>
+        <tracking-manager id="tracking"></tracking-manager>
+        <app-route route="{{route}}" pattern="#/page/:param" active={{activity}} data="{{routeData}}" tail="{{subroute}}"></app-route>
+        <app-scrollpos-control id="scrollPosition" selected="{{page}}"></app-scrollpos-control>
+
+        <app-drawer-layout fullbleed>
+            <!-- Drawer content -->
+            <app-drawer>
+                <iron-selector selected="{{page}}" attr-for-selected="name" class="drawer-list" role="navigation">
+                    <paper-item class="menu-content firstLevelMenu">
+                        <a class='' name="intro" href="#intro">
+                            <span>{{status.name}}</span>
+                        </a>
+                    </paper-item>
+                    <paper-item class="menu-content firstLevelMenu">
+                        <a class='' name="intro" href="#intro">
+                            <iron-icon src="../images/logo_appliSenario1.png"></iron-icon>
+                            <span>MOGGLE</span>
+                        </a>
+                    </paper-item>
+
+                    <paper-item name="[[page]]">
+                        <a class='menuLinkPermanent' name="login" href="#login">
+                            <i18n-msg msgid="login_button">Login/logout</i18n-msg>
+                        </a>
+                    </paper-item>
+                    <!--                     <paper-item name="[[page]]" visible=[[status.isadmin]]>
+                        <a class='menuLinkPermanent' name="tutorial" href="#tutorial">
+                            <i18n-msg msgid="login_button">Tutoriel</i18n-msg>
+                        </a>
+                    </paper-item>
+                    <paper-item name="[[page]]" visible=[[status.isadmin]]>
+                            <a class='menuLinkPermanent' name="admin" href="#">
+                                <i18n-msg msgid="login_button">Tutoriel</i18n-msg>
+                            </a>
+                    </paper-item>    
+ -->
+                    <paper-submenu name=[[page]]>
+                        <paper-item class="menu-trigger firstLevelMenu">
+                            <i18n-msg msgid="resources_button"> Mes documents & médias </i18n-msg>
+                        </paper-item>
+                        <paper-menu class="menu-content">
+
+                            <paper-item>
+                                <a class='menuLink' name="image" href="#image">Mes images</a>
+                            </paper-item>
+                            <paper-item>
+                                <a class='menuLink' name="youtube" href="#youtube">Mes vidéos youtube</a>
+                            </paper-item>
+                            <paper-item>
+                                <a class='menuLink' name="staticmedia" href="#staticmedia">Mes documents multimédias</a>
+                            </paper-item>
+                        </paper-menu>
+                    </paper-submenu>
+                    <paper-submenu name=[[page]]>
+                        <paper-item class="menu-trigger firstLevelMenu">
+                            Mes composants de jeu
+                        </paper-item>
+                        <paper-menu class="menu-content">
+                            <paper-item>
+                                <a class='menuLink' name="freetext" href="#freetext">Mes questions libres</a>
+                            </paper-item>
+                            <paper-item>
+                                <a class='menuLink' name="mcq" href="#mcq">Mes QCM</a>
+                            </paper-item>
+                            <paper-item>
+                                <a class='menuLink' name="folia" href="#folia">Mes exercices d'identification</a>
+                            </paper-item>
+                            <paper-item>
+                                <a class='menuLink' name="badge" href="#badge">Mes badges</a>
+                            </paper-item>
+                            <paper-item>
+                                <a class='menuLink' name="inventory" href="#inventory">Mes objets d'inventaire</a>
+                            </paper-item>
+                        </paper-menu>
+                    </paper-submenu>
+                    <paper-item name="[[page]]">
+                        <a class='menu-trigger firstLevelMenu' name="poi" href="#poi">Mes cartes et POI</a>
+                    </paper-item>
+                    </paper-menu>
+                    </paper-submenu>
+                    <paper-submenu name=[[page]]>
+                        <paper-item class="menu-trigger firstLevelMenu">
+                            Mes scénarios de jeu
+                        </paper-item>
+                        <paper-menu class="menu-content">
+                            <paper-item>
+                                <a class='menuLink' name="constructor" href="#constructor">Mes unités de jeu</a>
+                            </paper-item>
+                            <paper-item>
+                                <a class='menuLink' name="mlg" href="#mlg">Mes jeux sérieux</a>
+                            </paper-item>
+                        </paper-menu>
+                    </paper-submenu>
+                    </paper-menu>
+                </iron-selector>
+            </app-drawer>
+            <!-- Main content -->
+            <app-header-layout has-scrolling-region>
+                <app-header id="header" condenses reveals effects="waterfall">
+                    <app-toolbar>
+                        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+                        <div title>Echologia - MOGGLE 1.5</div>
+                        <paper-icon-button style="margin-left:auto;" icon="help" on-click="showTutorial"></paper-icon-button>
+                    </app-toolbar>
+                </app-header>
+                <iron-pages id="pages" role="main" selected="[[page]]" attr-for-selected="name">
+                    <intro-view name="intro"></intro-view>
+                    <login-view status=[[status]] name="login"></login-view>
+                    <admin-view name="admin"></admin-view>
+                    <folia-view name="folia"></folia-view>
+                    <tutorial-view name="tutorial"></tutorial-view>
+                    <poi-view name="poi"></poi-view>
+                    <youtube-view name="youtube"></youtube-view>
+                    <staticmedia-view id='staticmedia' name="staticmedia"></staticmedia-view>
+                    <freetext-view id='freetext' name="freetext"></freetext-view>
+                    <image-view name="image"></image-view>
+                    <mcq-view id="mcq" name="mcq"></mcq-view>
+                    <badge-view id="badge" name="badge"></badge-view>
+                    <inventory-view id="inventoryView" name="inventory"></inventory-view>
+                    <constructor-view id="constructorView" name="constructor"></constructor-view>
+                    <mlg-view id="mlgView" name="mlg"></mlg-view>
+                    <reset-view id="reset" token=[[token]] name="reset"></reset-view>
+                </iron-pages>
+            </app-header-layout>
+        </app-drawer-layout>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'my-app',
+            ready: function () {
+                I18nMsg.lang = 'en';
+                Platform.performMicrotaskCheckpoint();
+                this.$$('#pages').addEventListener('tracking-operation', this.peformTracking.bind(this))
+                this.$$('#pages').addEventListener('resource-operation', this.showMessage.bind(this))
+                this.$$('#pages').addEventListener('auth-event', this.authChanged.bind(this))
+                this.$$('#pages').addEventListener('auth-message', this.showAuthMessage.bind(this))
+
+                this.$.manager.addEventListener('auth-message', this.showAuthMessage.bind(this))
+                this.$.manager.checkStatusOnRefresh();
+            },
+            peformTracking: function () {
+
+            },
+            unitGameSaved: function () {
+                if (this.$$('#mlgView') && this.$$('#mlgView').updateUnitGames) {
+                    this.$$('#mlgView').updateUnitGames();
+                }
+            },
+            showTutorial: function () {
+                this.$.tuto.toggle()
+            },
+            showAuthMessage: function (message) {
+                this.$.authNotif.showToast(message.detail)
+            },
+            showMessage: function (message) {
+                if (message && message.detail && message.detail.info && message.detail.info.resource &&
+                    message.detail.info.resource.type && message.detail.info.resource.type == 'unitgame') {
+                    this.unitGameSaved()
+                }
+                if (message.detail && message.detail.info && message.detail.info.operation && message.detail
+                    .info.operation === 'edit') {
+                    this.$.header.scrollTarget.scrollTop = 0
+                }
+
+                this.$.toaster.showToast(message.detail)
+            },
+            authChanged: function (arg) {
+                if (arg && arg.detail && arg.detail.type) {
+                    var operation = arg.detail
+                    switch (operation.type) {
+                        case 'reset':
+                            this.page = 'login'
+                            var message = {}
+                            message.detail = {
+                                'info': 'Mot de passe mis à jour'
+                            }
+                            this.showAuthMessage(message)
+                            break
+                        case 'import':
+                            this.$.manager.importTutorial()
+                        case 'login':
+                            this.$.manager.authenticate(operation.credential.email, operation.credential.pass)
+                            break
+                        case 'logout':
+                            this.$.manager.logout()
+                            break
+                        case 'signup':
+                            var cred = operation.credential
+                            this.$.manager.signup(cred.name, cred.pass, cred.mail)
+                    }
+                }
+            },
+            properties: {
+                meta: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute: true
+                },
+                page: {
+                    type: String,
+                    reflectToAttribute: true
+                },
+
+            },
+
+            observers: [
+                '_routePageChanged(route.page)',
+            ],
+
+            _routePageChanged: function () {
+                if (this.route.path.indexOf('reset') >= 0) {
+                    this.token = this.route.path.slice(12)
+                    this.page = 'reset'
+                    this.pageChanged('reset')
+                    return
+                }
+                this.page = this.route.path || 'intro';
+                this.pageChanged(this.page)
+            },
+            pageChanged: function (page) {
+                if (page === null) {
+                    return
+                }
+                this.$.tuto.setPage(page)
+
+                this.importHref(
+                    this.resolveUrl(page + '-view.html'),
+                    () => {
+                        console.log(page + ' loaded')
+                    },
+                    () => {
+                        console.log(page + ' loading Error')
+                    },
+                    false);
+            }
+
+        })
+    </script>
+</dom-module>

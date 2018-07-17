@@ -1,0 +1,215 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<dom-module id="map-icons">
+    <template>
+        <style>
+        .outerdiv {
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .inner {
+            display: inline-flex;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .imgcontainer {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        
+        .imgcontainer:hover {
+            background-color: lightgrey;
+        }
+        </style>
+        <div class="outerdiv">
+            <paper-toggle-button id="size">Large icons</paper-toggle-button>
+            <div class="inner">
+                <template is="dom-repeat" items={{blue}} as="icon">
+                    <div class="imgcontainer">
+                        <img on-click="setIcon" class="" src="https://maps.google.com/mapfiles/kml/paddle/{{icon.name}}{{size}}.png">
+                    </div>
+                </template>
+            </div>
+            <div class="inner">
+                <template is="dom-repeat" items={{red}} as="icon">
+                    <div class="imgcontainer">
+                        <img on-click="setIcon" class="" src="https://maps.google.com/mapfiles/kml/paddle/{{icon.name}}{{size}}.png">
+                    </div>
+                </template>
+            </div>
+            <div class="inner">
+                <template is="dom-repeat" items={{grn}} as="icon">
+                    <div class="imgcontainer">
+                        <img on-click="setIcon" src="https://maps.google.com/mapfiles/kml/paddle/{{icon.name}}{{size}}.png">
+                    </div>
+                </template>
+            </div>
+            <div class="inner">
+                <template is="dom-repeat" items={{pin}} as="icon">
+                    <div class="imgcontainer">
+                        <img on-click="setIcon" class="" src="https://maps.google.com/mapfiles/kml/pushpin/{{icon.name}}{{size}}.png">
+                    </div>
+                </template>
+            </div>
+            <div class="inner">
+                <template is="dom-repeat" items={{traject}} as="icon">
+                    <div class="imgcontainer">
+                        <img on-click="setIcon" class="" src="https://maps.google.com/mapfiles/kml/paddle/{{icon.name}}{{size}}.png">
+                    </div>
+                </template>
+            </div>
+        </div>
+    </template>
+    <script>
+(function() {
+        'use strict';
+
+        Polymer({
+            is: 'map-icons',
+
+
+            setIcon: function(elem) {
+                this.set('icon', elem.target.src);
+            },
+
+
+
+            ready: function() {
+                this.$.size.addEventListener('change', function() {
+                    if (!this.$.size.active) {
+                        this.set('size', '_maps')
+                    } else {
+                        this.set('size', '')
+                    }
+                }.bind(this));
+                this.set('blue', []);
+                this.push('blue', {
+                    name: 'blu-blank'
+                })
+                this.push('blue', {
+                    name: 'blu-circle'
+                })
+                this.push('blue', {
+                    name: 'blu-diamond'
+                })
+                this.push('blue', {
+                    name: 'blu-square'
+                })
+                this.push('blue', {
+                    name: 'blu-stars'
+                })
+                this.set('red', []);
+                this.push('red', {
+                    name: 'red-blank'
+                })
+                this.push('red', {
+                    name: 'red-circle'
+                })
+                this.push('red', {
+                    name: 'red-diamond'
+                })
+                this.push('red', {  
+                    name: 'red-square'
+                })
+                this.push('red', {
+                    name: 'red-stars'
+                })
+                this.set('grn', []);
+                this.push('grn', {
+                    name: 'grn-blank'
+                })
+                this.push('grn', {
+                    name: 'grn-circle'
+                })
+                this.push('grn', {
+                    name: 'grn-diamond'
+                })
+                this.push('grn', {
+                    name: 'grn-square'
+                })
+                this.push('grn', {
+                    name: 'grn-stars'
+                })
+
+                this.set('pin', [])
+                this.push('pin', {
+                    name: 'blue-pushpin'
+                })
+                this.push('pin', {
+                    name: 'grn-pushpin'
+                })
+                this.push('pin', {
+                    name: 'red-pushpin'
+                })
+                this.push('pin', {
+                    name: 'ylw-pushpin'
+                })
+
+
+
+
+
+                this.set('traject', []);
+
+                this.push('traject', {
+                    name: '1'
+                })
+                this.push('traject', {
+                    name: '2'
+                })
+                this.push('traject', {
+                    name: '3'
+                })
+                this.push('traject', {
+                    name: '4'
+                })
+                this.push('traject', {
+                    name: '5'
+                })
+                this.push('traject', {
+                    name: '6'
+                })
+                this.push('traject', {
+                    name: '7'
+                })
+                this.push('traject', {
+                    name: '8'
+                })
+                this.push('traject', {
+                    name: '9'
+                })
+                this.push('traject', {
+                    name: '10'
+                })
+            },
+
+            properties: {
+                size: {
+                    type: String,
+                    value: '_maps',
+                    notify: true,
+                },
+
+                icon: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute: true,
+                        value: 'http://www.google.com/mapfiles/marker.png'
+                }
+
+            }
+        })
+    })();
+    </script>
+</dom-module>

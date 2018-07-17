@@ -1,0 +1,88 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="./styles/common-styles.html">
+<link rel="import" href="./element/static-media/staticmedia-viewer.html">
+<link rel="import" href="./element/resource-filtering/generic-header.html">
+<link rel="import" href="./element/static-media/staticmedia-generator.html">
+<link rel="import" href="../src/element/helper/generic-resource-viewer.html">
+<link rel="import" href="../src/element/helper/list-generic-resource.html">
+<dom-module id="staticmedia-view">
+    <template>
+        <style include="common-styles">
+        </style>
+        <div class="card">
+            <div class='topLevelInfo'>
+                <h1>Mes documents multimédia</h1>
+                <div>
+                    Les documents multimédias permettent d'associer
+                    <b>images ou vidéos à du texte mis en forme.</b>
+                    <br>Ces documents sont utilisables dans la
+                    <b>création des éléments de jeu (ex. instruction de jeu, feedback...)</b>
+                    <br>La syntaxe Markdown permet la mise en forme de ces documents</div>
+                <br> Dans cet section :
+                <ul>
+                    <li>Vous pouvez créer, partager, éditer des documents multimédias</li>
+                </ul>
+                <paper-toggle-button checked={{showMkdown}}>Afficher syntaxe Markdown</paper-toggle-button>
+                <iron-collapse id="mkdownHelp" tabindex="0" opened=[[showMkdown]]>
+                    <ul>
+                        <li>Pour mettre du texte en italique, utiler underscore (ex. _text_)
+                        </li>
+                        <li>Pour mettre du texte en gras, utiler double underscore (ex. __gras__)
+                        </li>
+                        <li>Pour créer une liste d'élément, précéder chaque élément d'une étoile et d'un espace (ex. * Item 1)
+                        </li>
+                        <li>Pour créer des titres/sous-titres, précéder le titre du caractère dièse et d'un espace (ex. # titre)
+                        </li>
+                    </ul>
+                </iron-collapse>
+
+            </div>
+
+        </div>
+        <div class="card constructorCard">
+            <staticmedia-generator class="topLevelView" label="{{label}}" mkdown="{{MK}}" id="staticConstructor"></staticmedia-generator>
+
+
+
+            <staticmedia-viewer resource-label="[[label]]" conception-mode style="min-width:150px" class="topLevelView" mkdown="{{MK}}"></staticmedia-viewer>
+        </div>
+        <div class="card">
+            <generic-header search="{{keyword}}"></generic-header>
+            <list-generic-resource filter-search="[[keyword]]" share-url='/staticmedia' id='staticmedialist' resource-type='staticmedia'
+                url='/staticmedia'></list-generic-resource>
+        </div>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'staticmedia-view',
+            ready: function () {
+                this.addEventListener('resource-operation', this.updateMedia.bind(this))
+
+            },
+            updateMedia: function (message) {
+                switch (message.detail.info.operation) {
+                    case 'create':
+                        this.$.staticmedialist.requestElements()
+                        break
+                    case 'update':
+                        this.$.staticmedialist.requestElements()
+                        break
+
+                    case 'delete':
+                        this.$.staticmedialist.requestElements()
+                        break
+
+                    case 'edit':
+                        this.$.staticConstructor.edit(message.detail.info.resource)
+                        break
+                }
+            }
+        });
+    </script>
+</dom-module>

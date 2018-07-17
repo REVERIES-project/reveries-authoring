@@ -1,0 +1,70 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/file-upload/file-upload.html">
+<link rel="import" href="../src/element/helper/list-generic-resource.html">
+<link rel="import" href="./styles/common-styles.html">
+<dom-module id="image-view">
+    <template>
+        <style include="common-styles">
+            file-upload{
+                --file-upload-upload-border:{display:none !important;}
+            }
+        </style>
+        <div class="card">
+            <div class="topLevelInfo">
+                <h1>Mes fichiers images</h1>
+                <div>Les images sont très utiles en apprentissage mobile, pour <b>illustrer ou expliquer</b> un phénomène plus rapidement que du texte.
+                    <br>Une image importée dans cette section <b>deviens disponible lors de la création de composants de jeu</b>.
+                </div>
+                <br>Dans cette section :
+                <ul>
+                    <li>Vous pouvez importer des images utilisables dans les phases suivante de la conception</li>
+                    <li>Vous pouvez partager ces images avec votre groupe de conception</li>
+                    <li>Vous pouvez supprimer des images précédemment importées</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="topLevelInfo">
+                <h2>Image uploader</h2>
+                <file-upload id="uploader" hide-file-list on-success="updateImages" public={{setpublic}} raised method="POST" target="/file">Importer une image
+                </file-upload>
+            </div>
+        </div>
+        <div class="card">
+            <list-generic-resource share-url='/file' id='mediaviewer' resource-type='image' url='/listUserImages'></list-generic-resource>
+        </div>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'image-view',
+        ready: function() {
+            this.addEventListener('resource-operation', this.updateMedia.bind(this))
+
+        },
+        updateImages: function(message) {
+            this.$.mediaviewer.requestElements()
+            this.fire('resource-operation', { info: JSON.parse(message.detail.xhr.responseText) })
+
+        },
+        updateMedia: function(message) {
+            console.log(message)
+            switch (message.detail.info.operation) {
+
+                case 'delete':
+                    this.$.mediaviewer.requestElements()
+                    break
+
+            }
+        },
+        clearList: function() {
+            this.$.uploader.clear();
+        }
+    });
+    </script>
+</dom-module>

@@ -1,0 +1,33 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
+<dom-module id="auth-notification">
+    <style type="text/css">
+    .notif:first-letter {
+        text-transform: capitalize;
+    }
+    </style>
+    <template>
+        <paper-toast id="message" class="notif" text="{{currentMessage}}"></paper-toast>
+    </template>
+    <script type="text/javascript">
+    Polymer({
+
+        is: 'auth-notification',
+        ready: function() {
+            //  this.$.gameResource.addEventListener('addItem',this.addNewItem.bind(this))
+        },
+        showToast: function(message) {
+            if (message.info) {
+                    this.currentMessage = message.info
+                    this.$.message.show()
+            }
+        },
+
+    })
+    </script>
+</dom-module>

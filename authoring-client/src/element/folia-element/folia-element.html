@@ -1,0 +1,118 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../ui-helper/activity-feedback.html">
+
+<link rel="import" href="./specie-tag.html">
+<link rel="import" href="../ui-helper/activity-feedback.html">
+
+<link rel="import" href="../helper/sharedBehavior.html">
+<link rel="import" href="../static-media/staticmedia-viewer.html">
+<dom-module id="folia-element">
+    <style include="common-styles">
+        .question {
+            margin-top: 10px;
+            padding: 8px;
+            @apply(--paper-font-body2);
+        }
+
+        .response{
+            width:100%;
+        }
+        .validator{
+            margin-top: 30px;
+        }
+    </style>
+    <template>
+        <template is="dom-if" if="[[conceptionMode]]" restamp>
+            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
+        </template>
+        <div class="resource">
+            <div class="question">{{question}}</div>
+            <div class="resourceBody">
+
+                <template is="dom-repeat" items="[[targetSpecies]]">
+                    <specie-tag name="[[item.label]]"></specie-tag>
+                </template>
+                <activity-feedback id="feedback" correct-message=[[correctMessage]] wrong-message=[[wrongMessage]]></activity-feedback>
+            </div>
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'folia-element',
+
+                ready: function () {
+                    // this.showMediaButton = false;
+                    //  this.$.header.addEventListener('edit', this.editElement.bind(this))
+
+                },
+
+                properties: {
+                    question: {
+                        type: String,
+                        notify: true,
+                    },
+                    targetSpecies: {
+                        type: Array,
+                        notify: true,
+
+                    },
+                    correctMessage: {
+                        type: String,
+                        notify: true,
+                    },
+                    wrongMessage: {
+                        type: String,
+                        notify: true,
+                    },
+
+                    responseLabel: {
+                        type: String,
+                        notify: true,
+                    },
+                    preview: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    media: {
+                        type: Object,
+                        notify: true,
+                    },
+                    itemId: {
+                        type: String,
+                        notify: true,
+                    },
+                    resourceStatus: {
+                        type: String,
+                        notify: true,
+                    },
+                    conceptionMode: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    resourceLabel: {
+                        type: String,
+                        notify: true,
+                    },
+
+                }
+            });
+        })();
+    </script>
+</dom-module>

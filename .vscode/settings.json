@@ -1,0 +1,8 @@
+{
+	"eslint.options": { "configFile": "/home/gick/Dev/reveries-authoring-client/.eslintrc" },
+    "eslint.validate": [ "javascript", "html" ],
+    "eslint.workingDirectories": [
+    "./src"
+  ],
+  "update.channel": "none"
+}

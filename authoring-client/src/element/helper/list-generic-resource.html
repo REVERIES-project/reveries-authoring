@@ -1,0 +1,144 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="./generic-resource-viewer.html">
+<link rel="import" href="./resource-header.html">
+<link rel="import" href="../../styles/common-styles.html">
+
+<dom-module id="list-generic-resource">
+    <template include="common-styles">
+        <style>
+            :host {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .selected {
+                border: solid black 1px;
+            }
+
+
+
+            .resourceList {  
+                    margin: 10px;
+                    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+                
+            }
+        </style>
+        <iron-ajax id="searchLoader" params="[[keyword]]" url="{{url}}" handle-as="json" last-response="{{items}}"></iron-ajax>
+        <iron-ajax id="ajaxLoader" url="{{url}}" handle-as="json" last-response="{{items}}"></iron-ajax>
+        <div style="display:flex;flex-wrap:wrap;" id="genericListener">
+            <array-selector id="selector" items="{{items}}" selected="{{selected}}" toggle></array-selector>
+            <template is="dom-repeat" id='list' items="{{items}}" as="item">
+                <paper-card class="resource resourceList" on-click='selectItem'>
+                    <div class=card-content>
+                        <generic-resource-viewer is-importer=[[importer]] is-picker=[[picker]] class$={{setStyleValue(item,selected)}} resource-type="{{resourceType}}" item={{item}}>
+                        </generic-resource-viewer>
+                    </div>
+                </paper-card>
+            </template>
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'list-generic-resource',
+                ready: function () {
+                    if (!this.lazy) {
+                        this.requestElements()
+                    }
+                    //  this.$.selector.addEventListener('selected-changed',this.setStyleValue.bind(this))
+                    //  this.$.remover.addEventListener('elementRemoved',this.requestElements.bind(this))
+                },
+                setStyleValue: function (item, selected) {
+                    if (!this.picker)
+                        return
+                    if (this.selected && item._id == this.selected._id) {
+                        this.set('resourceId', this.selected._id)
+                        this.fire('resourcePickedFromList', {
+                            resourceType: this.resourceType,
+                            resourceItem: item
+                        })
+                        return 'selected'
+                    }
+                    this.set('resourceId', null)
+                    return ''
+                },
+                selectItem: function (e) {
+                    var item = this.$.list.itemForElement(e.target);
+                    this.$.selector.select(item);
+                },
+                requestElements: function () {
+                    this.$.ajaxLoader.generateRequest();
+
+                },
+                observers: [
+                    'statusChanged(status)',
+                ],
+                statusChanged: function (stat) {
+                    if (stat.logged) {
+                        this.$.requestElements()
+
+                    }
+                },
+                _search: function (keyword) {
+                    if (keyword && keyword.length >= 3) {
+                        this.set('keyword', {
+                            search: keyword
+                        })
+                        this.$.searchLoader.generateRequest()
+                        return
+                    }
+                    this.$.ajaxLoader.generateRequest()
+                },
+                _resourceTypeChanged: function (rc) {},
+                properties: {
+                    url: {
+                        type: String,
+                        notify: true
+                    },
+                    picker: {
+                        type: Boolean,
+                        notify:true,
+                        value: false,
+                    },
+                    importer:{
+                        type:Boolean,
+                        notify:true,    
+                        value:false,
+                    },
+                    resourceId: {
+                        type: String,
+                        reflectToAttribute: true,
+                        value: 'test',
+                    },
+                    resourceType: {
+                        type: String,
+                        notify: true,
+                        observer: '_resourceTypeChanged'
+                    },
+                    shareUrl: {
+                        type: String,
+                        notify: true,
+                    },
+                    lazy: {
+                        type: Boolean,
+                        notify: true,
+                        value: false,
+                    },
+                    filterSearch: {
+                        type: String,
+                        notify: true,
+                        observer: '_search',
+                    }
+                }
+            });
+        })();
+    </script>
+</dom-module>

@@ -1,0 +1,44 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="./styles/common-styles.html">
+<dom-module id="intro-view">
+    <template>
+        <style include="common-styles">
+
+        </style>
+        <div class="card">
+            <div class="topLevelInfo">
+                <h2>Bienvenue dans Moggle-Editor: MObile Geolocalized Game for LEarning</h2>
+                <h3>Une plateforme web pour la création de jeux sérieux mobiles</h3>
+
+                <h3>Principes</h3>
+                <ul>
+                    <li>Les jeux sont construits à partir de composants de jeux réutilisables et partageables</li>
+                    <li>Les jeux créés sont utilisables directement depuis un navigateur web mobile (iOS, Android, Windows Phone)</li>
+                    <li>Rien à installer, tout ce fait à partir de cette application</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="topLevelInfo">
+                <h3> Comment commencer ? </h3>
+                    <ul>
+                        <li>Allez sur la page login/logout pour vous identifier ou créer un compte</li>
+                        <li>Une fois identifié, vous pourrez importer un scénario de jeu préconstruit</li>
+                        <li>Ce scénario modifiable vous permettra de vous familiariser avec l'outil auteur</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'intro-view'
+    });
+    </script>
+</dom-module>

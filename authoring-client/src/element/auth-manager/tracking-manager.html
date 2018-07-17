@@ -1,0 +1,27 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="tracking-manager">
+    <template>
+        <iron-ajax id="tracker" url='/track' params="[[trackingString]]"></iron-ajax>
+    </template>
+</dom-module>
+<script>
+(function() {
+    'use strict';
+    Polymer({
+        is: 'tracking-manager',
+        ready: function() {
+        },
+        performTracking:function(operationType,param){
+            this.trackingString={operation:operation,param:param}
+            this.$.tracker.generateRequest()
+        }
+    })
+})();
+</script>

@@ -1,0 +1,186 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do Whatever You Want With Code" license
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../../bower_components/google-apis/google-maps-api.html">
+<link rel="import" href="../../../bower_components/google-map/google-map-marker.html">
+<link rel="import" href="../../../bower_components/google-map/google-map-search.html">
+<dom-module id="map-display">
+    <template>
+        <style>
+        .mymap {
+            width: 300px;
+            height: 300px;
+            margin:10px;
+            display: inline-flex;
+            @apply --custom-map-display;
+        }
+
+div > div > div > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div:nth-child(4) > div > div:nth-child(1) > div:nth-child(3){
+    display: none !important
+}
+        </style>
+        <google-maps-api api-key="AIzaSyBw9aJOCPfc4Hel0sTET3DgwJhuDeCDqdc" version="3.exp"></google-maps-api>
+        <google-map-search map="[[mapsAPI]]" query="Pizza" results="{{results}}">
+        </google-map-search>
+        <google-map class="mymap" api-key="AIzaSyBw9aJOCPfc4Hel0sTET3DgwJhuDeCDqdc" id="poimapgmap" zoom="{{mapzoom}}" map={{mapsAPI}} latitude="{{lat}}" longitude="{{long}}" click-events>
+            <template is="dom-repeat" items={{markers}} as="marker">
+                <google-map-marker click-events info="{{marker.info}}" title="{{marker.title}}" on-google-map-marker-click="clickMarker" latitude="{{marker.latitude}}" longitude="{{marker.longitude}}"></google-map-marker>
+            </template>
+        </google-map>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'map-display',
+
+            ready: function() {
+
+                this.markers = [];
+                this.circles = [];
+
+            },
+            clickMarker:function(evt){
+                var map = this.get('mapsAPI')
+
+                let mark=evt.model
+                mark.__data__.marker.info.open(map)
+            },
+            showPOI: function(item) {
+                if (this.findIndex(item) >= 0) {
+                    this.removeMarker(item)
+                    // this.fitMarkers();
+                    return;
+                }
+                this.addMarker(item);
+            },
+            removePOI: function(item) {
+                this.removeMarker(item);
+            },
+            removeMarker: function(item) {
+                var marker = this.findIndex(item);
+               // this.removeArea(item);
+                this.closeInfoWindow(marker.marker)
+                this.splice('markers', marker.index, 1);
+
+            },
+            closeInfoWindow:function(item){
+                item.test.close();
+            },
+            fitMarkers: function() {
+                var markerArray = [];
+                for (var i = 0; i < this.markers.length; i++) {
+
+                }
+                var bounds = new google.maps.LatLngBounds();
+
+            },
+            findIndex: function(item) {
+                for (var i = 0; i < this.markers.length; i++) {
+                    if (this.markers[i].id === item._id) {
+                        return {marker:this.markers[i],index:i}
+                    }
+                }
+                return -1
+            },
+            addMarker: function(item) {
+                var map = this.get('mapsAPI')
+                var lat = item.latitude;
+                var long = item.longitude;
+                var latlng = new google.maps.LatLng(item.latitude, item.longitude);
+
+
+/*                 var circle = new google.maps.Circle({
+                    strokeColor: '#FF0000',
+                    id: item._id,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35,
+                    map: map,
+                    center: {
+                        lat: item.map.mapLatitude,
+                        lng: item.map.mapLongitude,
+                    },
+                    radius: item.map.areaRadius,
+                })
+ */               
+                var info=this.getInfoWindow(item)
+                this.push('markers', {
+                    latitude: lat,
+                    longitude: long,
+                    test:info,
+                    areaLat: item.map.areaLat,
+                    title:item.label,
+                    areaLong: item.map.areaLong,
+                    radius: item.map.areaRadius,
+                    id: item._id,
+                });
+         //       this.push('circles', circle);
+         console.log(this.markers)
+                map.setCenter(latlng)
+            },
+            getInfoWindow:function(poiItem){
+                var latlng = new google.maps.LatLng(poiItem.latitude, poiItem.longitude);
+                var offset= new google.maps.Size(0,-30)
+                var map = this.get('mapsAPI')
+
+                var contenuInfoBulle =	'<b>'+ poiItem.label +'</b>'	
+                var info= new google.maps.InfoWindow({
+                     content: contenuInfoBulle,
+                     pixelOffset : offset
+                                    });
+                    info.setPosition(latlng)
+                    info.open(map)
+                return info
+
+
+            },
+            _getMarkeIndexById: function(id) {
+
+                for (var i = 0; i < this.markers.length; i++) {
+                    if (id == this.markers[i].id) return i;
+                }
+                return -1;
+
+            },
+            removeArea: function(item) {
+                var id = item._id;
+                var circles = this.get('circles')
+                for (var i = 0; i < circles.length; i++) {
+                    if (circles[i].id === id) {
+                        circles[i].setMap(null);
+                        var markerIndex = this._getMarkeIndexById(id);
+                        this.set('markers.#' + markerIndex + '.radius', 0);
+
+                    }
+                }
+            },
+
+            properties: {
+                mapSize: {
+                    type: String,
+                    notify: true,
+                    default: "width:500px;height:500px;display: inline-flex;"
+                },
+                lat: {
+                    type: Number
+                },
+                long: {
+                    type: Number
+                },
+                poi: {
+                    type: Array,
+                    notify: true
+                }
+
+            }
+        })
+    })();
+    </script>
+</dom-module>

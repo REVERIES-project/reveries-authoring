@@ -1,0 +1,229 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../remove-ressource/bulkRemove.html">
+
+<link rel="import" href="../../styles/common-styles.html">
+<dom-module id="user-profile">
+    <template>
+        <style include="common-styles">
+        .image {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+        }
+
+        .markdown-html img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
+
+        .badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        </style>
+        <iron-ajax id="imageLoader"  url="/userImages?userId=[[user._id]]" handle-as="json" last-response="{{images}}"></iron-ajax>
+        <template is="dom-if" if="[[conceptionMode]]" restamp>
+                <div class="headerText">{{resourceLabel}}</div>
+        </template>
+        <bulk-remove id="bulkRemove" target-user={{targetUser}} resource-type={{resourceType}}></bulk-remove>
+        <form class="resource">
+            <div role="listbox">
+                <paper-icon-item>
+                    <iron-icon icon="social:person" item-icon></iron-icon>
+                    Login {{userval}} : {{user.name}}
+                </paper-icon-item>
+                <paper-icon-item>
+                    <iron-icon icon="icons:mail" item-icon></iron-icon>
+                    Email : {{user.email}}
+                </paper-icon-item>
+                <paper-icon-item>
+                    <iron-icon icon="icons:today" item-icon></iron-icon>
+                    Création du compte : {{user.creationDate}}
+                </paper-icon-item>
+                <paper-icon-item>
+                    <iron-icon icon="icons:query-builder" item-icon></iron-icon>
+                    Dernière connection : {{user.lastLogin}}
+                </paper-icon-item>
+            </div>
+            <div>
+                <paper-button on-click="toggleRessources">Afficher ressources</paper-button>
+                <iron-collapse id="collapse">
+                    <div role="listbox">
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>Images</div>
+                                <div secondary>[[images.length]] images</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removeImages" alt="Supprimer">
+                            </paper-icon-button>
+                        </paper-item>
+
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>Badges</div>
+                                <div secondary>[[user.Badges.length]] badges</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removeBadges" alt="Supprimer">
+                            </paper-icon-button>
+                        </paper-item>
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>Inventaire</div>
+                                <div secondary>[[user.inventoryItems.length]] objets d'inventaires</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removeInventory" alt="Supprimer">
+                            </paper-icon-button>
+                        </paper-item>
+
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>Questions libres</div>
+                                <div secondary>[[user.Freetexts.length]] questions</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removeFreetexts" alt="Supprimer">
+                            </paper-icon-button>
+                        </paper-item>
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>QCM</div>
+                                <div secondary>[[user.MCQ.length]] QCM</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removeMCQ" alt="Supprimer">
+                            </paper-icon-button>
+                        </paper-item>
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>POI</div>
+                                <div secondary>[[user.POI.length]] POI</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removePOI" alt="Supprimer">
+                            </paper-icon-button>
+                        </paper-item>
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>Documents multimédia</div>
+                                <div secondary>[[user.staticMedias.length]] Documents</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removeStaticMedias" alt="Supprimer">
+                            </paper-icon-button>
+
+                        </paper-item>
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>Unité de jeux</div>
+                                <div secondary>[[user.unitGames.length]] Unités de jeux</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removeUnitGames" alt="Supprimer">
+                            </paper-icon-button>
+
+                        </paper-item>
+                        <paper-item>
+                            <paper-item-body two-line>
+                                <div>Scénarios</div>
+                                <div secondary>[[user.MLG.length]] scénarios</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="clear" on-click="removeMLG" alt="Supprimer">
+                            </paper-icon-button>
+
+                        </paper-item>
+                    </div>
+                </iron-collapse>
+            </div>
+        </form>
+    </template>
+</dom-module>
+<script>
+(function() {
+    'use strict';
+    Polymer({
+        is: 'user-profile',
+
+        ready: function() {},
+        removeMLG:function(){
+            this.targetUser=this.user._id
+            this.resourceType='MLG'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+        removePOI:function(){
+            this.targetUser=this.user._id
+            this.resourceType='POI'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+        removeUnitGames:function(){
+            this.targetUser=this.user._id
+            this.resourceType='UnitGame'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+        removeStaticMedias:function(){
+            this.targetUser=this.user._id
+            this.resourceType='StaticMedia'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+        removeFreetexts:function(){
+            this.targetUser=this.user._id
+            this.resourceType='FreeText'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+        removeMCQ:function(){
+            this.targetUser=this.user._id
+            this.resourceType='MCQ'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+        removeBadges:function(){
+            this.targetUser=this.user._id
+            this.resourceType='Badge'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+        removeInventory:function(){
+            this.targetUser=this.user._id
+            this.resourceType='Inventory'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+        removeImages:function(){
+            this.targetUser=this.user._id
+            this.resourceType='Image'
+            this.$.bulkRemove.bulkRemove()
+
+        },
+
+        toggleRessources: function() {
+            this.$.collapse.toggle()
+        },
+
+        _userObserver:function(item){
+            if(this.user._id){
+                this.$.imageLoader.generateRequest()
+            }
+        },
+        observers:['_userObserver(user._id)'],
+        properties: {
+            user: {
+                type: Object,
+                notify: true,
+            }
+        }
+    })
+})();
+</script>

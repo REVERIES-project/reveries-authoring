@@ -1,0 +1,112 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/akc-meta/akc-meta.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../src/element/unit-activity/list-posted-games.html">
+<link rel="import" href="../src/element/unit-activity/list-unit-game.html">
+<link rel="import" href="../src/element/unit-activity/unit-mlg-display.html">
+<link rel="import" href="./element/helper/resource-picker-dialog.html">
+<dom-module id="multimlg-view">
+    <template>
+        <style include="common-styles">
+
+        </style>
+        <resource-picker-dialog page media-id="{{currentid}}" media-name="{{currentname}}" id="selectMedia"></resource-picker-dialog>
+        <resource-picker-dialog badge media-id="{{startMediaId}}" media-name="{{startMediaName}}" id="badgePicker"></resource-picker-dialog>
+        <form is="iron-form" id="mlgform" method="post" action="/multimlg">
+            <input hidden type="text" name="mlg" value="{{mlgList}}">
+        </form>
+        <div class="card">
+            <h1>Multi player MLG are very interesting pedagogically</h1>
+            <br> Here you can :
+            <ul>
+                <li>Create collaborative MLG </li>
+                <li>Create competitive MLG </li>
+            </ul>
+        </div>
+        <div class="card">
+            <list-posted-games new-game="{{games}}" id="mlgCreator"></list-posted-games>
+        </div>
+        <div class="card">
+            <list-unit-game id="unitGameList" game-saved="{{currentList}}"></list-unit-game>
+        </div>
+        <div class="card">
+            <unit-mlg-display id="mlgList" game-saved="{{currentList}}"></unit-mlg-display>
+        </div>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'multimlg-view',
+        ready: function() {
+            this.addEventListener('newgame', this.analyse.bind(this))
+            this.$.mlgCreator.addEventListener('saveMLG', this.saveMLG.bind(this))
+            this.$.mlgCreator.addEventListener('selectMedia', this.selectMedia.bind(this))
+            this.$.mlgCreator.addEventListener('selectBadge', this.selectBadge.bind(this))
+
+            this.$.selectMedia.addEventListener('itemPicked', this.mediaPicked.bind(this));
+            this.$.selectMedia.addEventListener('mediaDeleted', this.mediaDeleted.bind(this));
+            this.$.badgePicker.addEventListener('itemPicked', this.badgePicked.bind(this))
+            this.$.badgePicker.addEventListener('mediaDeleted', this.badgeDeleted.bind(this))
+
+            //    this.push('games',this.returnItem   )
+        },
+        selectMedia: function() {
+            this.mediaDeleted();
+            //this.$.mediaviewer.genReq();
+            this.$.selectMedia.open();
+        },
+        mediaDeleted: function() {},
+        badgeDeleted: function() {},
+
+        selectBadge: function() {
+            this.$.badgePicker.open()
+        },
+        badgePicked: function(item) {
+            if (item && item.detail && item.detail.__data__) {
+                var newItem = item.detail.__data__.item;
+                this.$.mlgCreator.setBadge(newItem)
+            }
+
+        },
+
+        mediaPicked: function(item) {
+            if (item && item.detail && item.detail.__data__) {
+                var newItem = item.detail.__data__.item;
+                switch (newItem.type) {
+                    case "page":
+                        this.$.mlgCreator.setPage(newItem)
+                        break;
+
+                }
+            }
+        },
+
+        saveMLG: function() {
+            this.$.mlgList.mlgChanged()
+        },
+        unitGameChanged: function() {
+            console.log('save MLG')
+            this.$.unitGameList.unitGameChanged();
+        },
+        analyse: function(item) {
+            console.log(item)
+            if (item.detail) {
+                this.$.mlgCreator.addItem(item.detail)
+            }
+        }
+    })
+    </script>
+</dom-module>

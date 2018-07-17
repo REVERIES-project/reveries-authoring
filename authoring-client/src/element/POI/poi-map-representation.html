@@ -1,0 +1,276 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+
+<link rel="import" href="../../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="./google-map-marker-icons.html">
+<link rel="import" href="../remove-ressource/create-resource.html">
+<dom-module id="poi-map-representation">
+    <template>
+        <style>
+         :host {
+            display: inline-flex;
+            margin: 10px;
+        }
+
+        ;
+        .innerdiv {
+            display: inline-flex;
+            flex-flow: column;
+            flex-wrap: wrap;
+        }
+
+        paper-material.flexible {
+            display: inline-flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+        }
+
+        .insideflex {
+            display: inline-flex;
+            flex-direction: row;
+            align-self: stretch;
+            justify-content: space-between;
+            margin-left: 5px!important;
+        }
+
+        paper-button.small {
+            display: inline-flex;
+            font-size: medium;
+            padding: 0.42em 0.57em;
+        }
+
+        .formTitleWithButton {
+            display: inline-flex;
+            width: 93%;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .innerdiv>paper-button {
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .smallh3 {
+            display: inline-flex;
+            align-self: center;
+        }
+        paper-input{
+            display: inline-flex;
+        }
+        .innerdiv>* {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        </style>
+        <create-resource id="creator" resource-url="/poimap" resource="{{resource}}"></create-resource>
+        <paper-material class="flexible" elevation="2">
+            <form id="poimap" is="iron-form" class="innerdiv">
+                <div class="formTitleWithButton">
+                    <h3 class="smallh3">Nouveau POI</h3>
+                </div>
+                <paper-input name="label" value={{title}} label="Label">
+                        <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+                </paper-input>
+                <paper-textarea name="comment" value={{info}} label="Description"></paper-textarea>
+              
+                <paper-input name="latitude" value=[[latitude]] label="Latitude"></paper-input>
+                <paper-input name="longitude" value=[[longitude]] label="Longitude"></paper-input>
+                <paper-input name="radius" value=[[radius]] label="Rayon"></paper-input>
+
+<!--                 <div class="insideflex" style="margin-bottom: 10px">
+                    <paper-button noink on-click="openDialog" raised class="small" style="align-self: center;margin-right: 15px;" name="Iconpick">Modifier le marqueur</paper-button><img style="display:inline-flex" src="{{mapicon}}">
+                    <input type="hidden" value={{mapicon}} name="marker" />
+                    <input type="hidden" value={{mapLatitude}} name="mapLatitude" />
+                    <input type="hidden" value={{mapLongitude}} name="mapLongitude" />
+                    <input type="hidden" value={{mapZoom}} name="mapZoom" />
+                </div>
+ -->                <div class=insideflex style="margin-bottom: 10px">
+                    <paper-button noink name="save" class="small" on-click="_submit" raised>Enregistrer</paper-button>
+                    <paper-button noink name="delete" on-click="removeMark" class="small" raised>Annuler</paper-button>
+                </div>
+            </form>
+        </paper-material>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'poi-map-representation',
+
+            openDialog: function() {
+                this.$.icons.open();
+            },
+            setValues: function() {
+                if (this.currentname.length !== 0) {
+                    this.set('currentname', this.currentname);
+                    this.set('currentid', this.currentid);
+                    this.set('hasImage', true);
+                }
+            },
+            setArea: function() {
+                this.set('hasArea', true);
+            },
+            _removeArea: function() {
+                this.set('hasArea', false);
+                this.fire('remove-area', {
+                    id: this.ident
+                });
+            },
+
+            _noarea: function(hasArea) {
+                return !this.get('hasArea');
+            },
+
+            setImage: function() {
+                this.$.mediaviewer.genReq();
+                this.$.selectImage.open();
+            },
+            removeImage: function() {
+                this.set('currentid', '');
+                this.set('currentname', '');
+                this.set('hasImage', false);
+            },
+            _submit: function() {
+                var json = this.$.poimap.serialize()
+                this.set('resource', json)
+                this.$.creator.createResource()
+                this.removeMark()
+            },
+            removeMark: function() {
+                this.fire('remove-marker', {
+                    latitude: this.latitude,
+                    longitude: this.longitude,
+                    id: this.ident,
+                })
+            },
+            _mapiconobs: function(newval, oldval) {
+                this.set('icon', newval);
+                this.$.icons.close();
+            },
+            ready: function() {},
+
+
+            properties: {
+                title: {
+                    type: String,
+                    reflectToAttribute: true,
+                    notify: true,
+                },
+                info: {
+                    type: String
+                },
+                currentid: {
+                    type: String,
+                    reflectToAttribute: true,
+                    notify: true,
+                    value: '',
+
+                },
+                hasImage: {
+                    type: Boolean,
+                    notify: true,
+                    value: false,
+                },
+                hasArea: {
+                    type: Boolean,
+                    notify: true,
+                    value: false,
+                },
+                currentname: {
+                    type: String,
+                    reflectToAttribute: true,
+                    notify: true,
+                    value: '',
+                },
+
+                mapLatitude: {
+                    type: Number,
+                    notify: true,
+                },
+                status: {
+                    type: Boolean,
+                    observer: '_statusChanged'
+                },
+
+
+                mapLongitude: {
+                    type: Number,
+                    notify: true,
+                },
+
+                mapZoom: {
+                    type: Number,
+                    notify: true,
+                },
+
+                icon: {
+                    type: String,
+                    reflectToAttribute: true,
+                    notify: true,
+                },
+                radius: {
+                    type: Number,
+                    notify: true,
+                    reflectToAttribute: true,
+                },
+
+                areaLat: {
+                    type: Number,
+                    reflectToAttribute: true,
+                    notify: true,
+                },
+
+                areaLong: {
+                    type: Number,
+                    reflectToAttribute: true,
+                    notify: true,
+                },
+
+
+                mapicon: {
+                    type: String,
+                    notify: true,
+                    observer: '_mapiconobs'
+                },
+                latitude: {
+                    type: Number,
+                },
+                longitude: {
+                    type: Number,
+                },
+                ident: {
+                    type: Number,
+                    notify: true,
+                }
+
+
+            },
+            _statusChanged: function(newval, oldval) {
+                if (!newval) {
+                    this.statusText = "Private content, not visible for other users"
+                    this.statusString = "Private"
+                    this.statusIcon = "visibility-off"
+                } else {
+                    this.statusText = "Public content, shared with other users"
+                    this.statusString = "Public"
+                    this.statusIcon = "visibility"
+
+                }
+            }
+        })
+    })();
+    </script>
+</dom-module>

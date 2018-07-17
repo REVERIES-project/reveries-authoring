@@ -1,0 +1,28 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/my-app.html",
+  "fragments": [
+    "src/admin-view.html",
+    "src/badge-view.html",
+    "src/constructor-view.html",
+    "src/freetext-view.html",
+    "src/image-view.html",
+    "src/intro-view.html",
+    "src/inventory-view.html",
+    "src/login-view.html",
+    "src/mcq-view.html",
+    "src/mlg-view.html",
+    "src/poi-view.html",
+    "src/reset-view.html",
+    "src/staticmedia-view.html",
+    "src/poi-view.html"
+  ],
+  "sources": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}

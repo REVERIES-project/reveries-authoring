@@ -1,0 +1,35 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<dom-module id="specie-tag">
+    <style>
+        .specie {
+            border-radius: 6px;
+            background-color: lightgreen border-radius: 6px;
+            background-color: lightgreen;
+            color: darkgreen;
+
+        }
+    </style>
+    <template>
+        <span class="specie">[[name]]</span>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'specie-tag',
+                ready: function () {},
+                properties: {
+                    name: {
+                        type: String,
+                        notify: true,
+                    },
+                }
+            })
+        })();
+    </script>
+</dom-module>

@@ -1,0 +1,168 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../src/element/helper/forgotPassForm.html">
+<!--
+<h1>Login view</h1> 
+Used to log in.
+@demo
+-->
+
+<dom-module id="login-view">
+    <template>
+        <style>
+         :host {
+            display: block;
+            padding: 10px;
+        }
+
+        .card {
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            margin: 24px;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #757575;
+        }
+
+        .circle {
+            display: inline-block;
+            height: 64px;
+            width: 64px;
+            border-radius: 50%;
+            background: #ddd;
+            line-height: 64px;
+            font-size: 30px;
+            color: #555;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 16px 0;
+            color: #212121;
+        }
+        </style>
+        <forgot-pass id="forgotPass"></forgot-pass>
+        <div hidden="{{status.logged}}" class="card">
+            <form class="insidePaper" id="authform" is="iron-form">
+                <h1>Log in</h1>
+                <paper-input on-keydown="checkEnter" type="email" autocomplete="email" name="email" value={{emailVal}} label="Email" required></paper-input>
+                <paper-input on-keydown="checkEnter" type="password" autocomplete="current-password" value="{{passVal}}" name="password" label="password" required></paper-input>
+                <paper-button raised on-click="_submit">Envoyer</paper-button>
+                <paper-button raised on-click="_reset">Annuler</paper-button>
+                <paper-button raised on-click="forgotPassword">Mot de passe oublié</paper-button>
+                <div class="output"></div>
+            </form>
+        </div>
+        <template is="dom-if" if="{{status.logged}}" restamp>
+            <div class="card">
+                <h1 class="insidePaper">Profil utilisateur</h1>
+                <div role="listbox">
+                    <paper-icon-item>
+                        <iron-icon icon="icons:mail" item-icon></iron-icon>
+                        Email : {{status.email}}
+                    </paper-icon-item>
+                    <paper-icon-item>
+                        <iron-icon icon="social:person" item-icon></iron-icon>
+                        Pseudo {{userval}} : {{status.name}}
+                    </paper-icon-item>
+
+                    <template is="dom-if" if=[[status.isadmin]]>
+                        <paper-icon-item>
+                            <iron-icon icon="icons:verified-user" item-icon>
+                            </iron-icon>
+                            Administrateur
+                        </paper-icon-item>
+                    </template>
+                    <paper-item>
+                        <paper-button on-click="logout" raised>Se déconnecter</paper-button>
+                    </paper-item>
+                </div>
+            </div>
+        </template>
+        <template is="dom-if" if="{{status.logged}}" restamp>
+            <div class="card">
+                <div class="topLevelInfo">
+                    <h1>Comment démarrer ?</h1>
+                    <div>
+                        Vous pouvez accéder au tutoriel en cliquant sur l'icone d'aide en haut à droite
+                        <br>Un <b>scénario d'exemple</b> a été conçu pour illustrer ce tutoriel, pour importer le scénario d'exemple cliquez sur le bouton Importer
+                    </div>
+                    <br>
+                    <paper-button raised on-click="_import">Importer</paper-button>
+                </div>
+            </div>
+        </template>
+        <div hidden={{status.logged}} class="card">
+            <form class="insidePaper" id="signupForm" is="iron-form">
+                <h1>Créer un compte</h1>
+                <paper-input on-keydown="checkEnterSignup" type="email" value="{{signupMail}}" name="email" label="Email" required></paper-input>
+                <paper-input on-keydown="checkEnterSignup" type="password" value="{{signupPass}}" name="password" label="password" required></paper-input>
+                <paper-input on-keydown="checkEnterSignup" name="name" value={{signupName}} label="Pseudonyme" required></paper-input>
+                <paper-button raised on-click="_signup">Envoyer</paper-button>
+                <paper-button raised on-click="_reset">Annuler</paper-button>
+            </form>
+        </div>
+    </template>
+    <script>
+    Polymer({
+        ready: function() {},
+        logout: function() {
+            this.fire('auth-event', { type: 'logout', credential: {} })
+        },
+        _submit: function() {
+            var loginCredential = { email: this.emailVal, pass: this.passVal }
+            this.fire('auth-event', { type: 'login', credential: loginCredential })
+        },
+        _signup: function() {
+            var signupCredential = { name: this.signupName, pass: this.signupPass, mail: this.signupMail }
+            this.fire('auth-event', { type: 'signup', credential: signupCredential })
+        },
+        _import: function() {
+            this.fire('auth-event', { type: 'import', credential: {} })
+        },
+        checkEnter: function(evt) {
+            if (evt.keyCode === 13) {
+                this._submit()
+            }
+        },
+        forgotPassword: function() {
+            this.$.forgotPass.open()
+        },
+        checkEnterSignup: function(evt) {
+            if (evt.keyCode === 13) {
+                this._signup()
+            }
+        },
+
+        _statusObs: function(arg) {
+            console.log(arg)
+        },
+        is: 'login-view',
+        observers: [
+            '_statusObs(status.*)'
+        ],
+        property: {
+            status: {
+                type: Object,
+                notify: true,
+            }
+
+        }
+    });
+    </script>
+</dom-module>
