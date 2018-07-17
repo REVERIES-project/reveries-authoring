@@ -1,0 +1,46 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="create-resource">
+    <template>
+        <iron-ajax content-type="application/json" id="creator" url="{{resourceUrl}}" body="{{resource}}" method="POST" on-response="confirmCreate"></iron-ajax>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'create-resource',
+
+            confirmCreate :function(message){
+                this.fire('resource-operation',{info:message.detail.__data__.response})
+
+            },
+            ready: function() {
+            },
+            createResource:function(){
+                this.set('resource',this.resource)
+                this.set('resource.status','Private')
+
+                this.set('resourceURL',this.resourceUrl)                
+                this.$.creator.generateRequest()
+            },
+            properties: {
+                resourceUrl: {
+                    type: String,
+                    notify: true,
+                },
+                resource: {
+                    type: Object,
+                    notify: true
+                },
+            },
+
+        });
+    })();
+    </script>
+</dom-module>

@@ -1,0 +1,45 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<style>
+.flexible {
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+</style>
+<dom-module id="confirm-operation">
+    <template>
+        <paper-dialog dynamic-align id="confirmDialog">
+            <h2>Confirmer la suppression</h2>
+            <paper-dialog-scrollable>
+               Confirmer la suppression ? Cette opération est définitive.
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Annuler</paper-button>
+                <paper-button dialog-confirm on-click="confirmOperation" autofocus>Confirmer</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+        Polymer({
+            is: 'confirm-operation',
+            ready: function() {},
+            confirmOperation: function() {
+                this.fire('confirm-remove')
+            },
+            open: function() {
+                this.$.confirmDialog.open();
+            },
+
+            properties: {
+            }
+        });
+    })();
+    </script>
+</dom-module>

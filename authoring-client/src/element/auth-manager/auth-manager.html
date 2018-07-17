@@ -1,0 +1,167 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel.
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<!--
+<h1>Authentification manager</h1>
+Global manager for logging/authenticating states and status
+Fires messages when a logging/authentification fails
+@demo
+-->
+
+<dom-module id="auth-manager">
+
+    <template>
+        <iron-ajax id="logout" url='/logout' handle-as="json" on-response="handleLogout"></iron-ajax>
+        <iron-ajax id="signup" url='/signup' body="{{signupParam}}" method="post" handle-as="json" on-response="validateSignup"></iron-ajax>
+        <iron-ajax id="userInfo" url='/profile' handle-as="json" on-response="validateAuth"></iron-ajax>
+        <iron-ajax id="checkStatus" url='/profile' handle-as="json" on-response="refreshStatus"></iron-ajax>
+        <iron-ajax id="importTuto" url='/setup_tutorial' handle-as="json" on-response="tutorialImported"></iron-ajax>
+        <iron-ajax method='post' url='/login' id="userLogin" body='{{authparam}}' handle-as="json" on-response="validateAuth"></iron-ajax>
+        <paper-dialog id="loginFailed">
+            <h2>Authentification failed</h2>
+            <div>
+                {{authProblem}}
+            </div>
+            <div class="buttons">
+                <paper-button dialog-dismiss>OK</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+</dom-module>
+<script>
+(function() {
+    'use strict'
+    Polymer({
+        is: 'auth-manager',
+        ready: function() {
+            this.status={}
+            this.signupParam=""
+        },
+        checkStatusOnRefresh: function() {
+            this.$.checkStatus.generateRequest();
+        },
+        tutorialImported:function(resp){
+                var response = resp.detail.__data__.response;
+                if(response.success){
+                    this.fire('auth-message',{info:"Le scénario d'exemple a été importé!"})
+                }
+                else{
+                    this.fire('auth-message',{info:"Problème rencontré, le tutoriel n'a pas été importé!"})
+                }
+        },
+        getUserInfo: function() {
+            this.$.userInfo.generateRequest();
+        },
+        logout: function() {
+            this.$.logout.generateRequest();
+
+        },
+        importTutorial:function(){
+            this.$.importTuto.generateRequest()
+        },
+        handleLogout: function() {
+            this.$.checkStatus.generateRequest();
+        },
+        validateSignup:function(resp){
+            var response = resp.detail.__data__.response;
+            var status={}
+            if (!response.success) {
+                status.logged = false
+                status.name = ''
+                status.email = ''
+                status.isadmin = false
+                this.fire('auth-message',{info:'Email déjà utilisé'})
+
+
+            } else {
+                status.logged = true;
+                status.name = response.user.name
+                status.isadmin = response.user.isadmin
+                status.email = response.user.email
+                this.fire('auth-message',{info:'Bienvenue nouvel utilisateur!'})
+
+            }
+            this.status={}
+            this.status=status
+
+
+        },
+        refreshStatus:function(resp){
+            var status = {}
+            var response = resp.detail.__data__.response
+            if (!response.success) {
+                status.logged = false
+                status.name = ''
+                status.email = ''
+                status.isadmin = false
+
+            } else {
+                status.logged = true
+                status.name = response.user.name
+                status.isadmin = response.user.isadmin
+                status.email = response.user.email
+            }
+            this.status={}
+            this.status=status
+
+        },
+        validateAuth: function(resp) {
+            var status = {}
+            var response = resp.detail.__data__.response
+            if (!response.success) {
+                status.logged = false
+                status.name = ''
+                status.email = ''
+                status.isadmin = false
+                this.fire('auth-message',{info:'Email/mot de passe incorrect!'})
+
+
+            } else {
+                status.logged = true
+                status.name = response.user.name
+                status.isadmin = response.user.isadmin
+                status.email = response.user.email
+            }
+            this.status={}
+            this.status=status
+        },
+        signup: function(name,pass,mail) {
+            this.signupParam="name="+name
+            this.signupParam=this.signupParam+'&password='+pass
+            this.signupParam=this.signupParam+'&email='+mail
+            this.$.signup.generateRequest()
+        },
+
+        authenticate: function(userMail, pass) {
+            var emailParam = 'email=' + userMail
+            var passParam = '&password=' + pass
+            this.set('authparam', emailParam + passParam)
+            this.$.userLogin.generateRequest()
+
+        },
+        properties: {
+            authenticated: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
+            },
+            authparam: {
+                type: String,
+                value: '',
+                notify: true
+            },
+
+            status:{
+                type:Object,
+                notify:true,
+                reflectToAttribute:true,
+            }
+        }
+    })
+})()
+</script>

@@ -1,0 +1,152 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../helper/short-textarea.html">
+<link rel="import" href="../ui-helper/activity-feedback.html">
+
+
+<link rel="import" href="../helper/sharedBehavior.html">
+<link rel="import" href="../static-media/staticmedia-viewer.html">
+<dom-module id="free-text-question">
+    <style include="common-styles">
+        .question {
+            margin-top: 10px;
+            padding: 8px;
+            @apply(--paper-font-body2);
+        }
+
+        .response {
+            width: 100%;
+        }
+
+        .validator {
+            margin-top: 30px;
+        }
+    </style>
+    <template>
+        <template is="dom-if" if="[[conceptionMode]]" restamp>
+            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
+        </template>
+        <div class="resource">
+            <div class="question">{{question}}</div>
+            <div class="resourceBody">
+                <paper-input name="response" class="response" value="{{userResponse}}" error-message="{{incorrectMessage}}" label="{{responseLabel}}"></paper-input>
+                <template is="dom-if" if="{{showMediaButton}}" restamp=true>
+                    <paper-toggle-button checked={{showClue}}>Indice</paper-toggle-button>
+                </template>
+
+                <iron-collapse opened=[[showClue]] id="clue">
+                    <staticmedia-viewer resource-label="[[media.label]]" style="display:inline-flex;" mkdown="[[media.mkdown]]"></staticmedia-viewer>
+                </iron-collapse>
+                <activity-feedback id="feedback" correct-message=[[correctMessage]] wrong-message=[[wrongMessage]]></activity-feedback>
+                <paper-icon-button class="validator" src="../../../images/check.png" on-click="validate"></paper-icon-button>
+            </div>
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'free-text-question',
+                behaviors: [sharedBehavior],
+
+                ready: function () {
+                    var validator = {
+                        validatorName: 'free-text-validator',
+                        validatorType: 'validator',
+                        validate: function () {
+                            return this.response === this.userResponse
+                        }.bind(this)
+                    };
+                },
+
+                _mediaObserver: function (newval) {
+                    if (newval) {
+                        var temp = true
+                        this.set('showMediaButton', true)
+                    } else {
+                        this.set('showMediaButton', false)
+                        this.showMediaButton = false
+
+                    }
+                },
+                hideMessages:function(){
+                    this.$.feedback.hideAll();
+                }
+                ,
+                validate: function () {
+                    if (this.response === this.userResponse) {
+                        this.$.feedback.showCorrect();
+                    } else {
+                        this.$.feedback.showWrong();
+                    }
+                },
+                observers: [
+                    '_mediaObserver(media._id)',
+                ],
+                properties: {
+                    question: {
+                        type: String,
+                        notify: true,
+                    },
+                    response: {
+                        type: String,
+                        notify: true,
+
+                    },
+                    correctMessage: {
+                        type: String,
+                        notify: true,
+                    },
+                    wrongMessage: {
+                        type: String,
+                        notify: true,
+                    },
+
+                    responseLabel: {
+                        type: String,
+                        notify: true,
+                    },
+                    preview: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    media: {
+                        type: Object,
+                        notify: true,
+                    },
+                    itemId: {
+                        type: String,
+                        notify: true,
+                    },
+                    resourceStatus: {
+                        type: String,
+                        notify: true,
+                    },
+                    conceptionMode: {
+                        type: Boolean,
+                        notify: true,
+                    },
+                    resourceLabel: {
+                        type: String,
+                        notify: true,
+                    },
+
+                }
+            });
+        })();
+    </script>
+</dom-module>

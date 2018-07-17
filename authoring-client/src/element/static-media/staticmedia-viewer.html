@@ -1,0 +1,143 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/marked-element/marked-element.html">
+<link rel="import" href="../helper/resource-header.html">
+<link rel="import" href="../../styles/common-styles.html">
+<!--
+Viewer for Markdown resource using marked-element 
+<b>Example - basic</b>
+
+    <staticmedia-viewer mkdown="# Mkdown title"></staticmedia-viewer>
+
+    <script>
+    </script>
+
+<b>Example</b> - Use of a default markdown string when mkdown is null:
+
+    <staticmedia-viewer default-mkdown="# Default title"></staticmedia-viewer>
+@demo
+-->
+
+<dom-module id="staticmedia-viewer">
+    <style include="common-styles">
+        .element {
+            align-self: stretch;
+        }
+
+        img[src$="centerme"] {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .remove {
+            background-color: #eeeeee;
+        }
+
+        :host {
+            --resource-body-mixin: {
+                align-items: flex-start;
+            }
+        }
+
+        .suppress-action {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            padding: 10px;
+        }
+    </style>
+    <template>
+        <template is="dom-if" if="[[conceptionMode]]" restamp>
+            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
+        </template>
+        <div class="resource">
+            <div class="resourceBody">
+                <marked-element markdown="{{mkdown}}">
+                    <div class="markdown-html"></div>
+                </marked-element>
+                <template is="dom-if" if="[[showDefaultMkdown]]" restamp>
+                    <marked-element markdown="{{defaultMkdown}}">
+                        <div class="markdown-html"></div>
+                    </marked-element>
+                </template>
+            </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'staticmedia-viewer',
+                ready: function () {},
+                noMkdown(defaultMkdown) {
+                    if (defaultMkdown) {
+                        if (this.mkdown == null) {
+                            return true
+                        }
+                    }
+                    return false
+                },
+                _resourceReadonlyObserver: function (newval, oldval) {
+                    if (newval == "readonly") {
+                        this.isReadOnly = true
+
+                    } else {
+                        this.isReadOnly = false
+                    }
+                },
+
+                removeElement: function () {
+                    this.$.remover.genRequest();
+                },
+                _submit: function () {},
+                _defaultMkdownExists: function (defaultMkdown) {
+                    this.showDefaultMkdown = !this.mkdownExists
+                },
+                _mkdownExists: function (mkdown) {
+                    if (mkdown) {
+                        this.mkdownExists = true
+                        this.showDefaultMkdown = false
+                    } else {
+                        this.mkdownExists = false
+                        this.showDefaultMkdown = true
+
+                    }
+
+                },
+                properties: {
+                    mkdown: {
+                        type: String,
+                        notify: true,
+                        observer: '_mkdownExists',
+                    },
+                    defaultMkdown: {
+                        type: String,
+                        notify: true,
+                        observer: '_defaultMkdownExists',
+
+                    },
+                    resourceStatus: {
+                        type: String,
+                        notify: true,
+                    },
+                    resourceLabel: {
+                        type: String,
+                        notify: true,
+                    },
+                    resourceReadonly: {
+                        type: String,
+                        notify: true,
+                        observer: "_resourceReadonlyObserver",
+                    },
+                    conceptionMode: {
+                        type: Boolean,
+                        notify: true,
+                    }
+
+                }
+            });
+        })();
+    </script>
+</dom-module>

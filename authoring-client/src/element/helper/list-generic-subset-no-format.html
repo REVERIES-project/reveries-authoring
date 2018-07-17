@@ -1,0 +1,66 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="./generic-resource-viewer.html">
+<link rel="import" href="../../styles/common-styles.html">
+<dom-module id="list-generic-subset-no-format">
+    <template>
+        <style include="common-styles">
+            :host {
+                --resource-viewer-styling: {
+                    display: inline-flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+                    margin: 5px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .resourceViewer{
+                --ug-toggle: {
+                    display: none;
+                }}
+                --resource-look: {}
+            }
+        </style>
+        <div class="ug" style="display:flex;flex-direction:row;flex-wrap:wrap;">
+            <template is="dom-repeat" id='list' items="[[items]]">
+                <generic-resource-viewer on-resource-removed="resourceRemoved" is-picker is-removable input-name="situated[[item.type]]" class="resourceViewer" resource-type="{{item.type}}"
+                    item=[[item]]>
+                </generic-resource-viewer>
+            </template>
+
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer( {
+                is: 'list-generic-subset-no-format',
+                ready: function () {
+                },
+                addItem: function (item) {
+                    this.push('items', item)
+                },
+                resourceRemoved:function(event){
+                    this.splice('items', event.model.index,1)
+                },
+                adding: function (index) {
+                    console.log(index)
+                },
+                observers: ['adding(items.length)'],
+                properties: {
+                    items: {
+                        type: Array,
+                        value: [],
+                        notify: true,
+                    }
+                }
+            });
+        })();
+    </script>
+</dom-module>

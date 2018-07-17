@@ -1,0 +1,51 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="share-ressource">
+    <template>
+        <iron-ajax id="share" params="{{requestParams}}" url="{{ressourceUrl}}/{{ressourceId}}/share" method="PUT" on-response="_shared"></iron-ajax>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'share-ressource',
+
+            ready: function() {
+                this.requestParams='{"test":"test"}'
+
+            },
+            _shared:function(event){
+                if(event){
+                    if(event.detail.__data__.response && event.detail.__data__.response.success)
+                        this.fire('shift_ressource_sharing_status',null);
+                }
+            },
+            genRequest:function(){
+                    this.$.share.generateRequest();
+            },
+            properties: {
+                ressourceId: {
+                    type: String,
+                    notify: true,
+                },
+                ressourceUrl: {
+                    type: String,
+                    notify: true
+                },
+                genRequest: {
+                    type: Object,
+                    readonly: true,
+                },
+            },
+
+        });
+    })();
+    </script>
+</dom-module>

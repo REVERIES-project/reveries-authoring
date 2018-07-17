@@ -19,3 +19,7 @@ config/database.js
 config/auth.js
 config/config.js
 
+authoring-client/bower_components
+authoring-client/dist
+authoring-client/node_modules
+authoring-client/build

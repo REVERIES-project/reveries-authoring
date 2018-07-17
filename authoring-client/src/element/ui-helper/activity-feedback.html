@@ -1,0 +1,68 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel.
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="./prefixed-textarea.html">
+<link rel="import" href="../../styles/common-styles.html">
+
+
+<!--
+This component is designed to be used with activity where the user 
+have to give an explicit response (i.e. free text, mcq, qr code, scan a leave...) which can be correct or
+incorrect. 
+Such activity requires to provide a textual feedback, which are here defines as correctMessage and wrongMessage 
+
+@demo
+@author Gicquel
+-->
+
+<dom-module id="activity-feedback">
+    <style include="common-styles"></style>
+    <template>
+        <iron-collapse id="correct">
+            <prefixed-textarea class="correctAnswer" input-value=[[correctMessage]] input-icon="check-circle" disabled>
+            </prefixed-textarea>
+        </iron-collapse>
+        <iron-collapse id="wrong">
+            <prefixed-textarea class="wrongAnswer" input-value=[[wrongMessage]] input-icon="cancel" disabled>
+            </prefixed-textarea>
+        </iron-collapse>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'activity-feedback',
+                ready: function () {
+
+                },
+                showCorrect:function(){
+                    this.$.correct.show();
+                    this.$.wrong.hide();
+                },
+                showWrong:function(){
+                    this.$.correct.hide();
+                    this.$.wrong.show();
+                },
+                hideAll(){
+                    this.$.correct.hide();
+                    this.$.wrong.hide();
+                },
+
+                properties: {
+                    correctMessage: {
+                        type: String,
+                        notify: true,
+                    },
+                    wrongMessage: {
+                        type: String,
+                        notify: true,
+                    },
+                },
+            });
+        })();
+    </script>
+</dom-module>

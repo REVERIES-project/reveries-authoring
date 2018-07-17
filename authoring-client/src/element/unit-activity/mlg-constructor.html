@@ -1,0 +1,219 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../../../bower_components/iron-label/iron-label.html">
+
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../helper/list-generic-resource.html">
+<link rel="import" href="../helper/list-generic-subset-no-format.html">
+<link rel="import" href="../constructor-helper/save-cancel.html">
+
+<link rel=import href='./unitGame.html'>
+<link rel="import" href="../remove-ressource/create-resource.html">
+<link rel=import href='../helper/resource-picker-dialog.html'>
+<dom-module id="mlg-constructor">
+
+    <template>
+        <style include="common-styles">
+        .formBody{
+            display: flex;
+            flex-direction: columns;;
+            @apply(--shadow-elevation-2dp);
+
+        }
+        .blockButton{
+            width:100%;
+        }
+        .topLevel {
+            @apply(--shadow-elevation-4dp);
+
+            background-color: white;
+            margin-bottom: 5px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top:20px;
+            display: inline-flex;
+            flex-direction: row;;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding:10px;
+        }
+
+        </style>
+
+        <resource-picker-dialog page id="pagePicker"></resource-picker-dialog>
+        <resource-picker-dialog badge id="badgePicker"></resource-picker-dialog>
+        <resource-picker-dialog page id="endPagePicker"></resource-picker-dialog>
+
+        <create-resource id="creator" resource-url="/mlg" resource="{{resource}}"></create-resource>
+        <form class="topLevel" id="mlgform" is="iron-form" method="post" action="/mlg">
+            <div id="formBody">
+            <template is="dom-if" if="{{updating}}" restamp>
+                <paper-input hidden name="itemId" value="[[updateId]]"></paper-input>
+            </template>
+            <div class="formTitleWithButton">
+                <div class="title">Nouveau scénario de jeu</div>
+            </div>
+
+            <paper-input style="width:300px;margin-bottom:10px;" name="label" value="{{mlgName}}" label="Label">
+                <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+            </paper-input>
+            <paper-input name="duration" label="Durée" value="{{duration}}">
+                <div suffix style="color:#7f7f7f;">Minutes</div>
+            </paper-input>
+            <paper-textarea name="description" value={{description}} max-rows=0 rows=1 label="Description du jeu"></paper-textarea>
+
+            <iron-label style="color:#7f7f7f;">
+                Difficulté : [[difficulty]]
+                <paper-slider id="difficulty" name="difficulty" pin snaps max="10" step="1" style="width: 100%;" value="{{difficulty}}"></paper-slider>
+            </iron-label>
+            <paper-button class="blockButton" raised on-click="showMediaDialog">Page de départ</paper-button>
+            <generic-resource-viewer is-temp is-picker input-name="startpage" label="Page de départ" page class="resourceViewer" id="startPage"></generic-resource-viewer>
+
+            <paper-button class="blockButton" raised on-click="showEndPagePicker">Page de fin</paper-button>
+            <generic-resource-viewer is-temp is-picker input-name="endPage" page label="Page de fin" class="resourceViewer" id="endPage"></generic-resource-viewer>
+
+            <paper-button class="blockButton" raised on-click="showBadgeDialog">Ajouter un badge de récompense</paper-button>
+            <generic-resource-viewer is-temp no-header is-picker input-name="badge" label="Badge" badge class="resourceViewer" id="badgeViewer"></generic-resource-viewer>
+
+            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+        
+        </div>
+            <div style="display:inline-flex;flex-direction:row;">
+            <list-generic-subset-no-format items={{currentUnitGames}}></list-generic-subset-no-format>
+        </div>
+        </form>
+
+
+        <div style="display:inline-flex;width:97%;justify-content:space-between;">
+            <list-generic-resource  importer share-url='/unitgame' id='unitgameList' resource-type='unitgame' url='/unitgame'></list-generic-resource>
+
+            <map-display class="mymap" id="gmap"></map-display>
+
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'mlg-constructor',
+                ready: function () {
+                    this.currentUnitGames=[]
+                    this.updating = false
+                    this.difficulty = 3
+                    this.duration = 5
+                    this.addEventListener('resource-import', this.addItem.bind(this))
+                    this.$.pagePicker.addEventListener('resourcePicked', this.setResource.bind(this))
+                    this.$.badgePicker.addEventListener('resourcePicked', this.setResource.bind(this))
+                    this.$.unitgameList.addEventListener('change-poi-map', this.updateMap.bind(this))
+                    this.$.endPagePicker.addEventListener('resourcePicked', this.setEndPage.bind(this))
+
+                },
+                edit: function (item) {
+                    this.updating = true
+                    this.updateId = item._id
+                    this.mlgName = item.label
+                    this.description = item.description
+                    this.difficulty = item.difficulty
+                    if (item.startpage) {
+                        this.$.startPage.setPage(item.startpage)
+                    }
+                    if (item.unitGames && item.unitGames.length > 0) {
+                        for (var i = 0; i < item.unitGames.length; i++) {
+                            this.push('currentUnitGames',item.unitGames[i])
+                        }
+                    }
+                    if (item.endPage) {
+                        this.$.endPage.setPage(item.endPage)
+                    }
+                    if (item.badge) {
+                        this.$.badgeViewer.setBadge(item.badge)
+                    }
+
+                },
+                updateUnitGames: function () {
+                    this.$.unitgameList.requestElements()
+                },
+                updateMap: function (event) {
+                    var data = event.detail
+                    if (data.show) {
+                        this.$.gmap.showPOI(data.resource)
+                    } else {
+                        this.$.gmap.removePOI(data.resource)
+                    }
+                },
+                setEndPage: function (message) {
+                        this.$.endPage.setPage(message.detail.resourceItem)
+                    }
+
+                    ,
+                setResource: function (message) {
+                    switch (message.detail.resourceType) {
+                        case "page":
+                            this.$.startPage.setPage(message.detail.resourceItem)
+                            break
+                        case "badge":
+                            this.$.badgeViewer.setBadge(message.detail.resourceItem)
+                    }
+                },
+
+                addItem: function (event) {
+                    if (event && event.detail && event.detail.resource)
+                        this.push('currentUnitGames',event.detail.resource)
+                },
+                _reset: function () {
+                    this.$.endPage.removeResource()
+                    this.$.badgeViewer.removeResource()
+                    this.$.startPage.removeResource()
+                    while(this.currentUnitGames.length){
+                    this.currentUnitGames.pop()
+                    }
+                    this.mlgName = ""
+                    this.difficulty = 3
+                    this.duration = 5
+                    this.updating = false
+                },
+                showMediaDialog: function () {
+                    this.$.pagePicker.open()
+                },
+                showEndPagePicker: function () {
+                    this.$.endPagePicker.open()
+                },
+
+                showBadgeDialog: function () {
+                    this.$.badgePicker.open()
+                },
+
+                getUnitActivityAsJSON: function () {
+                    if (this.items) {
+                        var exp = JSON.stringify(this.items);
+                        return exp;
+                    }
+                    return {}
+                },
+
+                _submit: function () {
+                    var json = this.$.mlgform.serialize()
+                    this.set('resource', json)
+                    this.$.creator.createResource()
+                    this._reset()
+                },
+
+                properties: {
+                    item: {
+                        type: Object,
+                        notify: true,
+                    },
+                },
+            });
+        })();
+    </script>
+</dom-module>

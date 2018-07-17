@@ -1,0 +1,127 @@
+<!--
+<h1>Authentification manager</h1> 
+Global manager for logging/authenticating states and status
+Fires messages when a logging/authentification fails
+@demo
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="./badge-element.html">
+<link rel="import" href="../constructor-helper/save-cancel.html">
+
+<link rel="import" href="../remove-ressource/create-resource.html">
+<link rel="import" href="../helper/resource-picker-dialog.html">
+<link rel="import" href="../helper/generic-resource-viewer.html">
+<!--
+<h1>Constructor for badges</h1> 
+
+@demo
+-->
+
+<dom-module id="badge-constructor">
+    <style include="common-styles">
+
+    </style>
+    <template>
+        <create-resource id="creator" resource-url="/badge" resource="{{resource}}"></create-resource>
+        <resource-picker-dialog page id="pagePicker"></resource-picker-dialog>
+        <form class="creator" id="badgeForm" is="iron-form">
+            <div class="formTitleWithButton">
+                <h3 class="smallh3">Nouveau badge</h3>
+            </div>
+            <template is="dom-if" if="{{updating}}" restamp>
+                <paper-input hidden name="itemId" value="{{itemId}}"></paper-input>
+            </template>
+            <paper-input name="label" value={{label}} label="Label">
+                    <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+
+            </paper-input>
+            <paper-input name="badgeText" value={{badgeText}} label="Texte associé au badge"></paper-input>
+            <paper-button raised on-click="showMediaDialog">Associer un document multimédia</paper-button>
+            <generic-resource-viewer item={{media}} input-name="badgePageId" is-temp page is-picker class="resourceViewer" id="resourceViewer"></generic-resource-viewer>
+            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+        </form>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+        Polymer({
+            is: 'badge-constructor',
+            ready: function() {
+                this.updating = false
+                this.$.pagePicker.addEventListener('resourcePicked', this.setResource.bind(this))
+
+            },
+
+            setResource: function(message) {
+                switch (message.detail.resourceType) {
+                    case "page":
+                        this.$.resourceViewer.setPage(message.detail.resourceItem)
+                }
+            },
+
+            showMediaDialog: function() {
+                this.$.pagePicker.open()
+            },
+
+            dummyFill: function() {
+                var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
+                for (var i = 0; i < inputList.length; i++) {
+                    inputList[i].value = this.$.randomSentence.getRandomSentence(5);
+                }
+            },
+
+            resetFields: function() {
+                this.updating = false
+                var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
+                for (var i = 0; i < inputList.length; i++) {
+                    inputList[i].value = ""
+                }
+                this.$.resourceViewer.removeResource()
+            },
+
+            edit: function(badge) {
+                this.updating = true
+                this.label = badge.label
+                this.badgeText = badge.badgeText
+                this.itemId = badge._id
+                if (badge.media) {
+                    this.$.resourceViewer.setPage(badge.media)
+                }
+            },
+
+            _submit: function(event) {
+                var json = this.$.badgeForm.serialize()
+                this.set('resource', json)
+                this.$.creator.createResource()
+                this.resetFields()
+            },
+            _reset: function() {
+                this.resetFields()
+            },
+            properties: {
+                label: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute: true,
+                },
+                badgeText: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute: true,
+                },
+                media: {
+                    type: Object,
+                    notify: true,
+                    reflectToAttribute: true,
+                },
+            },
+
+
+        });
+    })();
+    </script>
+</dom-module>

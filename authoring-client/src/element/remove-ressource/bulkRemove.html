@@ -1,0 +1,51 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../helper/confirmOperation.html">
+
+<dom-module id="bulk-remove">
+    <template>
+        <confirm-operation id="confirmOperation"></confirm-operation>
+        <iron-ajax id="remove" url="userResources?targetUser=[[targetUser]]&resourceType=[[resourceType]]" method="DELETE" on-response="confirmDelete"></iron-ajax>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'bulk-remove',
+
+            confirmDelete:function(message){
+                this.fire('resource-operation',{info:message.detail.__data__.response})
+
+            },
+            ready: function() {
+                this.addEventListener('confirm-remove',this.removeConfirmed.bind(this))
+            },
+            removeConfirmed(){
+                this.$.remove.generateRequest()
+            },
+            bulkRemove:function(){
+                this.set('targetUser',this.targetUser)
+                this.set('resourceType',this.resourceType)   
+                this.$.confirmOperation.open()             
+            },
+            properties: {
+                targetUser: {
+                    type: String,
+                    notify: true,
+                },
+                resourceType: {
+                    type: String,
+                    notify: true
+                },
+            },
+
+        });
+    })();
+    </script>
+</dom-module>

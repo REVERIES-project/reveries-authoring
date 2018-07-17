@@ -1,0 +1,243 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../constructor-helper/save-cancel.html">
+
+<link rel="import" href="../remove-ressource/create-resource.html">
+<link rel="import" href="../helper/resource-picker-dialog.html">
+<link rel="import" href="../helper/generic-resource-viewer.html">
+<link rel="import" href="../helper/mcq-distractor.html">
+<link rel="import" href="../helper/mcq-message.html">
+
+<!--
+<h1>Constructor for multiple choice questions</h1> 
+Builder for free text question resources 
+<b>Parameters</b>
+    <ul>
+        <li>Label :identifiant</li> 
+        <li>mediaId : </li>
+        <li>question</li>
+    </ul>
+    <script>
+    </script>
+
+@demo
+-->
+
+<dom-module id="mcq-constructor">
+    <style include="common-styles">
+
+    </style>
+    <template>
+        <create-resource id="creator" resource-url="/mcq" resource="{{resource}}"></create-resource>
+        <resource-picker-dialog page id="pagePicker"></resource-picker-dialog>
+        <form class="creator" id="mcqForm" is="iron-form" method="post" action="/mcq">
+            <div class="formTitleWithButton">
+                <h3 class="smallh3">Nouveau QCM</h3>
+            </div>
+            <template is="dom-if" if="{{updating}}" restamp>
+                <paper-input hidden name="itemId" value="{{itemId}}"></paper-input>
+            </template>
+            <paper-toggle-button name="imageMode" checked="{{imageMode}}">Réponses images</paper-toggle-button>
+            <paper-input name="label" label="Label" value="{{label}}" required>
+                <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+            </paper-input>
+
+            <paper-textarea name="question" value={{question}} label="Question" required>
+
+            </paper-textarea>
+
+            <template is="dom-repeat" items="{{distractorArray}}">
+                <mcq-distractor image-mode=[[imageMode]] disabled=[[item.disabled]] distractor-name={{item.distractorName}} distractor-value={{item.value}}
+                    index=[[index]]>
+                </mcq-distractor>
+            </template>
+            <template is="dom-if" if="[[!imageMode]]" restamp>
+                <paper-input name="response" label="Réponse correcte" value={{correctChoice}} required>
+
+                </paper-input>
+            </template>
+            <template is="dom-if" if="[[imageMode]]" restamp>
+                <mcq-distractor image-mode=[[imageMode]] response disabled=[[item.disabled]] distractor-name={{item.distractorName}} distractor-value={{correctChoice}}>
+                </mcq-distractor>
+            </template>
+
+            <mcq-message name="correctMessage" message-label="Message pour réponse correcte" value={{correctMessage}} required></mcq-message>
+            <mcq-message name="wrongMessage" message-label="Message pour réponse incorrecte" value={{wrongMessage}} required></mcq-message>
+            <paper-button raised on-click="addResponseField">Ajouter un distracteur</paper-button>
+
+            <paper-button raised on-click="showMediaDialog">Associer un indice (optionnel)</paper-button>
+            <generic-resource-viewer is-picker input-name="mediaId" is-temp page class="resourceViewer" id="mcqMediaViewer"></generic-resource-viewer>
+            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+        </form>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'mcq-constructor',
+                ready: function () {
+                    //this.$.selectImage.addEventListener('iron-overlay-opened',function(){this.$.selectImage.fit();console.log('opened')}.bind(this))
+                    this.updating = false
+                    this.addEventListener('remove-distractor', this.removeDistractor.bind(this))
+                    this.distractorArray = [{
+                        disabled: true,
+                        value: ""
+                    }, {
+                        disabled: true,
+                        value: ""
+                    }]
+                    this.$.pagePicker.addEventListener('resourcePicked', this.setResource.bind(this))
+                },
+                addResponseField: function () {
+                    this.push('distractorArray', {})
+                },
+                removeDistractor: function (evt) {
+                    this.splice('distractorArray', evt.detail.index, 1)
+                },
+                setResource: function (message) {
+                    switch (message.detail.resourceType) {
+                        case "page":
+                            this.$.mcqMediaViewer.setPage(message.detail.resourceItem)
+                            break
+                    }
+                },
+                setValues: function () {
+                    this.set('mediaId', this.mediaId);
+                    this.set('fileName', this.currentname);
+                },
+                showMediaDialog: function () {
+                    this.$.pagePicker.open()
+                },
+                resetDistrators: function () {
+                    this.set('distractorArray.0.value', "")
+                    this.set('distractorArray.1.value', "")
+
+                    while (this.distractorArray.length > 2) {
+                        this.pop('distractorArray')
+                    }
+                },
+                resetFields: function () {
+                    this.updating = false
+                    var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
+                    for (var i = 0; i < inputList.length; i++) {
+                        inputList[i].value = ""
+                    }
+                    var textarealist = Polymer.dom(this.root).querySelectorAll('paper-textarea');
+                    for (var i = 0; i < textarealist.length; i++) {
+                        textarealist[i].value = ""
+                    }
+                    this.resetDistrators()
+                    this.imageMode=false
+                    this.correctChoice=""
+                    this.correctMessage = ""
+                    this.wrongMessage = ""
+                    this.$.mcqMediaViewer.removeResource()
+                },
+
+                _submit: function (event) {
+                    var json = this.$.mcqForm.serialize()
+                    this.set('resource', json)
+                    this.$.creator.createResource()
+                    this.statusString = ""
+                    this.label = ""
+                    this.mkdown = ""
+                    this.resetFields()
+                },
+                edit: function (question) {
+                    this.updating = true
+                    this.imageMode=question.imageMode
+                    this.set('distractorArray.0.value', question.distractors[0].value)
+                    this.set('distractorArray.1.value', question.distractors[1].value)
+                    while (question.distractors.length > 2) {
+                        let currentDist = question.distractors.pop()
+                        this.push('distractorArray', {
+                            value: currentDist.value
+                        })
+                    }
+                    this.label = question.label
+                    this.question = question.question
+                    if (question.media) {
+                        this.$.mcqMediaViewer.setPage(question.media)
+                    }
+                    this.correctChoice = question.response
+                    this.wrongMessage = question.wrongMessage
+                    this.correctMessage = question.correctMessage
+                    this.itemId = question._id
+                },
+                _reset: function (event) {
+                    this.resetFields()
+
+                },
+                properties: {
+                    mediaId: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    itemId: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    distractorArray: {
+                        type: Array,
+                        notify: true,
+                    },
+                    correctChoice: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    resourceLabel: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    wrongMessage: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    correctMessage: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    question: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    label: {
+                        type: String,
+                        notify: true,
+                    },
+                    updating: {
+                        type: Boolean,
+                        notify: true,
+                        value: false,
+                    },
+                    imageMode:{
+                        type:Boolean,
+                        notify:true,
+                        reflectToAttribute:true,
+                    }
+
+                },
+
+            });
+        })();
+    </script>
+</dom-module>

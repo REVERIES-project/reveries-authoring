@@ -1,0 +1,365 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../../bower_components/paper-styles/shadow.html">
+<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../helper/resource-picker-dialog.html">
+<link rel="import" href="../helper/list-generic-subset-no-format.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../helper/generic-resource-viewer.html">
+<link rel="import" href="../remove-ressource/create-resource.html">
+<link rel="import" href="../constructor-helper/save-cancel.html">
+
+<dom-module id="unit-activity-constructor">
+    <style include="common-styles">
+        .title {
+            @apply(--paper-font-title);
+        }
+
+        .shadow-2dp {
+            @apply(--shadow-elevation-2dp);
+        }
+
+
+
+        paper-input {
+            width: 90%;
+            margin: 10px;
+            margin-left: 0;
+        }
+
+        paper-button {
+            width: 90%;
+            margin: 10px;
+            margin-left: 0;
+        }
+
+
+
+        .contain {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px;
+        }
+
+        .subtitle {
+            @apply(--paper-font-subhead);
+        }
+
+        #poiViewer {
+            --poi-map-visibility: {
+                display: none
+            }
+        }
+
+        .creator {
+            padding: 0;
+            width: 100%;
+        }
+
+        .situated {
+            margin: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topLevel {
+            @apply(--shadow-elevation-2dp);
+
+            background-color: white;
+            margin-bottom: 5px;
+            margin-left: 20px;
+            margin-right: 20px;
+
+            display: flex;
+            flex-direction: row;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+    <template>
+        <create-resource id="creator" resource-url="/unitGame" resource="{{resource}}"></create-resource>
+        <resource-picker-dialog page resource-viewer="startMediaViewer" id="startingMediaPicker"></resource-picker-dialog>
+        <resource-picker-dialog mcq freetext folia resource-viewer="noid" id="situatedQuestionPicker"></resource-picker-dialog>
+        <resource-picker-dialog page id="poiPAMediaPicker"></resource-picker-dialog>
+        <resource-picker-dialog page media-id="{{startMediaId}}" media-name="{{startMediaName}}" id="cluePOIMediaPicker"></resource-picker-dialog>
+        <resource-picker-dialog page resource-viewer="feedbackMediaViewer" id="feedbackMediaPicker"></resource-picker-dialog>
+        <resource-picker-dialog inventory resource-viewer="poiInventoryResourceViewer" id="poiInventoryMediaPicker"></resource-picker-dialog>
+        <resource-picker-dialog poi resource-viewer="poiViewer" id="poiMediaPicker"></resource-picker-dialog>
+        <form class="creator" id="unitActivityForm" is="iron-form">
+            <template is="dom-if" if="{{updating}}" restamp>
+                <paper-input hidden name="itemId" value="{{itemId}}"></paper-input>
+            </template>
+
+            <div class="topLevel">
+                <div class="contain">
+                    <div class="title">Début de l'unité de jeu</div>
+                    <paper-input name="label" value={{label}} label="Label">
+                        <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+                    </paper-input>
+                    <div class="subtitle">Page de départ (optionnelle) :</div>
+                    <paper-button on-click="setMedia" raised>Assigner un document</paper-button>
+                </div>
+                <generic-resource-viewer is-picker input-name="startMedia" is-temp page class="resourceViewer" id="startMediaViewer"></generic-resource-viewer>
+            </div>
+
+            <div class="topLevel">
+                <div class="contain">
+                    <div class="title">POI et guidance</div>
+                    <paper-button style="margin-top:10px;" on-click="setPOI" raised>Choisir un POI</paper-button>
+                    <label class="subtitle" id="label1">Guidance :</label>
+                    <paper-radio-group attr-for-selected="name" selected="map" id="selectGuidance" allow-empty-selection>
+                        <paper-radio-button disabled="[[!poiActive]]" name="map">Carte interactive</paper-radio-button>
+                        <paper-radio-button disabled="[[!poiActive]]" name="ping">Radar</paper-radio-button>
+                    </paper-radio-group>
+                    <label class="subtitle" id="label2">Validation de l'arrivée au POI:</label>
+                    <paper-radio-group attr-for-selected="name" selected="gps" allow-empty-selection selectable={{poiSet}} id="selectReach" aria-labelledby="label2">
+                        <paper-radio-button disabled="[[!poiActive]]" checked={{QRactive}} name="QR">Scan du QR code</paper-radio-button>
+                        <paper-radio-button disabled="[[!poiActive]]" name="gps">GPS</paper-radio-button>
+                    </paper-radio-group>
+                    <paper-button class="heading" toggles active={{showQR}} raised disabled="[[!QRactive]]">Imprimer QR-code</paper-button>
+                    <iron-collapse tabindex="0" opened="{{showQR}}">
+                        <template is="dom-if" if="[[poiid]]" restamp>
+                            <div class="content">
+                                <img style="width:400px" src='/qrcode/[[poiid]]'>
+                            </div>
+                        </template>
+                    </iron-collapse>
+                </div>
+                <generic-resource-viewer is-picker input-name="poi" style="height:10%" active="{{poiActive}}" poi-id={{poiid}} poi is-temp
+                    class="resourceViewer" id="poiViewer"></generic-resource-viewer>
+            </div>
+
+            <iron-collapse opened='[[active]]'>
+
+                <div class="topLevel">
+                    <div class="contain">
+                        <div class="title">POI Post action</div>
+                        <label class="subtitle" id="label2">Bon QR-code scanné :</label>
+                        <paper-input label="QR code correct message" value={{poiReachedMessage}} name="poiReachedMessage"></paper-input>
+                        <label class="subtitle" id="labelpoi">Mauvais QR-Code scanné :</label>
+                        <paper-input label="QR code incorrect message" value={{poiIncorrectMessage}} name="poiIncorrectMessage"></paper-input>
+                    </div>
+                </div>
+            </iron-collapse>
+
+            <div class="topLevel">
+                <div class="contain">
+                    <div class="title">Inventaire</div>
+                    <div class="subtitle">Objet d'inventaire acquis durant l'unité de jeu :</div>
+                    <paper-button on-click="setPOIInventory" raised>Choisir un objet d'inventaire (optionnel)</paper-button>
+                    <div class="subtitle">L'objet est acquis quand :</div>
+                    <paper-radio-group id="inventoryStep" allow-empty-selection aria-labelledby="label2" attr-for-selected="value">
+                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="uginstructions">L'unité de jeu commence</paper-radio-button>
+                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="guidance">Le POI est atteint</paper-radio-button>
+                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="questions">Les activités situées sont terminées</paper-radio-button>
+                    </paper-radio-group>
+                </div>
+                <generic-resource-viewer is-picker input-name="inventoryItem" active={{rewardActive}} is-temp inventory class="resourceViewer"
+                    id="poiInventoryResourceViewer"></generic-resource-viewer>
+            </div>
+            <div class="topLevel">
+                <div class="contain">
+                    <div class="title">Activité situées</div>
+                    <label class="subtitle" id="label2">Activités proposées au joueur lorsqu'il atteint le POI :</label>
+
+                    <paper-button on-click="addSituatedActivity" raised>Ajouter une activité située</paper-button>
+                </div>
+                <list-generic-subset-no-format items={{currentActivities}}></list-generic-subset-no-format>
+            </div>
+            <div class="topLevel">
+                <div class="contain">
+                    <div class="title">Feedback pédagogique</div>
+                    <label class="subtitle">Feedback optionnel à l'issu de l'unité de jeu :</label>
+                    <paper-button on-click="setFeedbackMedia" raised>Choisir un document de feedback</paper-button>
+                </div>
+                <generic-resource-viewer is-picker is-temp input-name="feedbackMedia" image page video class="resourceViewer" id="feedbackMediaViewer"></generic-resource-viewer>
+            </div>
+            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+        </form>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'unit-activity-constructor',
+                edit: function (unitGame) {
+                    this._reset()
+                    this.updating = true
+                    this.itemId = unitGame._id
+                    this.label = unitGame.label
+                    this.poiIncorrectMessage = unitGame.poiIncorrectMessage
+                    this.poiReachedMessage = unitGame.poiReachedMessage
+                    if (unitGame.startMedia) {
+                        this.$.startMediaViewer.setPage(unitGame.startMedia)
+                    }
+                    if (unitGame.freetextActivities) {
+                        for (var i = 0; i < unitGame.freetextActivities.length; i++) {
+                            this.push('currentActivities', unitGame.freetextActivities[i])
+                        }
+                    }
+
+                    if (unitGame.mcqActivities) {
+                        for (var i = 0; i < unitGame.mcqActivities.length; i++) {
+                            this.push('currentActivities', unitGame.mcqActivities[i])
+                        }
+                    }
+                    if (unitGame.identificationActivity) {
+                            this.push('currentActivities', unitGame.identificationActivity)
+                    }
+
+                    if (unitGame.feedbackMedia) {
+                        this.$.feedbackMediaViewer.setPage(unitGame.feedbackMedia)
+                    }
+
+                    if (unitGame.POI) {
+                        this.$.poiViewer.setPOI(unitGame.POI)
+                    }
+                    if (unitGame.inventoryItem) {
+                        this.$.poiInventoryResourceViewer.setInventory(unitGame.inventoryItem)
+                    }
+                    if (unitGame.poiGuidType === 'map') {
+                        this.$.selectGuidance.selected = 'map'
+                    }
+                    if (unitGame.poiGuidType === 'ping') {
+                        this.$.selectGuidance.selected = 'ping'
+                    }
+
+                    if (unitGame.poiQRValidation) {
+                        this.$.selectReach.selected = 'QR'
+                    }
+                    if (unitGame.poiGPSValidation) {
+                        this.$.selectReach.selected = 'gps'
+
+                    }
+                },
+
+                ready: function () {
+                    this.addEventListener('resourcePicked', this.setPickedResource.bind(this))
+                    // this.$.startingMediaPicker.addEventListener('resourcePicked', this.setResource.bind(this))
+                    this.actPA = [];
+                    this.currentActivities = [];
+                    this.activityCount = null;
+                    this.updating = false
+
+                },
+                setPickedResource: function (evt) {
+                    if (evt && evt.detail && evt.detail.resourceType && evt.detail.resourceItem && evt.detail
+                        .resourceViewer) {
+                        switch (evt.detail.resourceType) {
+                            case "image":
+                                this.$[evt.detail.resourceViewer].setImage(evt.detail.resourceItem)
+                                break;
+                            case "page":
+                                this.$[evt.detail.resourceViewer].setPage(evt.detail.resourceItem)
+                                break;
+                            case "inventory":
+                                this.$[evt.detail.resourceViewer].setInventory(evt.detail.resourceItem)
+                                break;
+                            case "poi":
+                                this.$[evt.detail.resourceViewer].setPOI(evt.detail.resourceItem)
+                                break;
+                            case "mcq":
+                                this.push('currentActivities', evt.detail.resourceItem)
+                                break;
+                            case "freetext":
+                                this.push('currentActivities', evt.detail.resourceItem)
+                                break;
+                            case "folia":
+                                this.push('currentActivities', evt.detail.resourceItem)
+                                break
+                        }
+                    }
+                },
+
+
+                _reset: function () {
+                    this.updating = false
+                    while(this.currentActivities.length){
+                        this.pop('currentActivities')
+                    }
+                    this.$.startMediaViewer.removeResource()
+                    this.$.feedbackMediaViewer.removeResource()
+                    this.$.poiViewer.removeResource()
+                    this.$.poiInventoryResourceViewer.removeResource()
+                    this.$.selectGuidance.selected = 'map'
+                    this.$.selectReach.selected = 'gps'
+
+                    var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
+                    for (var i = 0; i < inputList.length; i++) {
+                        inputList[i].value = ""
+                    }
+
+
+                },
+
+
+
+                setFeedbackMedia: function () {
+                    this.$.feedbackMediaPicker.open();
+                },
+
+                addSituatedActivity: function () {
+                    this.$.situatedQuestionPicker.open();
+                },
+                setPOIPaMedia: function () {
+                    this.$.poiPAMediaPicker.open();
+                },
+                setPOI: function () {
+                    this.$.poiMediaPicker.open()
+                },
+
+                setMedia: function () {
+                    this.$.startingMediaPicker.open();
+                },
+                setCluePOIValue: function () {
+                    this.$.cluePOIMediaPicker.open();
+                },
+                setPOIInventory: function () {
+                    this.$.poiInventoryMediaPicker.open();
+                },
+
+
+
+
+                _submit: function () {
+                    var json = this.$.unitActivityForm.serialize()
+                    this.set('resource', json)
+                    this.$.creator.createResource()
+                    this._reset()
+                },
+                properties: {
+                    mediaId: {
+                        type: String,
+                        notify: true,
+                        value: null,
+                    },
+                    mediaName: {
+                        type: String,
+                        notify: true,
+                        value: null,
+                    },
+                    imageRequired: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true
+                    }
+
+                }
+            });
+        })();
+    </script>
+</dom-module>

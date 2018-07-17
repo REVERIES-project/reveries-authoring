@@ -1,0 +1,52 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<style>
+.flexible {
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+</style>
+<dom-module id="forgot-pass">
+    <template>
+        <iron-ajax id="forgot" url='/forgot' body="email={{email}}" method="post" handle-as="json" on-response="checkValidMail"></iron-ajax>
+        <paper-dialog dynamic-align id="confirmDialog">
+            <h2>Réinitialisation du mot de passe</h2>
+            <paper-dialog-scrollable>
+                <paper-input type="email" value={{email}} label="Email associé à votre compte"></paper-input>
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Annuler</paper-button>
+                <paper-button on-click="confirmOperation" autofocus>Confirmer</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+        Polymer({
+            is: 'forgot-pass',
+            ready: function() {},
+            confirmOperation: function() {
+                this.$.forgot.generateRequest()
+            },
+            open: function() {
+                this.$.confirmDialog.open();
+            },
+            checkValidMail:function(res){
+                var data=res.detail.__data__.response
+                this.fire('auth-message',data)
+                this.$.confirmDialog.close()
+                
+            },
+            properties: {}
+        });
+    })();
+    </script>
+</dom-module>

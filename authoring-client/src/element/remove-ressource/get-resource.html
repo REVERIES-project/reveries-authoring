@@ -1,0 +1,44 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="get-resource">
+    <template>
+        <iron-ajax id="getter" url="[[resourceUrl]]/[[resourceId]]" method="GET" on-response="confirmGet"></iron-ajax>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'get-resource',
+
+            confirmGet :function(message){
+                this.fire('get-operation',{info:message.detail.__data__.response})
+
+            },
+            ready: function() {
+            },
+            getResource:function(){
+                this.set('resourceId',this.resourceId)
+                this.set('resourceURL',this.resourceUrl)                
+                this.$.getter.generateRequest()
+            },
+            properties: {
+                resourceUrl: {
+                    type: String,
+                    notify: true,
+                },
+                resourceId: {
+                    type: String,
+                    notify: true
+                },
+            },
+
+        });
+    })();
+    </script>
+</dom-module>

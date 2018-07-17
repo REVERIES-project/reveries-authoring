@@ -1,0 +1,80 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="./styles/common-styles.html">
+<link rel="import" href="./element/resource-filtering/generic-header.html">
+<link rel="import" href="./element/basic-element/mcq-constructor.html">
+<link rel="import" href="./element/basic-element/mcq-activity.html">
+<link rel="import" href="../src/element/helper/list-generic-resource.html">
+<dom-module id="mcq-view">
+    <template>
+        <style include="common-styles">
+        </style>
+        <div class="card">
+
+            <div class="topLevelInfo">
+                <h1>Questions à choix multiples</h1>
+                <div>
+                    Les questions à choix multiples comportent deux distracteurs et une bonne réponse.
+                    <br> Un
+                    <b>indice optionnel</b> peut être associé à la question sous la forme d'un document multimédia
+                </div>
+                <br> Dans cette section :
+                <ul>
+                    <li>Vous pouvez créer, éditer, partager et supprimer des questions à choix multiples</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card constructorCard">
+            <mcq-constructor class="topLevelView" id="mcqConstructor" image-mode={{imageMode}} label={{label}} question={{question}} distractor-array={{distArray}}
+                correct-choice={{response}} correct-message={{correctMessage}} wrong-message={{wrongMessage}}>
+            </mcq-constructor>
+            <mcq-activity id="currentQuestion" style="max-width:30%;" conception-mode resource-label="[[label]]" image-mode="[[imageMode]]" distractor-array="[[distArray]]" class="topLevelView"
+                question="[[question]]" correct-answer=[[response]] correct-message=[[correctMessage]] wrong-message=[[wrongMessage]]
+                media-id={{mediaId}}>
+            </mcq-activity>
+        </div>
+        <div class="card">
+            <generic-header search={{keyword}}></generic-header>
+            <list-generic-resource filter-search=[[keyword]] share-url='/mcq' id='mcqList' resource-type='mcq' url='/mcq'></list-generic-resource>
+        </div>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'mcq-view',
+            ready: function () {
+                this.addEventListener('resource-operation', this.updateMedia.bind(this))
+            },
+            updateMedia: function (message) {
+                switch (message.detail.info.operation) {
+                    case 'create':
+                        this.$.currentQuestion.hideMessages()
+                        this.$.mcqList.requestElements()
+                        break
+                    case 'update':
+                        this.$.currentQuestion.hideMessages()
+                        this.$.mcqList.requestElements()
+                        break
+
+                    case 'delete':
+                        this.$.mcqList.requestElements()
+                        break
+
+                    case 'edit':
+                        this.$.currentQuestion.hideMessages()
+                        this.$.mcqConstructor.edit(message.detail.info.resource)
+                        break
+                }
+            },
+
+        });
+    </script>
+</dom-module>

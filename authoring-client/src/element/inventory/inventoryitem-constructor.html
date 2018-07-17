@@ -1,0 +1,145 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../constructor-helper/save-cancel.html">
+
+<link rel="import" href="./inventory-element.html">
+<link rel="import" href="../remove-ressource/create-resource.html">
+<link rel="import" href="../helper/resource-picker-dialog.html">
+<link rel="import" href="../helper/generic-resource-viewer.html">
+
+<!--
+<h1>Inventory item constructor</h1> 
+Builder for inventory 
+
+@demo
+-->
+
+<dom-module id="inventoryitem-constructor">
+
+    <style include="common-styles">
+    </style>
+    <template>
+        <create-resource id="creator" resource-url="/inventory" resource="{{resource}}"></create-resource>
+        <resource-picker-dialog page id="pagePicker"></resource-picker-dialog>
+        <resource-picker-dialog page id="pageDocPicker"></resource-picker-dialog>
+        <form class="creator" id="inventoryForm" is="iron-form">
+            <div class="formTitleWithButton">
+                <h3 class="smallh3">Nouvel objet d'inventaire</h3>
+            </div>
+            <template is="dom-if" if="{{updating}}" restamp>
+                <paper-input hidden name="itemId" value="{{itemId}}"></paper-input>
+            </template>
+            <paper-input name="label" value={{label}} label="Label">
+                    <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+            </paper-input>
+            <paper-input name="itemText" value={{itemText}} label="Texte associé à l'objet d'inventaire"></paper-input>
+            <paper-button raised  style="margin-top: 10px" on-click="showMediaDialog">Associer une ressource multimédia</paper-button>
+            <generic-resource-viewer is-picker input-name="itemPageId" is-temp item={{media}} page class="resourceViewer" id="inventoryMediaViewer"></generic-resource-viewer>
+            <paper-button raised style="margin-top: 10px" on-click="showDocMediaDialog">Associer une notice (optionnelle) </paper-button>
+            <generic-resource-viewer is-picker is-temp input-name="itemDocPageId" page class="resourceViewer" id="inventoryDocPageViewer"></generic-resource-viewer>
+            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+        </form>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+        Polymer({
+            is: 'inventoryitem-constructor',
+            ready: function() {
+                this.updating = false
+                this.$.pagePicker.addEventListener('resourcePicked', this.setResource.bind(this))
+                this.$.pageDocPicker.addEventListener('resourcePicked', this.setDocResource.bind(this))
+
+            },
+            setResource: function(message) {
+                switch (message.detail.resourceType) {
+                    case "page":
+                        message.detail.resourceItem.mkdown=  message.detail.resourceItem.mkdown
+                        this.$.inventoryMediaViewer.setPage(message.detail.resourceItem)
+                }
+            },
+
+            setDocResource: function(message) {
+                switch (message.detail.resourceType) {
+                    case "page":
+                        this.$.inventoryDocPageViewer.setPage(message.detail.resourceItem)
+                }
+            },
+
+
+            _activateObs: function(newval, oldval) {
+                this.set('imageRequired', newval)
+            },
+            showMediaDialog: function() {
+                this.$.pagePicker.open()
+            },
+
+            showDocMediaDialog: function() {
+                this.$.pageDocPicker.open()
+
+            },
+
+            resetFields: function() {
+                this.updating = false
+                var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
+                for (var i = 0; i < inputList.length; i++) {
+                    inputList[i].value = ""
+                }
+                this.$.inventoryDocPageViewer.removeResource()
+                this.$.inventoryMediaViewer.removeResource()
+            },
+
+            edit: function(inventory) {
+                this.updating = true
+                this.label = inventory.label
+                this.itemText = inventory.itemText
+                this.itemId = inventory._id
+                if(inventory.media){
+                    this.$.inventoryMediaViewer.setPage(inventory.media)
+                }
+                if(inventory.inventoryDoc){
+                    this.$.inventoryDocPageViewer.setPage(inventory.inventoryDoc)
+                }
+            },
+            _submit: function() {
+                var json = this.$.inventoryForm.serialize()
+                this.set('resource', json)
+                this.$.creator.createResource()
+                this.resetFields()
+
+            },
+            _reset: function() {
+                this.resetFields()
+            },
+            properties: {
+                label: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute: true,
+                },
+                itemText: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute: true,
+                },
+                media:{
+                    type:Object,
+                    notify:true,
+                    reflectToAttribute:true,
+                }
+            },
+
+        });
+    })();
+    </script>
+</dom-module>

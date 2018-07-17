@@ -1,0 +1,56 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="./element/resource-filtering/generic-header.html">
+<link rel="import" href="../src/element/helper/list-generic-resource.html">
+<dom-module id="admin-view">
+    <template>
+        <style include="common-styles">
+        </style>
+        <div class="card">
+            <div class="topLevelInfo">
+                <h1 class="text">Outils d'administration</h1>
+                <div class="text">Cette section est
+                    <b>réservée aux administrateurs</b>
+                </div>
+                <div>Dans cette section vous pouvez:</div>
+                <ul>
+                    <li class="text">Supprimer des comptes utilisateurs</li>
+                    <li class="text">Supprimer des ressources créés par un utilisateur (utile si un utisateur à créé involontairement beaucoup
+                        de ressources du même type)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <generic-header></generic-header>
+            <list-generic-resource share-url='/user' id='userList' resource-type='user' url='/listUsers'></list-generic-resource>
+        </div>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'admin-view',        
+        ready: function() {
+            this.addEventListener('resource-operation', this.updateMedia.bind(this))
+        },
+        updateMedia: function(message) {
+            switch (message.detail.info.operation) {
+
+                case 'delete':
+                    this.$.userList.requestElements()
+                    break
+                case 'bulkDelete':
+                    this.$.userList.requestElements()
+                    break
+
+
+
+            }
+        },
+
+    });
+    </script>
+</dom-module>

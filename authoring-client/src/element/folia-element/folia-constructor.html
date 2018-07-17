@@ -1,0 +1,137 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/cosmoz-autocomplete/cosmoz-autocomplete.html">
+<link rel="import" href="../constructor-helper/save-cancel.html">
+
+<link rel="import" href="../remove-ressource/create-resource.html">
+<link rel="import" href="../helper/resource-picker-dialog.html">
+<link rel="import" href="../../styles/common-styles.html">
+<!--
+An element to set up Folia interaction easily. 
+TODO : Add images of leaf
+-->
+
+<dom-module id="folia-constructor">
+    <style include="common-styles">
+    </style>
+    <template>
+        <iron-ajax auto id="getSpecies" url="../../../folia-data/species.json" last-response="{{species}}"></iron-ajax>
+        <create-resource id="creator" resource-url="/folia" resource="{{resource}}"></create-resource>
+        <form class="creator" id="foliaGenerator" is="iron-form">
+            <template is="dom-if" if="{{updating}}" restamp>
+                <paper-input hidden name="itemId" value="{{itemId}}"></paper-input>
+            </template>
+            <div class="formTitleWithButton">
+                <input id="status" type="hidden" value="Private" name="status" />
+            </div>
+            <paper-input id="label" name="label" value={{label}} label="Label"></paper-input>
+            <paper-textarea name="question" value={{question}} label="Question ex. Pouvez-vous identifier un chêne?" required>
+
+            </paper-textarea>
+
+            <cosmoz-autocomplete items='[[species]]' placeholder="Choisir une ou plusieurs espèces" multi-selection selected-items="{{targetSpecies}}">
+            </cosmoz-autocomplete>
+            <paper-textarea name="correctMessage" value={{correctMessage}} label="Texte identification réussie" required>
+            </paper-textarea>
+            <paper-textarea name="wrongMessage" value={{wrongMessage}} label="Texte identification ratée" required>
+            </paper-textarea>
+            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+        </form>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'folia-constructor',
+                ready: function () {
+                    this.updating = false
+                },
+                edit: function (page) {
+                    this.updating = true
+                    this.n = page.mkdown
+                    this.itemId = page._id
+                    this.label = page.label
+                },
+
+                resetFields: function () {
+                    this.updating = false
+                    this.label = ""
+                    this.splice("targetSpecies", 0, this.targetSpecies.length)
+                    var inputList = Polymer.dom(this.root).querySelectorAll('paper-textarea');
+                    for (var i = 0; i < inputList.length; i++) {
+                        inputList[i].value = ""
+                    }
+                },
+
+                _submit: function (event) {
+                    var json = this.$.foliaGenerator.serialize()
+                    json.targetSpecies = this.targetSpecies
+                    this.set('resource', json)
+                    this.$.creator.createResource()
+                    this.statusString = ""
+                    this.label = ""
+                    this.resetFields()
+                },
+                _reset: function () {
+                    this.resetFields()
+                },
+                properties: {
+                    targetSpecies: {
+                        type: Array,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    label: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    question: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    correctMessage: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    wrongMessage: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+
+                    status: {
+                        type: Boolean,
+                        observer: '_statusChanged'
+                    },
+
+
+                },
+                _statusChanged: function (newval, oldval) {
+                    if (!newval) {
+                        this.statusText = "Private content, not visible for other users"
+                        this.statusString = "Private"
+                        this.statusIcon = "visibility-off"
+                    } else {
+                        this.statusText = "Public content, shared with other users"
+                        this.statusString = "Public"
+                        this.statusIcon = "visibility"
+
+                    }
+                }
+
+
+            });
+        })();
+    </script>
+</dom-module>

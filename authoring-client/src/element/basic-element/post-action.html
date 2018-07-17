@@ -1,0 +1,39 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<dom-module id="post-action">
+    <style>
+    .flexible {
+        display: inline-flex;
+        flex-wrap: wrap;
+    }
+    </style>
+    <template>
+        <div class="flexible">
+            <div>
+                <h2> Score associé </h2>
+                <paper-input name="scoreCorrect" class="inputfield" value="{{scoreCorrect}}" label="Score acquis pour une réponse correcte"></paper-input>
+            </div>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+        Polymer({
+            is: 'post-action',
+            ready: function() {
+            },
+            properties: {
+                scoreCorrect: {
+                    type: String,
+                    notify: true,
+                },
+            }
+        })
+    })();
+    </script>
+</dom-module>

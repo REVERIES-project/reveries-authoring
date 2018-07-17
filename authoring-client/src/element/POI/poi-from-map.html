@@ -1,0 +1,154 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../../bower_components/google-apis/google-maps-api.html">
+<link rel="import" href="../../../bower_components/google-map/google-map-point.html">
+<link rel="import" href="../../../bower_components/google-map/google-map-search.html">
+<link rel="import" href="../../../bower_components/google-map/google-map-marker.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="./poi-map-representation.html">
+<link rel="import" href="../helper/googlemap-result.html">
+<dom-module id="poi-from-map">
+    <template>
+        <style include="common-styles">
+        google-map {
+            padding: 10px;
+            width: 500px;
+            height: 500px;
+            display: inline-flex;
+        }
+
+        .mapsearch {
+            display: flex;
+            width:100%;
+        }
+        </style>
+        <google-map-search map="[[mapsAPI]]" query="{{query}}" results="{{results}}">
+        </google-map-search>
+        <geo-location id="geoloc" watch-pos latitude="{{lat}}" longitude="{{long}}"></geo-location>
+        <div style="padding:10px" class="constructorCard">
+            <div class="mapsearch">
+                <div style="width:150px;display:flex;flex-direction: column;margin-right: 10px;">
+                    <paper-input label="Rechercher" value={{query}}></paper-input>
+                    <template is="dom-repeat" items="{{results}}">
+                        <googlemap-result place-name="[[item.name]]" latitude="[[item.latitude]]" longitude="[[item.longitude]]"></googlemap-result>
+                    </template>
+                </div>
+                <google-map api-key="AIzaSyBw9aJOCPfc4Hel0sTET3DgwJhuDeCDqdc" id="gmap" zoom="{{mapzoom}}" map={{mapsAPI}} latitude="{{latitude}}" longitude="{{longitude}}" click-events>
+                    <template is="dom-if" if="[[hasMarker]]" restamp>
+                        <google-map-marker click-events draggable="true" title="POI" icon={{marker.icon}} on-google-map-marker-click="{{markerClicked}}" latitude="{{marker.latitude}}" longitude="{{marker.longitude}}"></google-map-marker>
+                    </template>
+                </google-map>
+            </div>
+            <div class=innerdiv>
+                <!--<paper-button on-click="centerMap">Center Map</paper-button> !-->
+                <poi-map-representation map-zoom="{{mapZoom}}" area-lat={{marker.areaLat}} area-long={{marker.areaLong}} ident="{{marker.id}}" map-latitude="{{lat}}" map-longitude="{{long}}" latitude="{{marker.latitude}}" longitude="{{marker.longitude}}" radius={{marker.radius}} icon={{marker.icon}} info={{marker.info}} title="{{marker.title}}"></poi-map-representation>
+            </div>
+        </div>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'poi-from-map',
+            ready: function() {
+                this.latitude = 48.085206
+                this.longitude = -0.755491
+                this.set('marker', {})
+                this.set('circle', {})
+                this.set('hasMarker', false)
+                this.$.gmap.addEventListener('google-map-click', this.setMarker.bind(this))
+                this.addEventListener('remove-marker', this.removeMarker.bind(this))
+                this.addEventListener('map-operation', this.setNewCenter.bind(this))
+                this.addEventListener('resource-operation', function(e) { console.log(e) })
+
+            },
+            setNewCenter: function(msg) {
+                var myLatLng = new google.maps.LatLng({
+                    lat: msg.detail.lat,
+                    lng: msg.detail.lng
+                });
+
+                var map = this.get('mapsAPI')
+                map.setCenter(myLatLng)
+
+            },
+            centerMap: function() {
+                var myLatLng = new google.maps.LatLng({
+                    lat: this.lat,
+                    lng: this.long
+                });
+
+                var map = this.get('mapsAPI')
+                map.setCenter(myLatLng)
+
+            },
+
+            removeMarker: function(event) {
+                this.set('marker', {})
+                this.circle.setMap(null)
+                this.set('hasMarker', false)
+
+            },
+
+            setMarker: function(event) {
+                if (this.circle.setMap) {
+                    this.circle.setMap(null)
+                }
+                var map = this.get('mapsAPI')
+                var date = new Date();
+                var id = date.getTime();
+                var lat = event.detail.latLng.lat();
+                var long = event.detail.latLng.lng();
+                var circle = new google.maps.Circle({
+                    strokeColor: '#FF0000',
+                    id: id,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35,
+                    map: map,
+                    center: {
+                        lat: lat,
+                        lng: long
+                    },
+                    radius: 30,
+                    editable: true,
+                })
+                google.maps.event.addDomListener(circle, 'radius_changed', function() {
+                    this.updateRadius(circle)
+                }.bind(this))
+                this.set('marker', {
+                    latitude: lat,
+                    draggable: true,
+                    longitude: long,
+                    areaLat: lat,
+                    areaLong: long,
+                    radius: 30,
+                    id: id,
+                });
+                this.set('circle', circle);
+                this.set('hasMarker', true)
+            },
+            updateRadius: function(circle) {
+                this.set('marker.radius', circle.radius.toFixed(2));
+
+            },
+            properties: {
+                lat: {
+                    type: Number
+                },
+                long: {
+                    type: Number
+                }
+
+            }
+        })
+    })();
+    </script>
+</dom-module>

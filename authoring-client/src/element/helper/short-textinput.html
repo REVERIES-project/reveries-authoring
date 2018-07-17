@@ -1,0 +1,65 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../styles/common-styles.html">
+
+<!--
+A generic response input field to be used to define MCQ resposnses
+
+@demo
+@author Gicquel
+-->
+
+<dom-module id="short-textinput">
+    <style include="common-styles">
+        :host {
+            display: inline-flex;
+            justify-content: flex-start;
+            flex-direction: row-reverse;
+            align-items: center;
+        }
+
+        .imageDistractorLabel {
+            color: #737373;
+            margin-right: 20px;
+        }
+    </style>
+
+    <template>
+            <paper-input class="mcq-distractor" name="[[inputName]]" label="[[inputLabel]]" value="{{inputValue}}" required></paper-input>
+
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'short-textinput',
+                ready: function () {
+                },
+
+                properties: {
+                    inputName: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    inputLabel: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+
+                    inputValue: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                },
+            });
+        })();
+    </script>
+</dom-module>

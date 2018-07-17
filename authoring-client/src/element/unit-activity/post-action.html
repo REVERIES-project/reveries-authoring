@@ -1,0 +1,119 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
+<dom-module id="post-action">
+<!--
+Post action element : post action can be specified by the MSG conceptor at different step of the MSG.
+PA are context dependant, for instance "to add 100 point to the score if user correctly finish a situated activity",
+"to show a map if the user press help button during the guiding phase", "to show a given media after completion of a 
+unit activity".
+A PA is then defined by :
+-A condition of execution, that depends on the position where the PA is defined (Game unit level, POI guiding level, 
+MSG level)
+-An onExec instruction/series of instructions applied when the execution condition is true at a given level
+
+For the moment, the PA can be defined at the "POI reached" level (condition : POI reached, user ask help), the "Situated Activities" level (number of success condition)
+and between two Game Unit (game unit succeed condition)
+The instruction are either "change score instruction (var int)", "show media instruction (var static-media)", "skip activity instruction"
+!-->
+    <style include="common-style">
+    .resourceReadwrite {
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: lightblue;
+        width: 100%;
+    }
+    
+    .resourceReadonly {
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: lightgreen;
+        width: 100%;
+    }
+    
+    .headerText {
+        padding-left: 10px;
+        display: inline-flex;
+        align-self: center;
+    }
+    </style>
+    <template>
+        <div class="paElement">
+            <paper-checkbox class="paCheck">{{paLabel}}</paper-checkbox>
+            <b>
+            <template is="dom-if" if="{{!isReadOnly}}">
+                <paper-icon-button id="setStatus" style="display:inline-flex;align-self: center" raised on-click="setStatus" icon="{{sharedIcon}}"></paper-icon-button>
+            </template>
+        </div>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'post-action',
+
+            ready: function() {
+                //  this.sharedIcon="visibility-off"
+            },
+            setStatus: function() {
+                if (this.resourceStatus == "Private") {
+                    this.sharedIcon = "visibility"
+                } else {
+                    this.sharedIcon = "visibility-off"
+                }
+            },
+            _resourceSharedObserver: function(newval, oldval) {
+                console.log(newval)
+                if (newval == "Private") {
+                    this.sharedIcon = "visibility-off"
+                } else {
+                    this.sharedIcon = "visibility"
+                }
+            },
+            _resourceReadonlyObserver: function(newval, oldval) {
+                if (newval == "readonly") {
+                    this.isReadOnly = true
+                    this.resourceClass="resourceReadonly"
+
+                } else {
+                    this.isReadOnly = false
+                    this.resourceClass="resourceReadwrite"
+                }
+            },
+            properties: {
+                paType: {
+                    type: String,
+                    notify: true,
+                },
+                paLabel: {
+                    type: String,
+                    notify: true,
+                },
+                paResourcetype: {
+                    type: String,
+                    notify: true,
+                },
+                paCondition:{
+                    type: String,
+                    notify: true,
+                },
+                paLevel:{
+                    type: String,
+                    notify: true,
+                },
+            },
+
+        });
+    })();
+    </script>
+</dom-module>

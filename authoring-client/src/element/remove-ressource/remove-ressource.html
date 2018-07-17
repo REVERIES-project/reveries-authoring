@@ -1,0 +1,44 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="remove-ressource">
+    <template>
+        <iron-ajax id="remove" url="{{resourceUrl}}/{{resourceId}}" method="DELETE" on-response="confirmDelete"></iron-ajax>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'remove-ressource',
+
+            confirmDelete:function(message){
+                this.fire('resource-operation',{info:message.detail.__data__.response})
+
+            },
+            ready: function() {
+            },
+            removeResource:function(){
+                this.set('ressourceId',this.resourceId)
+                this.set('ressourceURL',this.resourceUrl)                
+                this.$.remove.generateRequest()
+            },
+            properties: {
+                resourceId: {
+                    type: String,
+                    notify: true,
+                },
+                resourceUrl: {
+                    type: String,
+                    notify: true
+                },
+            },
+
+        });
+    })();
+    </script>
+</dom-module>

@@ -1,0 +1,116 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../styles/common-styles.html">
+<dom-module id="unit-game">
+    <style include="common-styles">
+        .activityContent {
+            margin: 5px;
+        }
+
+        
+        :host {
+            --resource-body-mixin: {
+                align-items: baseline;
+            }
+        }
+    </style>
+    <template>
+        <div class="resource">
+            <div class="resourceBody">
+                <template is="dom-if" if="{{item.POI}}">
+                    <div class="visible">
+                        <paper-toggle-button checked={{poiShowed}} class="ugOnMap" on-change="togglePOI">Afficher sur la carte</paper-toggle-button>
+                    </div>
+                </template>
+
+                <template is="dom-if" if="{{guidance}}">
+                    <div class="activityContent">
+                        <b>Guidance</b> : [[guidance]]
+                    </div>
+                </template>
+                <template is="dom-if" if="{{validation}}">
+                    <div class="activityContent">
+                        <b>Validation</b> : [[validation]]
+                    </div>
+                </template>
+                <div class="activityContent">
+                    <b>Activité situées</b> : [[getNumber(item.mcqActivities,item.freetextActivities)]]
+                </div>
+
+            </div>
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'unit-game',
+                ready: function () {
+                    // TODO refactor with more meaningfull var name
+                    if (this.item && this.item.poiGuidType) {
+                        let guidance = this.item.poiGuidType
+                        if (guidance === "map") {
+                            this.guidance = "carte intéractive"
+                        }
+                        if (guidance === "ping") {
+                            this.guidance = "radar"
+                        }
+                    }
+
+
+                    if (this.item.poiGuidFolia) {
+                        this.validation = "Folia"
+                    }
+
+                    if (this.item.poiGPSValidation) {
+                        this.validation = "GPS"
+                    }
+                    if (this.item.poiQRValidation) {
+                        this.validation = "scan QR-code"
+                    }
+
+                },
+                getNumber:function(mcqArray,freetextArray){
+                    var number=0
+                    if(mcqArray && mcqArray.length>0){
+                        number=number+mcqArray.length
+                    }
+                    if(freetextArray && freetextArray.length>0){
+                        number=number+freetextArray.length
+                    }
+                    return number
+                },
+                togglePOI: function () {
+                    if (this.item && this.item.POI) {
+                        this.item.POI.label = this.label
+                        if (this.poiShowed) {
+                            this.fire('change-poi-map', {
+                                show: true,
+                                resource: this.item.POI
+                            })
+
+                        } else {
+                            this.fire('change-poi-map', {
+                                show: false,
+                                resource: this.item.POI
+                            })
+
+                        }
+                    }
+                },
+                properties: {
+                    item: {
+                        type: Object,
+                        notify: true,
+                    },
+
+                }
+            });
+        })();
+    </script>
+</dom-module>

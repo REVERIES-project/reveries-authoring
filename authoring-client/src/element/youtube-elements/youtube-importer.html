@@ -1,0 +1,91 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../remove-ressource/create-resource.html">
+
+
+<dom-module id="youtube-importer">
+    <template>
+        <style include="common-styles">
+        </style>
+        <create-resource id="creator" resource-url="/youtube" resource="{{resource}}"></create-resource>
+
+        <form class="creator" id="youtubeImporter" is="iron-form" method="post" action="/youtube">
+            <input id="status" type="hidden" value="Private" name="status" />
+            <paper-input id="label" name="label" value={{label}} label="Label">
+                <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+            </paper-input>
+            <paper-input value="{{myUrl}}" label="URL de la vidéo Youtube">
+
+            </paper-input>
+            <paper-button on-click="validateURL">Valider et Importer</paper-button>
+            <paper-input name="videoId" value=[[videoId]] label="Identifiant de la vidéo"></paper-input>
+            <template is="dom-if" if=[[validateFail]]>
+                <paper-input disabled value="URL non conforme, merci de fournir une URL de vidéo Youtube"> </paper-input>
+            </template>
+
+            <div class="insideflex">
+                <paper-button raised on-click="submit">Enregistrer</paper-button>
+                <paper-button raised on-click="reset">Annuler</paper-button>
+            </div>
+        </form>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'youtube-importer',
+            ready: function () {},
+            validateURL: function () {
+                if (this.getVideoId(this.myUrl)) {
+                    this.videoId = this.getVideoId(this.myUrl)
+                }
+
+            },
+            getVideoId: function (url) {
+                var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                var match = url.match(regExp);
+                if (match && match[2].length == 11) {
+                    return match[2];
+                } else {
+                    this.validateFail = true
+                    //error
+                }
+
+            },
+            submit: function () {
+                var json = this.$.youtubeImporter.serialize()
+                this.set('resource', json)
+                this.$.creator.createResource()
+                this.reset()
+            },
+            reset:function(){
+                this.resource={}
+                this.myUrl=""
+                this.videoId=""
+                this.validateFail=false
+            },
+
+
+            properties: {
+                videoId: {
+                    type: String,
+                    reflectToAttribute: true,
+                    notify: true,
+                },
+                label: {
+                    type: String,
+                    reflectToAttribute: true,
+                    notify: true,
+                }
+
+            }
+        });
+    </script>
+</dom-module>

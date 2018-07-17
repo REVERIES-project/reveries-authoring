@@ -1,0 +1,181 @@
+<!--
+@license
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="./free-text-question.html">
+<link rel="import" href="../helper/resource-picker-dialog.html">
+<link rel="import" href="../remove-ressource/create-resource.html">
+<link rel="import" href="../helper/generic-resource-viewer.html">
+<link rel="import" href="../helper/short-textinput.html">
+<link rel="import" href="../helper/short-textarea.html">
+<link rel="import" href="../constructor-helper/save-cancel.html">
+
+<link rel="import" href="../../styles/common-styles.html">
+<!--
+<h1>Free text question constructor</h1> 
+Builder for free text question resources 
+<b>Parameters</b>
+    <ul>
+        <li>Label :identifiant</li> 
+        <li>mediaId : </li>
+        <li>question</li>
+    </ul>
+    <script>
+    </script>
+
+@demo
+-->
+
+<dom-module id="free-text-constructor">
+    <style include="common-styles">
+
+    </style>
+    <template>
+        <create-resource id="creator" resource-url="/freetextactivity" resource="{{resource}}"></create-resource>
+        <resource-picker-dialog page id="pagePicker"></resource-picker-dialog>
+        <form class="creator" id="freeTextForm" is="iron-form">
+            <div class="formTitleWithButton">
+                <h3 class="smallh3">Nouvelle question</h3>
+            </div>
+            <template is="dom-if" if="{{updating}}" restamp>
+                <paper-input hidden name="itemId" value="{{itemId}}"></paper-input>
+            </template>
+            <paper-input name="label" value={{label}} label="Label">
+                <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
+            </paper-input>
+            <paper-textarea name="question" value={{question}} max-rows=0 rows=1 label="Question"></paper-textarea>
+            <short-textinput input-name="responseLabel" input-label="Label du champ réponse" input-value={{responseLabel}}></short-textinput>
+            <paper-input name="response" label="Response" value={{response}} required></paper-input>
+            <short-textarea input-name="correctMessage" input-label="Message associé à une réponse correcte" input-value={{correctMessage}}
+                required></short-textarea>
+            <short-textarea input-name="wrongMessage" input-label="Message associé à une réponse incorrecte" input-value={{wrongMessage}}
+                required></short-textarea>
+            <paper-button raised on-click="showMediaDialog">Associer un indice (optionnel))</paper-button>
+            <generic-resource-viewer input-name="mediaId" is-picker is-temp page class="resourceViewer" id="freetextMediaViewer"></generic-resource-viewer>
+            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+        </form>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+            Polymer({
+                is: 'free-text-constructor',
+                ready: function () {
+                    this.changeFreeTextQuestion = null;
+                    this.updating = false
+                    this.$.pagePicker.addEventListener('resourcePicked', this.setResource.bind(this))
+
+                },
+                setResource: function (message) {
+                    switch (message.detail.resourceType) {
+                        case "page":
+                            this.$.freetextMediaViewer.setPage(message.detail.resourceItem)
+                    }
+                },
+
+                showMediaDialog: function () {
+                    this.$.pagePicker.open()
+                },
+                resetFields: function () {
+                    this.updating = false
+
+                    var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
+                    for (var i = 0; i < inputList.length; i++) {
+                        inputList[i].value = ""
+                    }
+                    var shortInput = Polymer.dom(this.root).querySelectorAll('short-textinput');
+                    for (var i = 0; i < shortInput.length; i++) {
+                        shortInput[i].inputValue = ""
+                    }
+
+
+                    var shortTextarea = Polymer.dom(this.root).querySelectorAll('short-textarea');
+                    for (var i = 0; i < shortTextarea.length; i++) {
+                        shortTextarea[i].inputValue = ""
+                    }
+
+
+                    var textareaList = Polymer.dom(this.root).querySelectorAll('paper-textarea');
+                    for (var i = 0; i < textareaList.length; i++) {
+                        textareaList[i].value = ""
+                    }
+
+                    this.$.freetextMediaViewer.removeResource()
+                },
+
+                edit: function (question) {
+                    this.updating = true
+                    this.responseLabel = question.responseLabel
+                    this.label = question.label
+                    this.question = question.question
+                    if (question.media) {
+                        this.$.freetextMediaViewer.setPage(question.media)
+                    }
+                    this.response = question.response
+                    this.wrongMessage = question.wrongMessage
+                    this.correctMessage = question.correctMessage
+                    this.itemId = question._id
+                },
+                _submit: function (event) {
+                    var json = this.$.freeTextForm.serialize()
+                    this.set('resource', json)
+                    this.$.creator.createResource()
+                    this.resetFields()
+                },
+                _reset: function () {
+                    this.resetFields()
+                },
+                properties: {
+                    mediaId: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: null,
+                    },
+                    label: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    question: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    response: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    correctMessage: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    wrongMessage: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                    },
+                    mediaId: {
+                        type: String,
+                        notify: true,
+                        value: null,
+                    },
+                    responseLabel: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true
+                    }
+
+                },
+
+            });
+        })();
+    </script>
+</dom-module>
