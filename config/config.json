@@ -1,0 +1,12 @@
+{
+"development":{
+"webDirectory":"authoring-client",
+"mongoURL": "mongodb://localhost/test",
+"secretString":"Appelez-moi Ismaël"
+},
+"production":{
+    "webDirectory":"authoring-client",
+    "mongoURL": "mongodb://conception:reveriesConception@localhost/test?authSource=test",
+    "secretString":"Aujourd'hui, maman est morte. Ou peut-être hier, je ne sais pas"    
+}
+}

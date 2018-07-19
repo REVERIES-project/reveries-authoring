@@ -4,20 +4,14 @@ Copyright (c) 2018 Pierre-Yves Gicquel.
 This code may only be used under the "Do whatever you want with code license"
 -->
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../../bower_components/paper-radio-group/paper-radio-group.html">
-
-<link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../basic-element/post-action.html">
-<link rel="import" href="../helper/sharedBehavior.html">
 <link rel="import" href="../helper/thumbnailView.html">
 <link rel="import" href="../static-media/staticmedia-viewer.html">
 <link rel="import" href="../../styles/common-styles.html">
-<link rel="import" href="../ui-helper/activity-feedback.html">
+<link rel="import" href="../../../bower_components/activity-feedback/activity-feedback.html">
 
 <dom-module id="mcq-activity">
     <style include="common-styles">
@@ -40,9 +34,6 @@ This code may only be used under the "Do whatever you want with code license"
         }
     </style>
     <template>
-        <template is="dom-if" if="[[conceptionMode]]" restamp>
-            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
-        </template>
         <div id="mcqbody" class="resource">
             <div class="question" name="question">{{question}}</div>
             <div class="resourceBody">
@@ -84,7 +75,7 @@ This code may only be used under the "Do whatever you want with code license"
             'use strict';
             Polymer({
                 is: 'mcq-activity',
-                behaviors: [sharedBehavior],
+                behaviors: [],
 
                 ready: function () {
                     // this.hasClue=false
@@ -143,15 +134,10 @@ This code may only be used under the "Do whatever you want with code license"
                         type: String,
                         notify: true,
                     },
-                    resourceStatus: {
-                        type: String,
-                        notify: true,
-                    },
                     correctAnswer: {
                         type: String,
                         notify: true,
                     },
-
                     distractorArray: {
                         type: Array,
                         notify: true,

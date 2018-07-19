@@ -37,7 +37,6 @@ Fires messages when a logging/authentification fails
             </template>
             <paper-input name="label" value={{label}} label="Label">
                     <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
-
             </paper-input>
             <paper-input name="badgeText" value={{badgeText}} label="Texte associé au badge"></paper-input>
             <paper-button raised on-click="showMediaDialog">Associer un document multimédia</paper-button>
@@ -67,12 +66,6 @@ Fires messages when a logging/authentification fails
                 this.$.pagePicker.open()
             },
 
-            dummyFill: function() {
-                var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
-                for (var i = 0; i < inputList.length; i++) {
-                    inputList[i].value = this.$.randomSentence.getRandomSentence(5);
-                }
-            },
 
             resetFields: function() {
                 this.updating = false

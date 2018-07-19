@@ -5,6 +5,7 @@ This code may only be used under the "Do whatever you want with code license"
 -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="./styles/common-styles.html">
+<link rel="import" href="./element/helper/resource-header.html">
 <link rel="import" href="./element/folia-element/folia-constructor.html">
 <link rel="import" href="./element/folia-element/folia-element.html">
 <link rel="import" href="../src/element/helper/list-generic-resource.html">
@@ -12,15 +13,17 @@ This code may only be used under the "Do whatever you want with code license"
 <dom-module id="folia-view">
     <template>
         <style include="common-styles">
-
         </style>
         <div class="card">
             <div class="topLevelInfo">
-                <h1>Identification botanique via Folia</h1> 
+                <h1>Identification botanique via Folia</h1>
                 <div>
-                Les exercices d'identifications botaniques demandent au joueur de d'identifier un spécimen d'une espèce d'arbre feuillue.
-                La <b>validation de l'identification</b>, c'est à dire la confirmation que le spécimen fait bien partie de l'espèce en question <b>est effectuée grace au moteur de traitement d'image Folia</b>
-                <br>L'execution de Folia est intégrée dans le moteur de jeux.  
+                    Les exercices d'identifications botaniques demandent au joueur de d'identifier un spécimen d'une espèce d'arbre feuillue.
+                    La
+                    <b>validation de l'identification</b>, c'est à dire la confirmation que le spécimen fait bien partie de
+                    l'espèce en question
+                    <b>est effectuée grace au moteur de traitement d'image Folia</b>
+                    <br>L'execution de Folia est intégrée dans le moteur de jeux.
                 </div>
                 <br> Dans cette section :
                 <ul>
@@ -29,10 +32,16 @@ This code may only be used under the "Do whatever you want with code license"
             </div>
         </div>
         <div class="card constructorCard">
-            <folia-constructor class="topLevelView" question={{question}} target-species="{{targetSpecies}}" item={{item}} correct-message="{{cmessage}}" wrong-message="{{wmessage}}" id="itemConstructor" label="{{label}}">
+            <folia-constructor class="topLevelView" question={{question}} target-species="{{targetSpecies}}" item={{item}} correct-message="{{cmessage}}"
+                wrong-message="{{wmessage}}" id="itemConstructor" label="{{resourceLabel}}">
             </folia-constructor>
-            <folia-element conception-mode question="[[question]]" target-species="[[targetSpecies]]" correct-message="[[cmessage]]" wrong-message="[[wmessage]]" resource-label=[[label]] class="topLevelView" id="previewQuestion">
-            </folia-element>
+            <div class="topLevelView">
+                <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
+
+                <folia-element  question="[[question]]" target-species="[[targetSpecies]]" correct-message="[[cmessage]]"
+                    wrong-message="[[wmessage]]"  id="previewQuestion">
+                </folia-element>
+            </div>
 
         </div>
         <div class="card">
@@ -41,31 +50,31 @@ This code may only be used under the "Do whatever you want with code license"
         </div>
     </template>
     <script>
-    Polymer({
+        Polymer({
 
-        is: 'folia-view',
-        ready: function() {
-            this.addEventListener('resource-operation', this.updateMedia.bind(this))
-        },
-        updateMedia: function(message) {
-            switch (message.detail.info.operation) {
-                case 'create':
-                    this.$.itemList.requestElements()
-                    break
-                case 'update':
-                    this.$.itemList.requestElements()
-                    break
+            is: 'folia-view',
+            ready: function () {
+                this.addEventListener('resource-operation', this.updateMedia.bind(this))
+            },
+            updateMedia: function (message) {
+                switch (message.detail.info.operation) {
+                    case 'create':
+                        this.$.itemList.requestElements()
+                        break
+                    case 'update':
+                        this.$.itemList.requestElements()
+                        break
 
-                case 'delete':
-                    this.$.itemList.requestElements()
-                    break
+                    case 'delete':
+                        this.$.itemList.requestElements()
+                        break
 
-                case 'edit':
-                    this.$.itemConstructor.edit(message.detail.info.resource)
-                    break
-            }
-        },
+                    case 'edit':
+                        this.$.itemConstructor.edit(message.detail.info.resource)
+                        break
+                }
+            },
 
-    });
+        });
     </script>
 </dom-module>

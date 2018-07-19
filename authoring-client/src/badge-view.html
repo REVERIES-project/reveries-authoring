@@ -12,14 +12,15 @@ This code may only be used under the "Do whatever you want with code license"
 <dom-module id="badge-view">
     <template>
         <style include="common-styles">
-
         </style>
         <div class="card">
             <div class="topLevelInfo">
-                <h1>Badges</h1> 
+                <h1>Badges</h1>
                 <div>
-                Les badges sont des <b>récompenses permanentes </b>acquises à la <b>fin d'un scénario de jeu</b>
-                <br>Les badges acquis restent visibles dans le profil utilisateur 
+                    Les badges sont des
+                    <b>récompenses permanentes </b>acquises à la
+                    <b>fin d'un scénario de jeu</b>
+                    <br>Les badges acquis restent visibles dans le profil utilisateur
                 </div>
                 <br> Dans cette section :
                 <ul>
@@ -28,10 +29,13 @@ This code may only be used under the "Do whatever you want with code license"
             </div>
         </div>
         <div class="card constructorCard">
-            <badge-constructor class="topLevelView" media={{media}} id="badgeConstructor" label="{{label}}" badge-text="{{badgeText}}">
+            <badge-constructor class="topLevelView" media={{media}} id="badgeConstructor" label="{{resourceLabel}}" badge-text="{{badgeText}}">
             </badge-constructor>
-            <badge-element class="topLevelView" id="" resource-label=[[label]] conception-mode media=[[media]] badge-text={{badgeText}}>
-            </badge-element>
+            <div class="topLevelView">
+                <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
+                <badge-element id="" media=[[media]] badge-text={{badgeText}}>
+                </badge-element>
+            </div>
         </div>
         <div class="card">
             <generic-header search="{{keyword}}"></generic-header>
@@ -39,31 +43,31 @@ This code may only be used under the "Do whatever you want with code license"
         </div>
     </template>
     <script>
-    Polymer({
+        Polymer({
 
-        is: 'badge-view',
-        ready: function() {
-            this.addEventListener('resource-operation', this.updateMedia.bind(this))
-        },
-        updateMedia: function(message) {
-            switch (message.detail.info.operation) {
-                case 'create':
-                    this.$.badgeList.requestElements()
-                    break
-                case 'update':
-                    this.$.badgeList.requestElements()
-                    break
+            is: 'badge-view',
+            ready: function () {
+                this.addEventListener('resource-operation', this.updateMedia.bind(this))
+            },
+            updateMedia: function (message) {
+                switch (message.detail.info.operation) {
+                    case 'create':
+                        this.$.badgeList.requestElements()
+                        break
+                    case 'update':
+                        this.$.badgeList.requestElements()
+                        break
 
-                case 'delete':
-                    this.$.badgeList.requestElements()
-                    break
+                    case 'delete':
+                        this.$.badgeList.requestElements()
+                        break
 
-                case 'edit':
-                    this.$.badgeConstructor.edit(message.detail.info.resource)
-                    break
-            }
-        },
+                    case 'edit':
+                        this.$.badgeConstructor.edit(message.detail.info.resource)
+                        break
+                }
+            },
 
-    });
+        });
     </script>
 </dom-module>

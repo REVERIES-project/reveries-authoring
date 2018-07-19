@@ -5,10 +5,8 @@ This code may only be used under the "Do whatever you want with code license"
 -->
 
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../helper/sharedBehavior.html">
 <link rel="import" href="../../styles/common-styles.html">
-<link rel="import" href="../helper/resource-header.html">
-<link rel="import" href="../../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../static-media/staticmedia-viewer.html">
 
 <dom-module id="inventory-element">
     <template>
@@ -29,9 +27,6 @@ This code may only be used under the "Do whatever you want with code license"
             }
 
         </style>
-        <template is="dom-if" if="[[conceptionMode]]" restamp>
-            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
-        </template>
         <div class="resource">
             <div class="resourceBody">
                 <div class="headText">{{itemText}}</div>
@@ -45,7 +40,7 @@ This code may only be used under the "Do whatever you want with code license"
         'use strict';
         Polymer({
             is: 'inventory-element',
-            behaviors: [sharedBehavior],
+            behaviors: [],
 
 
             ready: function () {
@@ -57,10 +52,6 @@ This code may only be used under the "Do whatever you want with code license"
                     type: Object,
                     notify: true,
                 },
-                label: {
-                    type: String,
-                    notify: true,
-                },
                 itemText: {
                     type: String,
                     notify: true,
@@ -69,14 +60,6 @@ This code may only be used under the "Do whatever you want with code license"
                     type: String,
                     notify: true,
                 },
-                resourceLabel: {
-                    type: String,
-                    notify: true,
-                },
-                conceptionMode: {
-                    type: Boolean,
-                    notify: true,
-                }
             }
         })
     })();

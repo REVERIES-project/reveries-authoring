@@ -5,6 +5,7 @@ This code may only be used under the "Do whatever you want with code license"
 -->
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="./styles/common-styles.html">
+<link rel="import" href="./element/helper/resource-header.html">
 <link rel="import" href="./element/basic-element/free-text-question.html">
 <link rel="import" href="./element/resource-filtering/generic-header.html">
 <link rel="import" href="./element/basic-element/free-text-constructor.html">
@@ -12,15 +13,17 @@ This code may only be used under the "Do whatever you want with code license"
 <dom-module id="freetext-view">
     <template>
         <style include="common-styles">
-
         </style>
         <div class="card">
             <div class='topLevelInfo'>
                 <h1>Questions libres</h1>
                 <div>
                     Les questions libres sont des questions dont la réponse n'est pas restreinte à un ensemble de choix
-                    <br>L'utilisateur fournit <b>une chaine de caractère comme réponse</b>, qui est comparée à la réponse correcte <b>sans tenir compte de la casse.</b>
-                    <br> Un <b>indice optionnel</b> peut être associé à la question sous la forme d'un document multimédia
+                    <br>L'utilisateur fournit
+                    <b>une chaine de caractère comme réponse</b>, qui est comparée à la réponse correcte
+                    <b>sans tenir compte de la casse.</b>
+                    <br> Un
+                    <b>indice optionnel</b> peut être associé à la question sous la forme d'un document multimédia
                 </div>
                 <br> Dans cette section :
                 <ul>
@@ -29,45 +32,51 @@ This code may only be used under the "Do whatever you want with code license"
             </div>
         </div>
         <div class="card constructorCard">
-            <free-text-constructor id="questionConstructor" class="topLevelView" label="{{label}}" question="{{question}}" response="{{response}}" correct-message="{{correctMessage}}" wrong-message="{{wrongMessage}}" response-label="{{rLabel}}">
+            <free-text-constructor id="questionConstructor" class="topLevelView" label="{{resourceLabel}}" question="{{question}}" response="{{response}}"
+                correct-message="{{correctMessage}}" wrong-message="{{wrongMessage}}" response-label="{{rLabel}}">
             </free-text-constructor>
-            <free-text-question id="currentQuestion" conception-mode question="[[question]]" response="[[response]]" correct-message="[[correctMessage]]" wrong-message="[[wrongMessage]]" media-id="{{currentid}}" resource-label=[[label]] response-label="{{rLabel}}" class="topLevelView" id="previewQuestion">
-            </free-text-question>
+            <div class="topLevelView">
+                <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
+                <free-text-question id="currentQuestion" question="[[question]]" response="[[response]]" correct-message="[[correctMessage]]"
+                    wrong-message="[[wrongMessage]]" media-id="{{currentid}}" response-label="{{rLabel}}" id="previewQuestion">
+                </free-text-question>
+            </div>
         </div>
         <div class="card">
             <generic-header search="{{keyword}}"></generic-header>
-            <list-generic-resource filter-search=[[keyword]] share-url='/freetextactivity' id='freetextList' resource-type='freetext' url='/freetextactivity'></list-generic-resource>
+            <list-generic-resource filter-search=[[keyword]] share-url='/freetextactivity' id='freetextList' resource-type='freetext'
+                url='/freetextactivity'></list-generic-resource>
         </div>
     </template>
     <script>
-    Polymer({
+        Polymer({
 
-        is: 'freetext-view',
-        ready: function() {
-            this.addEventListener('resource-operation', this.updateMedia.bind(this))
-        },
-        updateMedia: function(message) {
-            switch (message.detail.info.operation) {
-                case 'create':
-                    this.$.currentQuestion.hideMessages()
-                    this.$.freetextList.requestElements()
-                    break
-                case 'update':
-                    this.$.currentQuestion.hideMessages()
-                    this.$.freetextList.requestElements()
-                    break
+            is: 'freetext-view',
+            ready: function () {
+                this.addEventListener('resource-operation', this.updateMedia.bind(this))
+            },
+            updateMedia: function (message) {
+                switch (message.detail.info.operation) {
+                    case 'create':
+                        this.$.currentQuestion.hideMessages()
+                        this.$.freetextList.requestElements()
+                        break
+                    case 'update':
+                        this.$.currentQuestion.hideMessages()
+                        this.$.freetextList.requestElements()
+                        break
 
-                case 'delete':
-                    this.$.freetextList.requestElements()
-                    break
+                    case 'delete':
+                        this.$.freetextList.requestElements()
+                        break
 
-                case 'edit':
-                    this.$.currentQuestion.hideMessages()
-                    this.$.questionConstructor.edit(message.detail.info.resource)
-                    break
+                    case 'edit':
+                        this.$.currentQuestion.hideMessages()
+                        this.$.questionConstructor.edit(message.detail.info.resource)
+                        break
+                }
             }
-        }
 
-    });
+        });
     </script>
 </dom-module>

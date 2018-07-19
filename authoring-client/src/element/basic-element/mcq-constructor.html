@@ -18,7 +18,6 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../helper/resource-picker-dialog.html">
 <link rel="import" href="../helper/generic-resource-viewer.html">
 <link rel="import" href="../helper/mcq-distractor.html">
-<link rel="import" href="../helper/mcq-message.html">
 
 <!--
 <h1>Constructor for multiple choice questions</h1> 
@@ -37,6 +36,9 @@ Builder for free text question resources
 
 <dom-module id="mcq-constructor">
     <style include="common-styles">
+        .paddedInput{
+            padding-left: 30px;
+        }
 
     </style>
     <template>
@@ -73,8 +75,8 @@ Builder for free text question resources
                 </mcq-distractor>
             </template>
 
-            <mcq-message name="correctMessage" message-label="Message pour réponse correcte" value={{correctMessage}} required></mcq-message>
-            <mcq-message name="wrongMessage" message-label="Message pour réponse incorrecte" value={{wrongMessage}} required></mcq-message>
+            <paper-textarea name="correctMessage" class="paddedInput" label="Message pour réponse correcte" value={{correctMessage}} required></paper-textarea>
+            <paper-textarea name="wrongMessage" class="paddedInput" label="Message pour réponse incorrecte" value={{wrongMessage}} required></paper-textarea>
             <paper-button raised on-click="addResponseField">Ajouter un distracteur</paper-button>
 
             <paper-button raised on-click="showMediaDialog">Associer un indice (optionnel)</paper-button>

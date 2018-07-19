@@ -33,9 +33,6 @@ This code may only be used under the "Do whatever you want with code license"
                 @apply --poi-map-visibility;
             }
         </style>
-        <template is="dom-if" if="[[conceptionMode]]" restamp>
-            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
-        </template>
         <div class="resource">
             <div class="resourceBody">
                 <div>Longitude :
@@ -98,12 +95,6 @@ This code may only be used under the "Do whatever you want with code license"
                         value: false,
                         notify: true,
                     },
-                    conceptionMode: {
-                        type: Boolean,
-                        value: false,
-                        notify: true,
-
-                    }
                 },
 
 

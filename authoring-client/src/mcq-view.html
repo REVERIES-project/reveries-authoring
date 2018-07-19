@@ -1,14 +1,12 @@
 <!--
 @license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+Copyright (c) 2018 Pierre-Yves Gicquel. 
+This code may only be used under the "Do whatever you want with code license"
 -->
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="./styles/common-styles.html">
+<link rel="import" href="./element/helper/resource-header.html">
 <link rel="import" href="./element/resource-filtering/generic-header.html">
 <link rel="import" href="./element/basic-element/mcq-constructor.html">
 <link rel="import" href="./element/basic-element/mcq-activity.html">
@@ -33,13 +31,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
         </div>
         <div class="card constructorCard">
-            <mcq-constructor class="topLevelView" id="mcqConstructor" image-mode={{imageMode}} label={{label}} question={{question}} distractor-array={{distArray}}
-                correct-choice={{response}} correct-message={{correctMessage}} wrong-message={{wrongMessage}}>
+
+            <mcq-constructor class="topLevelView" id="mcqConstructor" image-mode={{imageMode}} label={{resourceLabel}} question={{question}}
+                distractor-array={{distArray}} correct-choice={{response}} correct-message={{correctMessage}} wrong-message={{wrongMessage}}>
             </mcq-constructor>
-            <mcq-activity id="currentQuestion" style="max-width:30%;" conception-mode resource-label="[[label]]" image-mode="[[imageMode]]" distractor-array="[[distArray]]" class="topLevelView"
-                question="[[question]]" correct-answer=[[response]] correct-message=[[correctMessage]] wrong-message=[[wrongMessage]]
-                media-id={{mediaId}}>
-            </mcq-activity>
+            <div class="topLevelView">
+                <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
+                <mcq-activity id="currentQuestion" style="max-width:30%;" resource-label="[[label]]" image-mode="[[imageMode]]"
+                    distractor-array="[[distArray]]" class="" question="[[question]]" correct-answer=[[response]]
+                    correct-message=[[correctMessage]] wrong-message=[[wrongMessage]] media-id={{mediaId}}>
+                </mcq-activity>
+            </div>
         </div>
         <div class="card">
             <generic-header search={{keyword}}></generic-header>

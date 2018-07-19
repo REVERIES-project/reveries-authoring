@@ -7,12 +7,9 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/iron-form/iron-form.html">
-<link rel="import" href="./free-text-question.html">
 <link rel="import" href="../helper/resource-picker-dialog.html">
 <link rel="import" href="../remove-ressource/create-resource.html">
 <link rel="import" href="../helper/generic-resource-viewer.html">
-<link rel="import" href="../helper/short-textinput.html">
-<link rel="import" href="../helper/short-textarea.html">
 <link rel="import" href="../constructor-helper/save-cancel.html">
 
 <link rel="import" href="../../styles/common-styles.html">
@@ -33,7 +30,9 @@ Builder for free text question resources
 
 <dom-module id="free-text-constructor">
     <style include="common-styles">
-
+        .paddedInput{
+            padding-left: 30px;
+        }
     </style>
     <template>
         <create-resource id="creator" resource-url="/freetextactivity" resource="{{resource}}"></create-resource>
@@ -49,14 +48,14 @@ Builder for free text question resources
                 <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
             </paper-input>
             <paper-textarea name="question" value={{question}} max-rows=0 rows=1 label="Question"></paper-textarea>
-            <short-textinput input-name="responseLabel" input-label="Label du champ réponse" input-value={{responseLabel}}></short-textinput>
+            <paper-input name="responseLabel" class="paddedInput" label="Label du champ réponse" value={{responseLabel}}></paper-input>
             <paper-input name="response" label="Response" value={{response}} required></paper-input>
-            <short-textarea input-name="correctMessage" input-label="Message associé à une réponse correcte" input-value={{correctMessage}}
-                required></short-textarea>
-            <short-textarea input-name="wrongMessage" input-label="Message associé à une réponse incorrecte" input-value={{wrongMessage}}
-                required></short-textarea>
+            <paper-textarea name="correctMessage"  class="paddedInput" label="Message associé à une réponse correcte" value={{correctMessage}}
+                required></paper-textarea>
+            <paper-textarea name="wrongMessage"  class="paddedInput" label="Message associé à une réponse incorrecte" value={{wrongMessage}}
+                required></paper-textarea>
             <paper-button raised on-click="showMediaDialog">Associer un indice (optionnel))</paper-button>
-            <generic-resource-viewer input-name="mediaId" is-picker is-temp page class="resourceViewer" id="freetextMediaViewer"></generic-resource-viewer>
+            <generic-resource-viewer name="mediaId" is-picker is-temp page class="resourceViewer" id="freetextMediaViewer"></generic-resource-viewer>
             <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
         </form>
     </template>
@@ -87,16 +86,6 @@ Builder for free text question resources
                     var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
                     for (var i = 0; i < inputList.length; i++) {
                         inputList[i].value = ""
-                    }
-                    var shortInput = Polymer.dom(this.root).querySelectorAll('short-textinput');
-                    for (var i = 0; i < shortInput.length; i++) {
-                        shortInput[i].inputValue = ""
-                    }
-
-
-                    var shortTextarea = Polymer.dom(this.root).querySelectorAll('short-textarea');
-                    for (var i = 0; i < shortTextarea.length; i++) {
-                        shortTextarea[i].inputValue = ""
                     }
 
 

@@ -73,7 +73,8 @@
     "google-youtube": "GoogleWebComponents/google-youtube#1.3.0",
     "cosmoz-autocomplete": "Neovici/cosmoz-autocomplete#^1.0.1",
     "polymer-dragula": "ergo/polymer-dragula#^0.1.1",
-    "osm-map": "FabianBormann/osm-map"
+    "osm-map": "FabianBormann/osm-map",
+    "activity-feedback": "gick/activity-feedback#^0.0.1"
   },
   "resolutions": {
     "polymer": "^1.7.1",
