@@ -1,6 +1,9 @@
 {
-  "name": "rev-server",
+  "name": "reveries-authoring",
   "main": "server.js",
+  "scripts": {
+    "install-client":"scripts/installClient.sh "
+  },
   "dependencies": {
     "async": "^2.6.0",
     "bcrypt-nodejs": "latest",

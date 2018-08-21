@@ -1,21 +1,14 @@
-/*jshint node: true, bitwise:true, curly:true, forin:true, noarg:true,
- noempty:true, nonew:true, undef:true, strict:true, browser:true, node:true,
-  asi:true, evil: true, nomen: true */
-const {generateCountingSharedBundleUrlMapper,
-  generateSharedDepsMergeStrategy} = require('polymer-bundler')
-  const gulp = require('gulp')
-  const mergeStream = require('merge-stream')
-  const PolymerProject = require('polymer-build').PolymerProject
+var gulp = require('gulp');
+var vulcanize = require('gulp-vulcanize');
 
-const project = new PolymerProject(require('./polymer.json'))
+gulp.task('vulcanize', function() {
+  return gulp.src('./src/element/elements.html')
+    .pipe(vulcanize({
+      stripComments: true,
+      inlineScripts: true,
+      inlineCss: true
+    }))
+    .pipe(gulp.dest('dist/elements'));
+});
 
-  
-mergeStream(project.sources(), project.dependencies())
-  .pipe(project.bundler({
-    excludes: ['bower_components/polymer-code-mirror'],
-    sourcemaps: true,
-    stripComments: true,
-    strategy: generateSharedDepsMergeStrategy(3),
-    urlMapper: generateCountingSharedBundleUrlMapper('shared/bundle_')
-  }))
-  .pipe(gulp.dest('build/'))
+gulp.task('default', ['vulcanize']);
