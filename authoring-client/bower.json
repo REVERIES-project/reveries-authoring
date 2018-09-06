@@ -74,11 +74,13 @@
     "cosmoz-autocomplete": "Neovici/cosmoz-autocomplete#^1.0.1",
     "polymer-dragula": "ergo/polymer-dragula#^0.1.1",
     "osm-map": "FabianBormann/osm-map",
-    "activity-feedback": "gick/activity-feedback#^0.0.1"
+    "activity-feedback": "gick/activity-feedback#^0.0.1",
+    "common-styles": "REVERIES-project/common-styles#^0.0.1"
   },
   "resolutions": {
     "polymer": "^1.7.1",
     "webcomponentsjs": "^0.7.24",
-    "iron-overlay-behavior": "^1.7.0"
+    "iron-overlay-behavior": "^1.7.0",
+    "paper-styles": "^1.0.0"
   }
 }

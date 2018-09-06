@@ -5,8 +5,7 @@ This code may only be used under the "Do whatever you want with code license"
 -->
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/marked-element/marked-element.html">
-<link rel="import" href="../helper/resource-header.html">
-<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../../../bower_components/common-styles/common-styles.html">
 <!--
 Viewer for Markdown resource using marked-element 
 <b>Example - basic</b>
@@ -50,9 +49,6 @@ Viewer for Markdown resource using marked-element
         }
     </style>
     <template>
-        <template is="dom-if" if="[[conceptionMode]]" restamp>
-            <resource-header is-picker resource-label="{{resourceLabel}}"></resource-header>
-        </template>
         <div class="resource">
             <div class="resourceBody">
                 <marked-element markdown="{{mkdown}}">

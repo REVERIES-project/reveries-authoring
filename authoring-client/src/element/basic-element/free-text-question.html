@@ -8,7 +8,7 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/iron-collapse/iron-collapse.html">
-<link rel="import" href="../../styles/common-styles.html">
+<link rel="import" href="../../../bower_components/common-styles/common-styles.html">
 <link rel="import" href="../../../bower_components/activity-feedback/activity-feedback.html">
 <link rel="import" href="../static-media/staticmedia-viewer.html">
 <dom-module id="free-text-question">
@@ -49,8 +49,6 @@ This code may only be used under the "Do whatever you want with code license"
             'use strict';
             Polymer({
                 is: 'free-text-question',
-                behaviors: [],
-
                 _mediaObserver: function (newval) {
                     if (newval) {
                         var temp = true

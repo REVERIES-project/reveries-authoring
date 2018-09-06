@@ -34,9 +34,11 @@ This code may only be used under the "Do whatever you want with code license"
                         </li>
                         <li>Pour mettre du texte en gras, utiler double underscore (ex. __gras__)
                         </li>
-                        <li>Pour créer une liste d'élément, précéder chaque élément d'une étoile et d'un espace (ex. * Item 1)
+                        <li>Pour créer une liste d'élément, précéder chaque élément d'une étoile et d'un espace (ex. *
+                            Item 1)
                         </li>
-                        <li>Pour créer des titres/sous-titres, précéder le titre du caractère dièse et d'un espace (ex. # titre)
+                        <li>Pour créer des titres/sous-titres, précéder le titre du caractère dièse et d'un espace (ex.
+                            # titre)
                         </li>
                     </ul>
                 </iron-collapse>
@@ -45,16 +47,18 @@ This code may only be used under the "Do whatever you want with code license"
 
         </div>
         <div class="card constructorCard">
-            <staticmedia-generator class="topLevelView" label="{{label}}" mkdown="{{MK}}" id="staticConstructor"></staticmedia-generator>
+            <staticmedia-generator class="topLevelView" label="{{resourceLabel}}" mkdown="{{MK}}" id="staticConstructor"></staticmedia-generator>
 
+            <div class="topLevelView">
+                <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
+                <staticmedia-viewer resource-label="[[label]]" conception-mode style="min-width:150px" mkdown="[[MK]]"></staticmedia-viewer>
 
-
-            <staticmedia-viewer resource-label="[[label]]" conception-mode style="min-width:150px" class="topLevelView" mkdown="{{MK}}"></staticmedia-viewer>
+            </div>
         </div>
         <div class="card">
             <generic-header search="{{keyword}}"></generic-header>
-            <list-generic-resource filter-search="[[keyword]]" share-url='/staticmedia' id='staticmedialist' resource-type='staticmedia'
-                url='/staticmedia'></list-generic-resource>
+            <list-generic-resource filter-search="[[keyword]]" share-url='/staticmedia' id='staticmedialist'
+                resource-type='staticmedia' url='/staticmedia'></list-generic-resource>
         </div>
     </template>
     <script>
