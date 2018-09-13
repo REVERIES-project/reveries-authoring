@@ -74,9 +74,11 @@
     "cosmoz-autocomplete": "Neovici/cosmoz-autocomplete#^1.0.1",
     "polymer-dragula": "ergo/polymer-dragula#^0.1.1",
     "osm-map": "FabianBormann/osm-map",
-    "activity-feedback": "gick/activity-feedback#^0.0.1",
-    "common-styles": "REVERIES-project/common-styles#^0.0.1",
-    "staticmedia-viewer": "REVERIES-project/staticmedia-viewer#^0.0.3"
+    "activity-feedback": "gick/activity-feedback",
+    "common-styles": "REVERIES-project/common-styles",
+    "staticmedia-viewer": "REVERIES-project/staticmedia-viewer",
+    "free-text-question": "REVERIES-project/free-text-question"
+
   },
   "resolutions": {
     "polymer": "^1.7.1",
