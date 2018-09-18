@@ -7,7 +7,6 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../../bower_components/paper-radio-group/paper-radio-group.html">
-<link rel="import" href="../basic-element/post-action.html">
 <link rel="import" href="../../../bower_components/thumbnail-view/thumbnail-view.html">
 <link rel="import" href="../../../bower_components/staticmedia-viewer/staticmedia-viewer.html">
 <link rel="import" href="../../../bower_components/common-styles/common-styles.html">
@@ -58,17 +57,14 @@ This code may only be used under the "Do whatever you want with code license"
                             </paper-radio-button>
                         </template>
                 </template>
-                <template is="dom-if" if="{{showMediaButton}}" restamp=true>
+                <template is="dom-if" if="[[media]]" restamp=true>
                     <paper-toggle-button checked={{showClue}}>Indice</paper-toggle-button>
                 </template>
                 <paper-icon-button class="validator" src="../../../images/check.png" on-click="validate"></paper-icon-button>
 
-                <activity-feedback id="feedback" correct-message=[[correctMessage]] wrong-message=[[wrongMessage]]></activity-feedback>
+                <activity-feedback id="feedback" response-status=[[responseStatus]] correct-message=[[correctMessage]] wrong-message=[[wrongMessage]]></activity-feedback>
             </div>
         </div>
-        <template is="dom-if" if="[[unitActivity]]" restamp>
-            <post-action></post-action>
-        </template>
     </template>
     <script>
         (function () {
@@ -78,16 +74,8 @@ This code may only be used under the "Do whatever you want with code license"
                 behaviors: [],
 
                 ready: function () {
-                    // this.hasClue=false
-                    this.mcqRemoved = function () {
-                        this.fire('mcq-removed', null)
-                    }.bind(this)
-                    this.correctIndex = Math.floor((Math.random() * 2));
                 },
 
-                getClue: function () {
-                    this.set('needClue', !this.needClue);
-                },
                 hideMessages:function(){
                     this.$.feedback.hideAll();
                 }
@@ -95,33 +83,29 @@ This code may only be used under the "Do whatever you want with code license"
 
                 validate: function () {
                     if (this.textSelected && this.textSelected === 'resp1') {
-                        this.$.feedback.showCorrect();
+                        this.responseStatus="correct";
                         return
                     }
                     if (this.imageSelected && this.imageSelected === 'resp1') {
-                        this.$.feedback.showCorrect();
+                        this.responseStatus="correct";
                         return
                     }
-                    this.$.feedback.showWrong()
-                },
-                _mediaObserver: function (newval) {
-                    if (newval) {
-                        var temp = true
-                        this.set('showMediaButton', true)
-                    } else {
-                        this.set('showMediaButton', false)
-                        this.showMediaButton = false
-
-                    }
+                    this.responseStatus="wrong";
                 },
 
-
-
-                observers: [
-                    '_mediaObserver(media._id)',
-                ],
 
                 properties: {
+                                        /*
+                    * This property inform if the question has been answered (click on check)
+                    * and if the response is "correct" or "wrong"
+                    */
+                    responseStatus:{
+                        type: String,
+                        notify : true,
+                        value:'',
+                        reflectToAttribute : true,
+                    },
+
                     question: {
                         type: String,
                         notify: true,
@@ -140,10 +124,6 @@ This code may only be used under the "Do whatever you want with code license"
                     },
                     distractorArray: {
                         type: Array,
-                        notify: true,
-                    },
-                    conceptionMode: {
-                        type: Boolean,
                         notify: true,
                     },
                     preview: {
