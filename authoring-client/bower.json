@@ -77,8 +77,8 @@
     "activity-feedback": "gick/activity-feedback",
     "common-styles": "REVERIES-project/common-styles",
     "staticmedia-viewer": "REVERIES-project/staticmedia-viewer",
-    "free-text-question": "REVERIES-project/free-text-question"
-
+    "free-text-question": "REVERIES-project/free-text-question",
+    "thumbnail-view": "REVERIES-project/thumbnail-view#^0.0.3"
   },
   "resolutions": {
     "polymer": "^1.7.1",
