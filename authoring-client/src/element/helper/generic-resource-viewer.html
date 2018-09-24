@@ -7,7 +7,7 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../basic-element/mcq-activity.html">
+<link rel="import" href="../../../bower_components/mcq-activity/mcq-activity.html">
 <link rel="import" href="../../../bower_components/marked-element/marked-element.html">
 <link rel="import" href="../../../bower_components/common-styles/common-styles.html">
 <link rel="import" href="../../../bower_components/free-text-question/free-text-question.html">
@@ -161,8 +161,7 @@ This code may only be used under the "Do whatever you want with code license"
                         resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
                     <mcq-activity preview image-mode={{item.imageMode}} distractor-array={{item.distractors}} class="" conception-mode=[[conceptionMode]]
                         question={{item.question}} resource-status="{{item.status}}" resource-readonly="{{item.readonly}}" resource-label="{{item.label}}"
-                        correct-answer={{item.response}} wrong-answer2={{item.distractor2}} wrong-answer1={{item.distractor1}}
-                        correct-message={{item.correctMessage}} wrong-message={{item.wrongMessage}} item-id="{{item._id}}"
+                        correct-answer={{item.response}} correct-message={{item.correctMessage}} wrong-message={{item.wrongMessage}} item-id="{{item._id}}"
                         media={{item.media}}>
                     </mcq-activity>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>

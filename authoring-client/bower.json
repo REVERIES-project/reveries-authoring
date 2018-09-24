@@ -78,7 +78,8 @@
     "common-styles": "REVERIES-project/common-styles",
     "staticmedia-viewer": "REVERIES-project/staticmedia-viewer",
     "free-text-question": "REVERIES-project/free-text-question",
-    "thumbnail-view": "REVERIES-project/thumbnail-view#^0.0.3"
+    "thumbnail-view": "REVERIES-project/thumbnail-view",
+    "mcq-activity": "REVERIES-project/mcq-activity"
   },
   "resolutions": {
     "polymer": "^1.7.1",
