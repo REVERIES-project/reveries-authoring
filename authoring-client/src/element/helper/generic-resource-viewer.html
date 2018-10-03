@@ -14,7 +14,7 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../POI/one-poi-display.html">
 <link rel="import" href="../inventory/inventory-element.html">
 <link rel="import" href="../auth-manager/user.html">
-<link rel="import" href="../badges/badge-element.html">
+<link rel="import" href="../../../bower_components/badge-element/badge-element.html">
 <link rel="import" href="../../../bower_components/staticmedia-viewer/staticmedia-viewer.html">
 <link rel="import" href="../tutorial-elements/tutorial-viewer.html">
 <link rel="import" href="../unit-game/unitGame.html">
@@ -85,34 +85,40 @@ This code may only be used under the "Do whatever you want with code license"
         <div class="resourceList">
             <template is="dom-if" if="{{item}}">
                 <template is="dom-if" if="{{poi}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/poi' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
+                    <resource-header is-picker=[[isPicker]] resource-url='/poi' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="{{item.label}}"></resource-header>
                     <one-poi-display conception-mode=[[conceptionMode]] resource-label="{{item.label}}" item="{{item}}"></one-poi-display>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{page}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/staticmedia' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
+                    <resource-header is-picker=[[isPicker]] resource-url='/staticmedia' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="{{item.label}}"></resource-header>
                     <staticmedia-viewer conception-mode=[[conceptionMode]] resource-label="[[item.label]]" mkdown="[[item.mkdown]]"></staticmedia-viewer>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{badge}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/badge' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
-                    <badge-element class="" id="" media="{{item.media}}" conception-mode=[[conceptionMode]] badge-text="{{item.badgeText}}" resource-readonly="{{item.readonly}}"
-                        resource-status={{item.status}} item-id="{{item._id}}" label="{{item.label}}">
+                    <resource-header is-picker=[[isPicker]] resource-url='/badge' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="{{item.label}}"></resource-header>
+                    <badge-element class="" id="" media="{{item.media}}" conception-mode=[[conceptionMode]] badge-text="{{item.badgeText}}"
+                        resource-readonly="{{item.readonly}}" resource-status={{item.status}} item-id="{{item._id}}"
+                        label="{{item.label}}">
                     </badge-element>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{folia}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/folia' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
-                    <folia-element class="" id="" media="{{item.media}}" conception-mode=[[conceptionMode]] item="{{item}}" resource-readonly="{{item.readonly}}"
-                       question=[[item.question]] correct-message=[[item.correctMessage]] wrong-message="[[item.wrongMessage]]" target-species=[[item.targetSpecies]] resource-status={{item.status}} item-id="{{item._id}}" label="{{item.label}}">
+                    <resource-header is-picker=[[isPicker]] resource-url='/folia' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="{{item.label}}"></resource-header>
+                    <folia-element class="" id="" media="{{item.media}}" conception-mode=[[conceptionMode]] item="{{item}}"
+                        resource-readonly="{{item.readonly}}" question=[[item.question]] correct-message=[[item.correctMessage]]
+                        wrong-message="[[item.wrongMessage]]" target-species=[[item.targetSpecies]] resource-status={{item.status}}
+                        item-id="{{item._id}}" label="{{item.label}}">
                     </folia-element>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
-
                 <template is="dom-if" if="{{user}}" restamp>
                     <user-profile class="" id="" user={{item}}>
                     </user-profile>
@@ -123,63 +129,71 @@ This code may only be used under the "Do whatever you want with code license"
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{unitgame}}" restamp>
-                    <resource-header is-importer=[[isImporter]] is-picker=[[isPicker]] resource-url='/unitgame' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="[[item.label]]"></resource-header>
-                    <unit-game start-media=[[item.startMedia]] item=[[item]] resource-readonly="[[item.readonly]]" resource-status={{item.status}}
-                        item-id="[[item._id]]" label="[[item.label]]">
+                    <resource-header is-importer=[[isImporter]] is-picker=[[isPicker]] resource-url='/unitgame'
+                        resource-id=[[item._id]] resource-readonly="[[item.readonly]]" resource-status="[[item.status]]"
+                        resource="[[item]]" resource-label="[[item.label]]"></resource-header>
+                    <unit-game start-media=[[item.startMedia]] item=[[item]] resource-readonly="[[item.readonly]]"
+                        resource-status={{item.status}} item-id="[[item._id]]" label="[[item.label]]">
                     </unit-game>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{image}}" restamp>
-
                     <div class="mediablock">
-                        <resource-header is-picker=[[isPicker]] resource-url='/file' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                            resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
-
+                        <resource-header is-picker=[[isPicker]] resource-url='/file' resource-id=[[item._id]]
+                            resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                            resource-label="{{item.label}}"></resource-header>
                         <iron-image class="image" sizing="contain" src="/file/{{item._id}}"></iron-image>
                         <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                     </div>
                 </template>
                 <template is="dom-if" if="{{youtube}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/youtube' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
-                    <youtube-element class="" id="" conception-mode=[[conceptionMode]] resource-status="{{item.status}}" video-id="{{item.videoId}}"
-                        resource-readonly="{{item.readonly}}" item-id="{{item._id}}" resource-label="{{item.label}}">
+                    <resource-header is-picker=[[isPicker]] resource-url='/youtube' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="{{item.label}}"></resource-header>
+                    <youtube-element class="" id="" conception-mode=[[conceptionMode]] resource-status="{{item.status}}"
+                        video-id="{{item.videoId}}" resource-readonly="{{item.readonly}}" item-id="{{item._id}}"
+                        resource-label="{{item.label}}">
                     </youtube-element>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{inventory}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/inventory' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
-                    <inventory-element class="" id="" conception-mode=[[conceptionMode]] resource-status="{{item.status}}" media="{{item.media}}"
-                        item-text="{{item.itemText}}" resource-readonly="{{item.readonly}}" item-id="{{item._id}}" resource-label="{{item.label}}">
+                    <resource-header is-picker=[[isPicker]] resource-url='/inventory' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="{{item.label}}"></resource-header>
+                    <inventory-element class="" id="" conception-mode=[[conceptionMode]] resource-status="{{item.status}}"
+                        media="{{item.media}}" item-text="{{item.itemText}}" resource-readonly="{{item.readonly}}"
+                        item-id="{{item._id}}" resource-label="{{item.label}}">
                     </inventory-element>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{mcq}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/mcq' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
-                    <mcq-activity preview image-mode={{item.imageMode}} distractor-array={{item.distractors}} class="" conception-mode=[[conceptionMode]]
-                        question={{item.question}} resource-status="{{item.status}}" resource-readonly="{{item.readonly}}" resource-label="{{item.label}}"
-                        correct-answer={{item.response}} correct-message={{item.correctMessage}} wrong-message={{item.wrongMessage}} item-id="{{item._id}}"
+                    <resource-header is-picker=[[isPicker]] resource-url='/mcq' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="[[item.label]]"></resource-header>
+                    <mcq-activity  image-mode={{item.imageMode}} distractor-array={{item.distractors}} class=""
+                         question={{item.question}} resource-label="{{item.label}}" correct-answer={{item.response}}
+                        correct-message={{item.correctMessage}} wrong-message={{item.wrongMessage}} item-id="{{item._id}}"
                         media={{item.media}}>
                     </mcq-activity>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{mlg}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/mlg' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
-                    <mlg-viewer class="" item={{item}} conception-mode=[[conceptionMode]] resource-status="{{item.status}}" resource-readonly="{{item.readonly}}"
-                        resource-label="{{item.label}}" item-id="{{item._id}}">
+                    <resource-header is-picker=[[isPicker]] resource-url='/mlg' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="{{item.label}}"></resource-header>
+                    <mlg-viewer class="" item={{item}} conception-mode=[[conceptionMode]] resource-status="{{item.status}}"
+                        resource-readonly="{{item.readonly}}" resource-label="{{item.label}}" item-id="{{item._id}}">
                     </mlg-viewer>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{freetext}}" restamp>
-                    <resource-header is-picker=[[isPicker]] resource-url='/freetextactivity' resource-id=[[item._id]] resource-readonly="[[item.readonly]]"
-                        resource-status="[[item.status]]" resource="[[item]]" resource-label="{{item.label}}"></resource-header>
-                    <free-text-question conception-mode=[[conceptionMode]] resource-status="{{item.status}}" media={{item.media}} resource-readonly="{{item.readonly}}"
-                        resource-label="{{item.label}}" question="{{item.question}}" wrong-message="{{item.wrongMessage}}" item-id="{{item._id}}"
-                        media="{{item.media}}" correct-message="{{item.correctMessage}}" response="{{item.response}}" response-label="Entrez la réponse"></free-text-question>
+                    <resource-header is-picker=[[isPicker]] resource-url='/freetextactivity' resource-id=[[item._id]]
+                        resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                        resource-label="{{item.label}}"></resource-header>
+                    <free-text-question conception-mode=[[conceptionMode]] resource-status="{{item.status}}" media={{item.media}}
+                        resource-readonly="{{item.readonly}}" resource-label="{{item.label}}" question="{{item.question}}"
+                        wrong-message="{{item.wrongMessage}}" item-id="{{item._id}}" media="{{item.media}}"
+                        correct-message="{{item.correctMessage}}" response="{{item.response}}" response-label="Entrez la réponse"></free-text-question>
                     <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                 </template>
                 <template is="dom-if" if="{{isTemp}}" restamp>
@@ -202,8 +216,8 @@ This code may only be used under the "Do whatever you want with code license"
                     this.pickedValue = 'mainDiv'
                     this.active = false
                 },
-                callRemoveResource:function(){
-                        this.fire('resource-removed')
+                callRemoveResource: function () {
+                    this.fire('resource-removed')
                 },
                 isEmpty: function () {
                     this.image = false;
@@ -219,7 +233,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.inventory = false
                     this.unitgame = false
                     this.mlg = false
-                    this.folia=false
+                    this.folia = false
 
                 },
                 isUser: function () {
@@ -235,7 +249,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.page = false;
                     this.badge = false
                     this.inventory = false
-                    this.folia=false
+                    this.folia = false
 
                 },
 
@@ -252,7 +266,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.page = false;
                     this.badge = false
                     this.inventory = false
-                    this.folia=false
+                    this.folia = false
 
                 },
                 isBadge: function () {
@@ -268,7 +282,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.page = false;
                     this.badge = true
                     this.inventory = false
-                    this.folia=false
+                    this.folia = false
 
                 },
                 isInventory: function () {
@@ -284,7 +298,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.page = false;
                     this.badge = false
                     this.inventory = true
-                    this.folia=false
+                    this.folia = false
 
                 },
 
@@ -302,7 +316,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.page = true;
                     this.badge = false
                     this.inventory = false
-                    this.folia=false
+                    this.folia = false
 
                 },
                 isPoi: function () {
@@ -318,7 +332,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.page = false;
                     this.badge = false
                     this.inventory = false
-                    this.folia=false
+                    this.folia = false
 
                 },
                 isyoutube: function () {
@@ -334,7 +348,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.user = false
-                    this.folia=false
+                    this.folia = false
 
                 },
                 isMcq: function () {
@@ -350,7 +364,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.page = false;
                     this.inventory = false
                     this.badge = false
-                    this.folia=false
+                    this.folia = false
 
                 },
                 isFreetext: function () {
@@ -366,7 +380,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.user = false
-                    this.folia=false
+                    this.folia = false
 
                 },
                 isUnitgame: function () {
@@ -382,7 +396,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.user = false
-                    this.folia=false
+                    this.folia = false
 
                 },
 
@@ -400,7 +414,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.user = false
-                    this.folia=false
+                    this.folia = false
 
                 },
 
@@ -417,7 +431,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.user = false
-                    this.folia=false
+                    this.folia = false
                 },
 
                 isFolia: function () {
@@ -433,7 +447,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.user = false
-                    this.folia=true
+                    this.folia = true
                 },
 
 

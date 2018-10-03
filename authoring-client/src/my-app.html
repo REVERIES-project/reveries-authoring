@@ -1,8 +1,9 @@
 <!--
 @license
-Copyright (c) 2018 Pierre-Yves Gicquel. 
-This code may only be used under the "Do whatever you want with code license"
+All this belongs to Pierre-Yves Gicquel, please send money directly in case of use
+ (including reading these lines). Preferably cash but I'm OK with most food and drink. 
 -->
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
@@ -95,7 +96,6 @@ This code may only be used under the "Do whatever you want with code license"
         <auth-notification id="authNotif"></auth-notification>
         <tutorial-dialog page=[[page]] id="tuto"></tutorial-dialog>
         <auth-manager id="manager" status="{{status}}"></auth-manager>
-        <tracking-manager id="tracking"></tracking-manager>
         <app-route route="{{route}}" pattern="#/page/:param" active={{activity}} data="{{routeData}}" tail="{{subroute}}"></app-route>
         <app-scrollpos-control id="scrollPosition" selected="{{page}}"></app-scrollpos-control>
 
@@ -120,23 +120,11 @@ This code may only be used under the "Do whatever you want with code license"
                             <i18n-msg msgid="login_button">Login/logout</i18n-msg>
                         </a>
                     </paper-item>
-                    <!--                     <paper-item name="[[page]]" visible=[[status.isadmin]]>
-                        <a class='menuLinkPermanent' name="tutorial" href="#tutorial">
-                            <i18n-msg msgid="login_button">Tutoriel</i18n-msg>
-                        </a>
-                    </paper-item>
-                    <paper-item name="[[page]]" visible=[[status.isadmin]]>
-                            <a class='menuLinkPermanent' name="admin" href="#">
-                                <i18n-msg msgid="login_button">Tutoriel</i18n-msg>
-                            </a>
-                    </paper-item>    
- -->
                     <paper-submenu name=[[page]]>
                         <paper-item class="menu-trigger firstLevelMenu">
                             <i18n-msg msgid="resources_button"> Mes documents & médias </i18n-msg>
                         </paper-item>
                         <paper-menu class="menu-content">
-
                             <paper-item>
                                 <a class='menuLink' name="image" href="#image">Mes images</a>
                             </paper-item>
@@ -152,7 +140,7 @@ This code may only be used under the "Do whatever you want with code license"
                         <paper-item class="menu-trigger firstLevelMenu">
                             Mes composants de jeu
                         </paper-item>
-                        <paper-menu class="menu-content">
+                        <paper-menu class="menu-content">   
                             <paper-item>
                                 <a class='menuLink' name="freetext" href="#freetext">Mes questions libres</a>
                             </paper-item>
@@ -168,6 +156,12 @@ This code may only be used under the "Do whatever you want with code license"
                             <paper-item>
                                 <a class='menuLink' name="inventory" href="#inventory">Mes objets d'inventaire</a>
                             </paper-item>
+                           <!-- Point d'insertion pour le lien du nouveau composant
+                            Suivre le template suivant
+                            <paper-item>
+                                    <a class='menuLink' name="moncomposant" href="#moncomposant">Mon composant</a>
+                            </paper-item>
+                            -->    
                         </paper-menu>
                     </paper-submenu>
                     <paper-item name="[[page]]">
@@ -208,14 +202,18 @@ This code may only be used under the "Do whatever you want with code license"
                     <tutorial-view name="tutorial"></tutorial-view>
                     <poi-view name="poi"></poi-view>
                     <youtube-view name="youtube"></youtube-view>
-                    <staticmedia-view id='staticmedia' name="staticmedia"></staticmedia-view>
-                    <freetext-view id='freetext' name="freetext"></freetext-view>
+                    <staticmedia-view  name="staticmedia"></staticmedia-view>
+                    <freetext-view  name="freetext"></freetext-view>
                     <image-view name="image"></image-view>
-                    <mcq-view id="mcq" name="mcq"></mcq-view>
-                    <badge-view id="badge" name="badge"></badge-view>
-                    <inventory-view id="inventoryView" name="inventory"></inventory-view>
-                    <constructor-view id="constructorView" name="constructor"></constructor-view>
-                    <mlg-view id="mlgView" name="mlg"></mlg-view>
+                    <mcq-view  name="mcq"></mcq-view>
+                    <badge-view name="badge"></badge-view>
+                    <inventory-view  name="inventory"></inventory-view>
+                    <constructor-view  name="constructor"></constructor-view>
+                    <mlg-view  name="mlg"></mlg-view>
+                    <!-- Point d'insertion pour la page de construction du nouveau composant
+                    <moncomposant-view name="moncomposant"></moncomposant-view>
+                    -->    
+
                     <reset-view id="reset" token=[[token]] name="reset"></reset-view>
                 </iron-pages>
             </app-header-layout>
