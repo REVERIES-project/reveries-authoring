@@ -1,0 +1,86 @@
+<!--
+@license
+All this belongs to Pierre-Yves Gicquel, please send money directly in case of use
+ (including reading these lines). Preferably cash but I'm OK with most food and drink. 
+-->
+<!--
+This page provides a template for the creation of a new component page. The template 
+suppose the component name to be "new-component" and have a unique property new-prop.
+ The constuctor part is named "new-component-constructor".
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/common-styles/common-styles.html">
+<link rel="import" href="./element/helper/resource-header.html">
+<link rel="import" href="./element/resource-filtering/generic-header.html">
+<link rel="import" href="../src/element/helper/list-generic-resource.html">
+<!--
+    Following import are specific to "new-component"
+-->
+<link rel="import" href="./element/basic-element/new-component-constructor.html">
+<link rel="import" href="../bower_components/new-component/new-component.html">
+<!--
+    The name of all component page follow the same pattern 
+-->
+<dom-module id="newcomponent-view">
+    <template>
+        <style include="common-styles">
+        </style>
+        <div class="card">
+
+            <div class="topLevelInfo">
+                <h1>Appropriate Title</h1>
+                <div>
+                    Description of the component
+                </div>
+                <br> Dans cette section :
+                <ul>
+                    <li>Description of what possible if nessary</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card constructorCard">
+            <new-component-constructor class="topLevelView" new-prop={{newProp}} id="newComponentConstructor" label={{resourceLabel}}>
+            </new-component-constructor>
+            <div class="topLevelView">
+                <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
+                <new-component id="newComponent" style="max-width:30%;" new-prop=[[new-prop]] resource-label="[[resourceLabel]]">
+                </new-component>
+            </div>
+        </div>
+        <div class="card">
+            <generic-header search={{keyword}}></generic-header>
+            <list-generic-resource filter-search=[[keyword]] share-url='/newcomponent' id='newcomponentList'
+             resource-type='newcomponent' url='/newcomponent'></list-generic-resource>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            /* This code is to be updated according to the component name
+            */
+            is: 'newcomponent-view',
+            ready: function () {
+                this.addEventListener('resource-operation', this.updateMedia.bind(this))
+            },
+            updateMedia: function (message) {
+                switch (message.detail.info.operation) {
+                    case 'create':
+                        this.$.newcomponentList.requestElements()
+                        break
+                    case 'update':
+                        this.$.newcomponentList.requestElements()
+                        break
+
+                    case 'delete':
+                        this.$.newcomponentList.requestElements()
+                        break
+
+                    case 'edit':
+                        this.$.newComponentConstructor.edit(message.detail.info.resource)
+                        break
+                }
+            },
+
+        });
+    </script>
+</dom-module>
