@@ -24,7 +24,7 @@ Builder for inventory
 @demo
 -->
 
-<dom-module id="inventoryitem-constructor">
+<dom-module id="inventory-constructor">
 
     <style include="common-styles">
     </style>
@@ -54,7 +54,7 @@ Builder for inventory
     (function() {
         'use strict';
         Polymer({
-            is: 'inventoryitem-constructor',
+            is: 'inventory-constructor',
             ready: function() {
                 this.updating = false
                 this.$.pagePicker.addEventListener('resourcePicked', this.setResource.bind(this))
