@@ -19,7 +19,6 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../src/element/auth-manager/auth-manager.html">
-<link rel="import" href="../src/element/auth-manager/tracking-manager.html">
 <link rel="import" href="../bower_components/i18n-msg/i18n-msg.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
@@ -226,16 +225,11 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
             ready: function () {
                 I18nMsg.lang = 'en';
                 Platform.performMicrotaskCheckpoint();
-                this.$$('#pages').addEventListener('tracking-operation', this.peformTracking.bind(this))
                 this.$$('#pages').addEventListener('resource-operation', this.showMessage.bind(this))
                 this.$$('#pages').addEventListener('auth-event', this.authChanged.bind(this))
                 this.$$('#pages').addEventListener('auth-message', this.showAuthMessage.bind(this))
-
                 this.$.manager.addEventListener('auth-message', this.showAuthMessage.bind(this))
                 this.$.manager.checkStatusOnRefresh();
-            },
-            peformTracking: function () {
-
             },
             unitGameSaved: function () {
                 if (this.$$('#mlgView') && this.$$('#mlgView').updateUnitGames) {
