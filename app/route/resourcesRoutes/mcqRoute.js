@@ -1,5 +1,7 @@
 module.exports = function (app, logger) {
     var MCQ = require('../../models/mcq.js')
+    var CommonHelper = require('./commonHelper.js')
+
     // Handle reception of a new mcq activity designed by conceptor
     app.post('/mcq', function (req, res) {
         if (!req.isAuthenticated()) {
@@ -167,7 +169,7 @@ module.exports = function (app, logger) {
 			})
 			return
 		}
-		switchStatus(MCQ, req, res)
+		CommonHelper.switchStatus(MCQ, req, res)
 
 	})
 
@@ -195,39 +197,6 @@ module.exports = function (app, logger) {
     })
 
 
-    var switchStatus = function (model, req, res) {
-		model.findById(req.params.id, function (err, resp) {
-			if (!err) {
-				if (resp && req.user._id == resp.owner) {
-					if (resp.status == 'Public') {
-						resp.status = 'Private'
-					} else {
-						resp.status = 'Public'
-					}
-					resp.save(function (err) {
-							if (err) {
-								res.send({
-									success: false
-								})
-							} else {
-								res.send({
-									success: true
-								})
-							}
-
-						}
-
-					)
-				} else {
-					res.send({
-						success: false,
-						message: 'User not owner of resource'
-					})
-				}
-			}
-		})
-
-	}
 
 
 }

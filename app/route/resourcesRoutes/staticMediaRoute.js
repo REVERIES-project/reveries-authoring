@@ -1,5 +1,7 @@
 module.exports = function(app,logger) {
 	var StaticMedia = require('../../models/staticmedia.js')
+	var CommonHelper = require('./commonHelper.js')
+
 	app.get('/staticmedia', function (req, res) {
 		if (!req.user) {
 			res.send({
@@ -77,7 +79,7 @@ module.exports = function(app,logger) {
 			})
 			return
 		}
-		switchStatus(StaticMedia, req, res)
+		CommonHelper.switchStatus(StaticMedia, req, res)
 
 	})
 
@@ -147,39 +149,5 @@ module.exports = function(app,logger) {
 
     })
     
-    var switchStatus = function (model, req, res) {
-		model.findById(req.params.id, function (err, resp) {
-			if (!err) {
-				if (resp && req.user._id == resp.owner) {
-					if (resp.status == 'Public') {
-						resp.status = 'Private'
-					} else {
-						resp.status = 'Public'
-					}
-					resp.save(function (err) {
-							if (err) {
-								res.send({
-									success: false
-								})
-							} else {
-								res.send({
-									success: true
-								})
-							}
-
-						}
-
-					)
-				} else {
-					res.send({
-						success: false,
-						message: 'User not owner of resource'
-					})
-				}
-			}
-		})
-
-	}
-
 
 }
