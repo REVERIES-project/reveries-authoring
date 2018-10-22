@@ -55,7 +55,7 @@ Builder for free text question resources
             <paper-textarea name="wrongMessage"  class="paddedInput" label="Message associé à une réponse incorrecte" value={{wrongMessage}}
                 required></paper-textarea>
             <paper-button raised on-click="showMediaDialog">Associer un indice (optionnel))</paper-button>
-            <generic-resource-viewer name="mediaId" is-picker is-temp page class="resourceViewer" id="freetextMediaViewer"></generic-resource-viewer>
+            <generic-resource-viewer input-name="mediaId" is-picker is-temp page class="resourceViewer" id="freetextMediaViewer"></generic-resource-viewer>
             <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
         </form>
     </template>

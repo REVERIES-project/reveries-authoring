@@ -15,8 +15,6 @@ module.exports = function (app, logger) {
         Mcq.status = req.body.status
         Mcq.label = req.body.label
         Mcq.question = req.body.question
-        Mcq.distractor1 = req.body.distractor1
-        Mcq.distractor2 = req.body.distractor2
         if (req.body.distractors) {
             Mcq.distractor = []
             for (var i = 0; i < req.body.distractors.length; i++) {
