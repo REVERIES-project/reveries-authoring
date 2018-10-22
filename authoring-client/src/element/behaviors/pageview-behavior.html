@@ -1,0 +1,37 @@
+
+<!--
+`pageview-behavior`
+
+
+@demo demo/index.html
+-->
+
+<script>
+    Window.PageviewBehavior = {
+  
+        ready: function () {
+                this.addEventListener('resource-operation', this.updateMedia.bind(this))
+            },
+            updateMedia: function (message) {
+                switch (message.detail.info.operation) {
+                    case 'create':
+                        this.$.resourceList.requestElements()
+                        break
+                    case 'update':
+                        this.$.resourceList.requestElements()
+                        break
+
+                    case 'delete':
+                        this.$.resourceList.requestElements()
+                        break
+
+                    case 'edit':
+                        this.$.resourceConstructor.edit(message.detail.info.resource)
+                        break
+                }
+            },
+  
+  
+    };
+  </script>
+  

@@ -33,7 +33,7 @@ This code may only be used under the "Do whatever you want with code license"
         </div>
         <div class="card constructorCard">
             <folia-constructor class="topLevelView" question={{question}} target-species="{{targetSpecies}}" item={{item}} correct-message="{{cmessage}}"
-                wrong-message="{{wmessage}}" id="itemConstructor" label="{{resourceLabel}}">
+                wrong-message="{{wmessage}}" id="resourceConstructor" label="{{resourceLabel}}">
             </folia-constructor>
             <div class="topLevelView">
                 <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
@@ -46,34 +46,16 @@ This code may only be used under the "Do whatever you want with code license"
         </div>
         <div class="card">
             <generic-header search="{{keyword}}"></generic-header>
-            <list-generic-resource filter-search="[[keyword]]" id='itemList' share-url="/folia" resource-type='folia' url='/folia'></list-generic-resource>
+            <list-generic-resource filter-search="[[keyword]]" id='resourceList' share-url="/folia" resource-type='folia' url='/folia'></list-generic-resource>
         </div>
     </template>
     <script>
         Polymer({
 
             is: 'folia-view',
-            ready: function () {
-                this.addEventListener('resource-operation', this.updateMedia.bind(this))
-            },
-            updateMedia: function (message) {
-                switch (message.detail.info.operation) {
-                    case 'create':
-                        this.$.itemList.requestElements()
-                        break
-                    case 'update':
-                        this.$.itemList.requestElements()
-                        break
-
-                    case 'delete':
-                        this.$.itemList.requestElements()
-                        break
-
-                    case 'edit':
-                        this.$.itemConstructor.edit(message.detail.info.resource)
-                        break
-                }
-            },
+            behaviors: [
+             Window.PageviewBehavior
+            ],
 
         });
     </script>

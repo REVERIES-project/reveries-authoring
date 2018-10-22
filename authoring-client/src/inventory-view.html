@@ -31,7 +31,7 @@ This code may only be used under the "Do whatever you want with code license"
             </div>
         </div>
         <div class="card constructorCard">
-            <inventory-constructor class="topLevelView" media="{{media}}" inventory-document="{{inventoryDocument}}" id="inventoryConstructor"
+            <inventory-constructor class="topLevelView" media="{{media}}" inventory-document="{{inventoryDocument}}" id="resourceConstructor"
                 label="{{resourceLabel}}" item-text="{{itemText}}">
             </inventory-constructor>
             <div class="topLevelView">
@@ -43,34 +43,16 @@ This code may only be used under the "Do whatever you want with code license"
         <div class="card">
             <generic-header search={{keyword}}></generic-header>
 
-            <list-generic-resource filter-search="[[keyword]]" share-url='/inventory' id='inventoryList' resource-type='inventory' url='/inventory'></list-generic-resource>
+            <list-generic-resource filter-search="[[keyword]]" share-url='/inventory' id='resourceList' resource-type='inventory' url='/inventory'></list-generic-resource>
         </div>
     </template>
     <script>
         Polymer({
 
             is: 'inventory-view',
-            ready: function () {
-                this.addEventListener('resource-operation', this.updateMedia.bind(this))
-            },
-            updateMedia: function (message) {
-                switch (message.detail.info.operation) {
-                    case 'create':
-                        this.$.inventoryList.requestElements()
-                        break
-                    case 'update':
-                        this.$.inventoryList.requestElements()
-                        break
-
-                    case 'delete':
-                        this.$.inventoryList.requestElements()
-                        break
-
-                    case 'edit':
-                        this.$.inventoryConstructor.edit(message.detail.info.resource)
-                        break
-                }
-            },
+            behaviors: [
+             Window.PageviewBehavior
+            ],
 
         });
     </script>

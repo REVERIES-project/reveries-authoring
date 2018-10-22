@@ -18,6 +18,8 @@ module.exports = function (app, gfs, logger) {
 	var Folia = require('../models/folia.js')
 
 
+	var staticMediaHandler=require('./resourcesRoutes/staticMediaRoute.js')(app,logger)
+	var mcqHandler=require('./resourcesRoutes/mcqRoute.js')(app,logger)
 
 	app.post('/folia', function (req, res) {
 		if (!req.isAuthenticated()) {
@@ -186,69 +188,6 @@ module.exports = function (app, gfs, logger) {
 	})
 
 	// Handle reception of a new static media
-	app.post('/staticmedia', function (req, res) {
-		if (!req.isAuthenticated()) {
-			res.send({
-				success: false,
-				message: 'Please authenticate'
-			})
-			return
-		}
-		var staticmedia = new StaticMedia()
-		staticmedia.label = req.body.label
-		var now = new Date()
-		staticmedia.creationDate = now
-		staticmedia.owner = req.user._id
-		staticmedia.status = req.body.status
-		staticmedia.mkdown = req.body.mkdown
-		if (!req.body.itemId) {
-
-			staticmedia.save(function (err, resource) {
-				if (err) {
-					logger.log('error', 'Error while saving static media %s', err.message)
-					res.send({
-						success: false
-					})
-				} else {
-					logger.log('info', 'Static media created %s', JSON.stringify(resource))
-					res.send({
-						success: true,
-						resource: staticmedia,
-						operation: 'create'
-					})
-
-				}
-			})
-		}
-		if (req.body.itemId && req.body.itemId.length > 0) {
-			StaticMedia.findById(req.body.itemId, function (err, toUpdate) {
-				if (!toUpdate) {
-					logger.log('error', 'Err, Freetext with id ' + req.body.itemId + ' does not exists')
-				} else {
-					toUpdate.label = req.body.label
-					toUpdate.owner = req.user._id
-					toUpdate.status = req.body.status
-					toUpdate.mkdown = req.body.mkdown
-					toUpdate.save(function (err) {
-						if (err) {
-							logger.log('error', 'Error while updating static media %s', err.message)
-							res.send({
-								success: false
-							})
-						} else res.send({
-							success: true,
-							resource: toUpdate,
-							operation: 'update'
-						})
-
-					})
-
-				}
-
-			})
-		}
-
-	})
 	app.post('/tutorial', function (req, res) {
 		if (!req.isAuthenticated()) {
 			res.send({
@@ -623,53 +562,6 @@ module.exports = function (app, gfs, logger) {
 
 
 
-	app.get('/staticmedia', function (req, res) {
-		if (!req.user) {
-			res.send({
-				success: false,
-				'message': 'please authenticate'
-			})
-			return
-		}
-		if (req.query && req.query.search) {
-			StaticMedia.find({
-				$text: {
-					$search: req.query.search
-				}
-			}, function (err, results) {
-				res.send(results)
-
-			})
-			return
-		}
-
-		//   StaticMedia.find({ owner: req.user._id })
-		StaticMedia.find({
-				$or: [{
-					owner: req.user._id
-				}, {
-					status: 'Public'
-				}]
-			})
-			.sort({
-				creationDate: -1
-			})
-			.exec(function (err, staticmedias) {
-				for (var i = 0; i < staticmedias.length; i++) {
-					var staticmedia = staticmedias[i]
-					if (staticmedia.owner == req.user._id) {
-						staticmedia.readonly = 'readwrite'
-					} else {
-						staticmedia.readonly = 'readonly'
-					}
-				}
-
-				res.send(staticmedias)
-			})
-
-
-	})
-
 	app.get('/tutorial', function (req, res) {
 		if (!req.user) {
 			res.send({
@@ -899,25 +791,6 @@ module.exports = function (app, gfs, logger) {
 	})
 
 
-	app.delete('/staticmedia/:id', function (req, res) {
-		if (!req.user._id) {
-			res.send({
-				success: false,
-				message: 'user not authenticated'
-			})
-		}
-		StaticMedia.findOneAndRemove({
-				'_id': req.params.id,
-				owner: req.user._id
-			},
-			function (err, doc) {
-				res.send({
-					success: true,
-					resource: doc,
-					operation: 'delete'
-				})
-			})
-	})
 
 	app.delete('/tutorial/:id', function (req, res) {
 		if (!req.user._id) {
@@ -1094,186 +967,10 @@ module.exports = function (app, gfs, logger) {
 			})
 	})
 	//TODO Refactor 
-	// Handle reception of a new mcq activity designed by conceptor
-	app.post('/mcq', function (req, res) {
-		if (!req.isAuthenticated()) {
-			res.send({
-				success: false,
-				message: 'Please authenticate'
-			})
-			return
-		}
-		var Mcq = new MCQ()
-		Mcq.owner = req.user._id
-		Mcq.imageMode = req.body.imageMode
-		Mcq.status = req.body.status
-		Mcq.label = req.body.label
-		Mcq.question = req.body.question
-		Mcq.distractor1 = req.body.distractor1
-		Mcq.distractor2 = req.body.distractor2
-		if (req.body.distractors) {
-			Mcq.distractor = []
-			for (var i = 0; i < req.body.distractors.length; i++) {
-				Mcq.distractors.push({
-					value: req.body.distractors[i]
-				})
-			}
-		}
-		Mcq.response = req.body.response
-		Mcq.wrongMessage = req.body.wrongMessage
-		Mcq.correctMessage = req.body.correctMessage
-		Mcq.media = req.body.mediaId
-		var now = new Date()
-		Mcq.creationDate = now
-
-		//save if no mediaId
-		if (!req.body.itemId) {
-			Mcq.save(function (err) {
-				if (err) {
-					logger.log('error', 'Error while saving MCQ %s', err.message)
-					res.send({
-						success: false
-					})
-				} else res.send({
-					success: true,
-					resource: Mcq,
-					operation: 'create'
-				})
-
-			})
-		}
-		//update existing MCQ if mediaId
-		if (req.body.itemId && req.body.itemId.length > 0) {
-			MCQ.findById(req.body.itemId, function (err, toUpdate) {
-				if (!toUpdate) {
-					logger.log('error', 'Err, MCQ with id ' + req.body.itemId + ' does not exists')
-				} else {
-					logger.log('info', 'Updating MCQ ', JSON.stringify(toUpdate))
-					toUpdate.owner = req.user._id
-					toUpdate.status = req.body.status
-					toUpdate.label = req.body.label
-					toUpdate.question = req.body.question
-					toUpdate.distractor1 = req.body.distractor1
-					toUpdate.distractor2 = req.body.distractor2
-					if (req.body.distractors) {
-						toUpdate.distractor = []
-						for (var i = 0; i < req.body.distractors.length; i++) {
-							toUpdate.distractors.push({
-								value: req.body.distractors[i]
-							})
-						}
-					}
-					toUpdate.response = req.body.response
-					toUpdate.wrongMessage = req.body.wrongMessage
-					toUpdate.correctMessage = req.body.correctMessage
-					toUpdate.media = req.body.mediaId
-					toUpdate.save(function (err) {
-						if (err) {
-							logger.log('error', 'Error while updating MCQ %s', err.message)
-							res.send({
-								success: false
-							})
-						} else res.send({
-							success: true,
-							resource: toUpdate,
-							operation: 'update'
-						})
-
-					})
-
-				}
-
-			})
-		}
-	})
-
-
-	// Return the list of mcq owned by current user
-	app.get('/mcq', function (req, res) {
-		if (!req.user) {
-			res.send({
-				success: false,
-				'message': 'please authenticate'
-			})
-			return
-		}
-
-
-		if (req.query && req.query.search) {
-			MCQ.find({
-					$text: {
-						$search: req.query.search
-					}
-				})
-				.populate('media')
-				.exec(function (err, results) {
-					res.send(results)
-
-				})
-			return
-		}
 
 
 
-		//        MCQ.find({ owner: req.user._id })
-		MCQ.find({
-				$or: [{
-					owner: req.user._id
-				}, {
-					status: 'Public'
-				}]
-			})
-			.sort({
-				creationDate: -1
-			})
-			.populate('media')
-			.exec(function (err, mcqs) {
-				for (var i = 0; i < mcqs.length; i++) {
-					var mcq = mcqs[i]
-					if (mcq.owner == req.user._id) {
-						mcq.readonly = 'readwrite'
-					} else {
-						mcq.readonly = 'readonly'
-					}
-				}
-				res.send(mcqs)
-			})
 
-	})
-
-
-	app.get('/mcq/:id', function (req, res) {
-		MCQ.findOne({
-				'_id': req.params.id,
-			})
-			.populate('media')
-			.exec(function (err, mcq) {
-				res.send(mcq)
-			})
-
-
-	})
-
-	app.delete('/mcq/:id', function (req, res) {
-		if (!req.user._id) {
-			res.send({
-				success: false,
-				message: 'user not authenticated'
-			})
-		}
-		MCQ.findOneAndRemove({
-				'_id': req.params.id,
-				owner: req.user._id
-			},
-			function (err, doc) {
-				res.send({
-					success: true,
-					resource: doc,
-					operation: 'delete'
-				})
-			})
-
-	})
 
 	app.post('/mlg', function (req, res) {
 		var mlg = new MLG()
@@ -1732,17 +1429,6 @@ module.exports = function (app, gfs, logger) {
 
 	//Put operation allow to chhane the metadata
 	// limited to share status for the moment 
-	app.put('/mcq/:id/share', function (req, res) {
-		if (!req.isAuthenticated()) {
-			res.send({
-				success: false,
-				message: 'Please authenticate'
-			})
-			return
-		}
-		switchStatus(MCQ, req, res)
-
-	})
 	app.put('/badge/:id/share', function (req, res) {
 		if (!req.isAuthenticated()) {
 			res.send({
