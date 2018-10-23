@@ -8,11 +8,9 @@ var poiSchema = mongoose.Schema({
     type: { type: String, default: 'poi' },
     typeLabel: { type: String, default: 'Point of interest' },
     comment: String,
-    qrcodeid: String,
     creationDate: Date,
     latitude: Number,
     longitude: Number,
-    photo: String,
     map: {
         marker: String,
         areaLat: Number,

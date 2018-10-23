@@ -24,6 +24,7 @@ module.exports = function (app, gfs, logger) {
 	var inventoryHandler=require('./resourcesRoutes/inventoryRoute.js')(app,logger)
 	var foliaHandler=require('./resourcesRoutes/foliaRoute.js')(app,logger)
 	var badgeHandler=require('./resourcesRoutes/badgeRoute.js')(app,logger)
+	var poiHandler=require('./resourcesRoutes/poiRoute.js')(app,logger)
 
 	app.post('/youtube', function (req, res) {
 		if (!req.isAuthenticated()) {
@@ -892,21 +893,6 @@ module.exports = function (app, gfs, logger) {
 
 
 
-	//Put operation allow to chhane the metadata
-	// limited to share status for the moment 
-
-	app.put('/poi/:id/share', function (req, res) {
-		if (!req.isAuthenticated()) {
-			res.send({
-				success: false,
-				message: 'Please authenticate'
-			})
-			return
-		}
-		switchStatus(POI, req, res)
-
-	})
-
 
 	//Put operation allow to chhane the metadata
 	// limited to share status for the moment 
@@ -960,64 +946,7 @@ module.exports = function (app, gfs, logger) {
 
 
 
-	//handle reception of a POI posted from a map,
-	// with possible trigger area
 
-	app.post('/poimap', function (req, res) {
-		if (!req.isAuthenticated()) {
-			res.send({
-				success: false,
-				message: 'Please authenticate'
-			})
-			return
-		}
-		var now = new Date()
-
-		var condition = {
-			'_id': req.user._id
-		}
-		var poi = {
-			owner: req.user._id,
-			status: req.body.status,
-			comment: req.body.comment,
-			label: req.body.label,
-			creationDate: now,
-			latitude: req.body.latitude,
-			longitude: req.body.longitude,
-			photo: req.body.imageId,
-			map: {
-				marker: req.body.marker,
-				mapLatitude: req.body.mapLatitude,
-				mapLongitude: req.body.mapLongitude,
-				mapZoom: req.body.mapZoom,
-				areaLat: req.body.areaLat,
-				areaLong: req.body.areaLong,
-				areaRadius: req.body.radius,
-			}
-		}
-		var Poi = new POI(poi)
-		Poi.save(function (err) {
-			if (err) {
-				logger.log('error', 'Error while saving POI %s', err.message)
-				return 500
-			}
-			res.send({
-				success: true,
-				resource: Poi,
-				operation: 'create'
-			})
-		})
-
-
-	})
-	app.get('/poi/:id', function (req, res) {
-		POI.findOne({
-			'_id': req.params.id,
-		}, function (err, poi) {
-			res.send(poi)
-		})
-
-	})
 
 	app.get('/qrcode/:id', function (req, res) {
 		//res.header('Content-Type', 'image/png');
@@ -1061,40 +990,6 @@ module.exports = function (app, gfs, logger) {
 			})
 
 	})
-	// Self explaining
-	app.get('/poi', function (req, res) {
-		if (!req.user) {
-			res.send({
-				success: false,
-				'message': 'please authenticate'
-			})
-		} else
-			//POI.find({ owner: req.user._id }) 
-			POI.find({
-				$or: [{
-					owner: req.user._id
-				}, {
-					status: 'Public'
-				}]
-			})
-			.sort({
-				creationDate: -1
-			})
-			.exec(function (err, pois) {
-				for (var i = 0; i < pois.length; i++) {
-					var poi = pois[i]
-					if (poi.owner == req.user._id) {
-						poi.readonly = 'readwrite'
-					} else {
-						poi.readonly = 'readonly'
-					}
-				}
-
-				res.send(pois)
-			})
-	})
-
-
 
 	var populateUsersPOI = function (user) {
 		return POI.find({
@@ -1180,26 +1075,6 @@ module.exports = function (app, gfs, logger) {
 
 
 
-	// Self explaining
-	app.delete('/poi/:id', function (req, res) {
-		if (!req.user) {
-			res.send({
-				success: false,
-				message: 'user not authenticated'
-			})
-		}
-		POI.findOneAndRemove({
-				'_id': req.params.id,
-				owner: req.user._id
-			},
-			function (err, doc) {
-				res.send({
-					success: true,
-					resource: doc,
-					operation: 'delete'
-				})
-			})
-	})
 
 
 	app.delete('/user/:id', function (req, res) {
