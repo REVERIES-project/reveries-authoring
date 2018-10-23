@@ -21,7 +21,7 @@ module.exports = function(app,logger) {
 	//handle reception of a POI posted from a map,
 	// with possible trigger area
 
-	app.post('/poimap', function (req, res) {
+	app.post('/poi', function (req, res) {
 		if (!req.isAuthenticated()) {
 			res.send({
 				success: false,

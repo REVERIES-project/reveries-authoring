@@ -9,11 +9,12 @@ This code may only be used under the "Do whatever you want with code license"
 <dom-module id="one-poi-display">
     <template>
         <style include="common-styles">
-            :host{
-                --resource-body-mixin:{
-                    align-items:baseline;
+            :host {
+                --resource-body-mixin: {
+                    align-items: baseline;
                 }
             }
+
             .info {
                 color: #737373;
                 font-weight: 400;
@@ -46,11 +47,9 @@ This code may only be used under the "Do whatever you want with code license"
                         <div class="info"> {{item.comment}}</div>
                     </div>
                 </template>
-                <template is="dom-if" if="[[!conceptionMode]]" restamp>
-                    <div style="justify-content: center" class="visible">
-                        <paper-toggle-button checked=[[onMap]] on-change="toggledMap">Afficher sur la carte</paper-toggle-button>
-                    </div>
-                </template>
+                <div style="justify-content: center" class="visible">
+                    <paper-toggle-button checked=[[onMap]] on-change="toggledMap">Afficher sur la carte</paper-toggle-button>
+                </div>
             </div>
         </div>
     </template>

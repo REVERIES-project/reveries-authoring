@@ -65,7 +65,6 @@ This code may only be used under the "Do whatever you want with code license"
                 this.$.gmap.addEventListener('google-map-click', this.setMarker.bind(this))
                 this.addEventListener('remove-marker', this.removeMarker.bind(this))
                 this.addEventListener('map-operation', this.setNewCenter.bind(this))
-                this.addEventListener('resource-operation', function(e) { console.log(e) })
 
             },
             setNewCenter: function(msg) {
@@ -78,17 +77,6 @@ This code may only be used under the "Do whatever you want with code license"
                 map.setCenter(myLatLng)
 
             },
-            centerMap: function() {
-                var myLatLng = new google.maps.LatLng({
-                    lat: this.lat,
-                    lng: this.long
-                });
-
-                var map = this.get('mapsAPI')
-                map.setCenter(myLatLng)
-
-            },
-
             removeMarker: function(event) {
                 this.set('marker', {})
                 this.circle.setMap(null)

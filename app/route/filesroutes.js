@@ -16,36 +16,6 @@ module.exports = function(app, passport, gfs) {
 
     // handle POI posted from app, since POI might contains a photo
     // we handle that case with if(req.files.file)
-    app.post('/poi', function(req, res) {
-        if (req.isAuthenticated()) {
-            if (req.files.file) {
-                var part = req.files;
-                var writestream = gfs.createWriteStream({
-                    filename: part.file.name,
-                    mode: 'w',
-                    content_type: part.file.mimetype,
-                    metadata: {
-                        owner: req.user._id,
-                        poi: true
-                    }
-                });
-                writestream.write(part.file.data);
-
-                writestream.on('close', function(file) {
-                    updateUserPOI(file, req, res);
-                })
-                writestream.end();
-            } else {
-                res.send({
-                    success: true
-                })
-                updateUserPOI(null, req, res);
-
-            }
-        } else {
-            res.send('Please authenticate first')
-        }
-    });
 
 
     // handle media posted by authenticated users
