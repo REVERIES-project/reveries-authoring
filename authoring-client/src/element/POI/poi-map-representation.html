@@ -83,7 +83,7 @@ This code may only be used under the "Do whatever you want with code license"
                 <div class="formTitleWithButton">
                     <h3 class="smallh3">Nouveau POI</h3>
                 </div>
-                <paper-input name="label" value={{title}} label="Label">
+                <paper-input name="label" value={{label}} label="Label">
                     <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
                 </paper-input>
                 <paper-textarea name="comment" value={{info}} label="Description"></paper-textarea>
@@ -93,7 +93,7 @@ This code may only be used under the "Do whatever you want with code license"
                 <paper-input name="radius" value=[[radius]] label="Rayon"></paper-input>
                 <div class=insideflex style="margin-bottom: 10px">
                     <paper-button noink name="save" class="small" on-click="_submit" raised>Enregistrer</paper-button>
-                    <paper-button noink name="delete" on-click="removeMark" class="small" raised>Annuler</paper-button>
+                    <paper-button noink name="delete" on-click="cancel" class="small" raised>Annuler</paper-button>
                 </div>
             </form>
         </paper-material>
@@ -108,140 +108,50 @@ This code may only be used under the "Do whatever you want with code license"
                 openDialog: function () {
                     this.$.icons.open();
                 },
-                setValues: function () {
-                    if (this.currentname.length !== 0) {
-                        this.set('currentname', this.currentname);
-                        this.set('currentid', this.currentid);
-                        this.set('hasImage', true);
-                    }
-                },
                 _submit: function () {
                     var json = this.$.poimap.serialize()
                     this.set('resource', json)
                     this.$.creator.createResource()
-                    this.removeMark()
+                    this.cancel()
                 },
-                removeMark: function () {
+                cancel: function () {
+                    this.label=""
+                    this.info=""
                     this.fire('remove-marker', {
                         latitude: this.latitude,
                         longitude: this.longitude,
                         id: this.ident,
                     })
                 },
-                _mapiconobs: function (newval, oldval) {
-                    this.set('icon', newval);
-                    this.$.icons.close();
-                },
-                ready: function () {},
-
 
                 properties: {
-                    title: {
-                        type: String,
-                        reflectToAttribute: true,
-                        notify: true,
+                    label:{
+                        type:String,
+                        value:"",
+                        notify:true,
                     },
                     info: {
-                        type: String
-                    },
-                    currentid: {
                         type: String,
-                        reflectToAttribute: true,
-                        notify: true,
-                        value: '',
-
-                    },
-                    hasImage: {
-                        type: Boolean,
-                        notify: true,
-                        value: false,
-                    },
-                    hasArea: {
-                        type: Boolean,
-                        notify: true,
-                        value: false,
-                    },
-                    currentname: {
-                        type: String,
-                        reflectToAttribute: true,
-                        notify: true,
-                        value: '',
-                    },
-
-                    mapLatitude: {
-                        type: Number,
-                        notify: true,
+                        value:"",
+                        notify:true,
                     },
                     status: {
                         type: Boolean,
                         observer: '_statusChanged'
-                    },
-
-
-                    mapLongitude: {
-                        type: Number,
-                        notify: true,
-                    },
-
-                    mapZoom: {
-                        type: Number,
-                        notify: true,
-                    },
-
-                    icon: {
-                        type: String,
-                        reflectToAttribute: true,
-                        notify: true,
                     },
                     radius: {
                         type: Number,
                         notify: true,
                         reflectToAttribute: true,
                     },
-
-                    areaLat: {
-                        type: Number,
-                        reflectToAttribute: true,
-                        notify: true,
-                    },
-
-                    areaLong: {
-                        type: Number,
-                        reflectToAttribute: true,
-                        notify: true,
-                    },
-
-
-                    mapicon: {
-                        type: String,
-                        notify: true,
-                        observer: '_mapiconobs'
-                    },
                     latitude: {
                         type: Number,
                     },
                     longitude: {
                         type: Number,
-                    },
-                    ident: {
-                        type: Number,
-                        notify: true,
                     }
-
 
                 },
-                _statusChanged: function (newval, oldval) {
-                    if (!newval) {
-                        this.statusText = "Private content, not visible for other users"
-                        this.statusString = "Private"
-                        this.statusIcon = "visibility-off"
-                    } else {
-                        this.statusText = "Public content, shared with other users"
-                        this.statusString = "Public"
-                        this.statusIcon = "visibility"
-
-                    }
-                }
             })
         })();
     </script>
