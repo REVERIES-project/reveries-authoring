@@ -29,7 +29,7 @@ This code may only be used under the "Do whatever you want with code license"
             </div>
         </div>
         <div class="card constructorCard">
-            <badge-constructor class="topLevelView" media={{media}} id="badgeConstructor" label="{{resourceLabel}}" badge-text="{{badgeText}}">
+            <badge-constructor class="topLevelView" media={{media}} id="resourceConstructor" label="{{resourceLabel}}" badge-text="{{badgeText}}">
             </badge-constructor>
             <div class="topLevelView">
                 <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
@@ -39,35 +39,16 @@ This code may only be used under the "Do whatever you want with code license"
         </div>
         <div class="card">
             <generic-header search="{{keyword}}"></generic-header>
-            <list-generic-resource filter-search="[[keyword]]" id='badgeList' share-url="/badge" resource-type='badge' url='/badge'></list-generic-resource>
+            <list-generic-resource filter-search="[[keyword]]" id='resourceList' share-url="/badge" resource-type='badge' url='/badge'></list-generic-resource>
         </div>
     </template>
     <script>
         Polymer({
 
             is: 'badge-view',
-            ready: function () {
-                this.addEventListener('resource-operation', this.updateMedia.bind(this))
-            },
-            updateMedia: function (message) {
-                switch (message.detail.info.operation) {
-                    case 'create':
-                        this.$.badgeList.requestElements()
-                        break
-                    case 'update':
-                        this.$.badgeList.requestElements()
-                        break
-
-                    case 'delete':
-                        this.$.badgeList.requestElements()
-                        break
-
-                    case 'edit':
-                        this.$.badgeConstructor.edit(message.detail.info.resource)
-                        break
-                }
-            },
-
+            behaviors: [
+             Window.PageviewBehavior
+            ],
         });
     </script>
 </dom-module>
