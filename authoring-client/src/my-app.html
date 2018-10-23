@@ -139,7 +139,7 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
                         <paper-item class="menu-trigger firstLevelMenu">
                             Mes composants de jeu
                         </paper-item>
-                        <paper-menu class="menu-content">   
+                        <paper-menu class="menu-content">
                             <paper-item>
                                 <a class='menuLink' name="freetext" href="#freetext">Mes questions libres</a>
                             </paper-item>
@@ -155,12 +155,12 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
                             <paper-item>
                                 <a class='menuLink' name="inventory" href="#inventory">Mes objets d'inventaire</a>
                             </paper-item>
-                           <!-- Point d'insertion pour le lien du nouveau composant
+                            <!-- Point d'insertion pour le lien du nouveau composant
                             Suivre le template suivant
                             <paper-item>
                                     <a class='menuLink' name="moncomposant" href="#moncomposant">Mon composant</a>
                             </paper-item>
-                            -->    
+                            -->
                         </paper-menu>
                     </paper-submenu>
                     <paper-item name="[[page]]">
@@ -193,7 +193,7 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
                         <paper-icon-button style="margin-left:auto;" icon="help" on-click="showTutorial"></paper-icon-button>
                     </app-toolbar>
                 </app-header>
-                <iron-pages id="pages" role="main" selected="[[page]]" attr-for-selected="name">
+                <iron-pages id="pages" role="main" selected-item=[[currentPage]] selected="[[page]]" attr-for-selected="name">
                     <intro-view name="intro"></intro-view>
                     <login-view status=[[status]] name="login"></login-view>
                     <admin-view name="admin"></admin-view>
@@ -201,17 +201,17 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
                     <tutorial-view name="tutorial"></tutorial-view>
                     <poi-view name="poi"></poi-view>
                     <youtube-view name="youtube"></youtube-view>
-                    <staticmedia-view  name="staticmedia"></staticmedia-view>
-                    <freetext-view  name="freetext"></freetext-view>
+                    <staticmedia-view name="staticmedia"></staticmedia-view>
+                    <freetext-view name="freetext"></freetext-view>
                     <image-view name="image"></image-view>
-                    <mcq-view  name="mcq"></mcq-view>
+                    <mcq-view name="mcq"></mcq-view>
                     <badge-view name="badge"></badge-view>
-                    <inventory-view  name="inventory"></inventory-view>
-                    <constructor-view  name="constructor"></constructor-view>
-                    <mlg-view  name="mlg"></mlg-view>
+                    <inventory-view name="inventory"></inventory-view>
+                    <constructor-view name="constructor"></constructor-view>
+                    <mlg-view name="mlg"></mlg-view>
                     <!-- Point d'insertion pour la page de construction du nouveau composant
                     <moncomposant-view name="moncomposant"></moncomposant-view>
-                    -->    
+                    -->
 
                     <reset-view id="reset" token=[[token]] name="reset"></reset-view>
                 </iron-pages>
@@ -225,11 +225,17 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
             ready: function () {
                 I18nMsg.lang = 'en';
                 Platform.performMicrotaskCheckpoint();
-                this.$$('#pages').addEventListener('resource-operation', this.showMessage.bind(this))
-                this.$$('#pages').addEventListener('auth-event', this.authChanged.bind(this))
-                this.$$('#pages').addEventListener('auth-message', this.showAuthMessage.bind(this))
+                this.$.pages.addEventListener('resource-operation', this.showMessage.bind(this))
+                this.$.pages.addEventListener('iron-select', this.setupPage.bind(this))
+                this.$.pages.addEventListener('auth-event', this.authChanged.bind(this))
+                this.$.pages.addEventListener('auth-message', this.showAuthMessage.bind(this))
                 this.$.manager.addEventListener('auth-message', this.showAuthMessage.bind(this))
                 this.$.manager.checkStatusOnRefresh();
+            },
+            setupPage: function (evt) {
+                if (evt.detail.item.updateItems) {
+                    evt.detail.item.updateItems()
+                }
             },
             unitGameSaved: function () {
                 if (this.$$('#mlgView') && this.$$('#mlgView').updateUnitGames) {

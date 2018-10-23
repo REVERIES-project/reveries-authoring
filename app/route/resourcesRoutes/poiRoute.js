@@ -13,7 +13,7 @@ module.exports = function(app,logger) {
 			})
 			return
 		}
-		switchStatus(POI, req, res)
+		CommonHelper.switchStatus(POI, req, res)
 
 	})
 
