@@ -7,7 +7,7 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../bower_components/common-styles/common-styles.html">
 <link rel="import" href="../bower_components/staticmedia-viewer/staticmedia-viewer.html">
 <link rel="import" href="./element/resource-filtering/generic-header.html">
-<link rel="import" href="./element/static-media/staticmedia-generator.html">
+<link rel="import" href="./element/constructor-elements/staticmedia-generator.html">
 <link rel="import" href="../src/element/helper/list-generic-resource.html">
 <dom-module id="staticmedia-view">
     <template>
@@ -46,7 +46,7 @@ This code may only be used under the "Do whatever you want with code license"
 
         </div>
         <div class="card constructorCard">
-            <staticmedia-generator class="topLevelView" label="{{resourceLabel}}" mkdown="{{MK}}" id="staticConstructor"></staticmedia-generator>
+            <staticmedia-generator class="topLevelView" label="{{resourceLabel}}" mkdown="{{MK}}" id="resourceConstructor"></staticmedia-generator>
 
             <div class="topLevelView">
                 <resource-header is-picker resource-label="[[resourceLabel]]"></resource-header>
@@ -56,7 +56,7 @@ This code may only be used under the "Do whatever you want with code license"
         </div>
         <div class="card">
             <generic-header search="{{keyword}}"></generic-header>
-            <list-generic-resource filter-search="[[keyword]]" share-url='/staticmedia' id='staticmedialist'
+            <list-generic-resource filter-search="[[keyword]]" share-url='/staticmedia' id='resourceList'
                 resource-type='staticmedia' url='/staticmedia'></list-generic-resource>
         </div>
     </template>
@@ -64,28 +64,9 @@ This code may only be used under the "Do whatever you want with code license"
         Polymer({
 
             is: 'staticmedia-view',
-            ready: function () {
-                this.addEventListener('resource-operation', this.updateMedia.bind(this))
-
-            },
-            updateMedia: function (message) {
-                switch (message.detail.info.operation) {
-                    case 'create':
-                        this.$.staticmedialist.requestElements()
-                        break
-                    case 'update':
-                        this.$.staticmedialist.requestElements()
-                        break
-
-                    case 'delete':
-                        this.$.staticmedialist.requestElements()
-                        break
-
-                    case 'edit':
-                        this.$.staticConstructor.edit(message.detail.info.resource)
-                        break
-                }
-            }
+            behaviors: [
+             Window.PageviewBehavior
+            ],
         });
     </script>
 </dom-module>
