@@ -3,40 +3,38 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
-// define the schema for our user model
-/*
-var mapinfoSchema = mongoose.Schema({
-    marker:String,
-    centerLatitude:Number,
-    centerLongitude:Number,
-    zoomLevel:Number,
-})*/
 var gameSchema = mongoose.Schema({
 
     label: String,
+    // The media that are shown at the beginning and end 
+    // of the game
     startMedia: { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
+    feedbackMedia: { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
+    
+
+    // Unit games are associated with one or zero POI
+    // if there is one, the user must reach it to start 
+    // situated activities
     POI: { type: Schema.Types.ObjectId, ref: 'POI' },
-    passActivities: Boolean,
+    poiGuidType: String,
+    poiReachedMessage: String,
+
+    // default fields for each resource type
     readonly: String,
     owner: String,
     creationDate: Date,
-    status: String,
+    status: { type: String, default: 'Private' },
+    
+    // Unit games have situated activities that can be of different type
     freetextActivities: [{ type: Schema.Types.ObjectId, ref: 'FreeText' }],
     mcqActivities: [{ type: Schema.Types.ObjectId, ref: 'MCQ' }],
-    identificationActivity:{type:Schema.Types.ObjectId,ref:'Folia'},
-    feedbackMedia: { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
-    status: { type: String, default: 'Private' },
-    clueGuidance: { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
-    typeLabel: { type: String, default: 'Unit game' },
-    poiGuidFolia: Boolean,
-    poiGuidMap: Boolean,
-    poiGuidType: String,
-    poiGuidClue: Boolean,
-    poiGPSValidation: Boolean,
-    poiQRValidation: Boolean,
-    poiIncorrectMessage: String,
-    poiReachedMessage: String,
+    identificationActivities:{type:Schema.Types.ObjectId,ref:'Folia'},
+   
+    // Unit games have optionnal inventory items
     inventoryItem: { type: Schema.Types.ObjectId, ref: 'InventoryItem' },
+
+    // default value used during construction or deletion of unit game
+    typeLabel: { type: String, default: 'Unit game' },
     type: { type: String, default: 'unitgame' },
 
 });
