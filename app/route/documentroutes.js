@@ -25,89 +25,9 @@ module.exports = function (app, gfs, logger) {
 	var foliaHandler=require('./resourcesRoutes/foliaRoute.js')(app,logger)
 	var badgeHandler=require('./resourcesRoutes/badgeRoute.js')(app,logger)
 	var poiHandler=require('./resourcesRoutes/poiRoute.js')(app,logger)
+	var youtubeHandler=require('./resourcesRoutes/youtubeRoute.js')(app,logger)
 
-	app.post('/youtube', function (req, res) {
-		if (!req.isAuthenticated()) {
-			res.send({
-				success: false,
-				message: 'Please authenticate'
-			})
-			return
-		}
-		var youtube = new YouTube()
-		youtube.label = req.body.label
-		youtube.owner = req.user._id
-		youtube.status = req.body.status
-		youtube.videoId = req.body.videoId
-		youtube.startTime=req.body.startTime
-		
-		youtube.save(function (err, resource) {
-			if (err) {
-				logger.log('error', 'Error while saving static myoutube media %s', err.message)
-				res.send({
-					success: false
-				})
-			} else {
-				logger.log('info', 'Youtube media created %s', JSON.stringify(resource))
-				res.send({
-					success: true,
-					resource: resource,
-					operation: 'create'
-				})
-
-			}
-		})
-
-	})
-
-	app.get('/youtube', function (req, res) {
-		if (!req.user) {
-			res.send({
-				success: false,
-				'message': 'please authenticate'
-			})
-			return
-		}
-
-
-		YouTube.find({
-				$or: [{
-					owner: req.user._id
-				}, {
-					status: 'Public'
-				}]
-			})
-			.exec(function (err, ressources) {
-				for (var i = 0; i < ressources.length; i++) {
-					var ressource = ressources[i]
-					if (ressource.owner == req.user._id) {
-						ressource.readonly = 'readwrite'
-					} else {
-						ressource.readonly = 'readonly'
-					}
-				}
-				res.send(ressources)
-			})
-	})
-	app.delete('/youtube/:id', function (req, res) {
-		if (!req.user._id) {
-			res.send({
-				success: false,
-				message: 'user not authenticated'
-			})
-		}
-		YouTube.findOneAndRemove({
-				'_id': req.params.id,
-				owner: req.user._id
-			},
-			function (err, doc) {
-				res.send({
-					success: true,
-					resource: doc,
-					operation: 'delete'
-				})
-			})
-	})
+	
 
 	// Handle reception of a new static media
 	app.post('/tutorial', function (req, res) {

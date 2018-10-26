@@ -12,79 +12,69 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../bower_components/common-styles/common-styles.html">
 <dom-module id="poi-view">
     <template>
-        <style include="common-styles">            
-        map-display {
-            
+        <style include="common-styles">
+            map-display {
+
                 --custom-map-display: {
                     width: 400px;
                     height: 400px;
                 }
             }
-        .poiDiv{
-            @apply(--shadow-elevation-2dp);
-            background-color: white;
-            margin-bottom: 5px;
-            margin-left: 20px;
-            margin-right: 20px;
 
-            display:flex;
-            flex-direction:row;
-        }
+            .poiDiv {
+                @apply(--shadow-elevation-2dp);
+                background-color: white;
+                margin-bottom: 5px;
+                margin-left: 20px;
+                margin-right: 20px;
 
+                display: flex;
+                flex-direction: row;
+            }
         </style>
         <div class="card">
             <div class="topLevelInfo">
                 <h1>Points d'intérêts et cartes</h1>
                 <div>
-                Les <b>points d'intérêts</b> (POI, Point of interest) representent <b>une localisation spécifique</b> à l'intérieur de la surface du jeu sérieux.
-                <br> Les points d'intérêts sont fondamentaux dans le design de jeux situés : ils assurent le lien entre la position physique de l'utilisateur et l'état du jeu.
+                    Les <b>points d'intérêts</b> (POI, Point of interest) representent <b>une localisation spécifique</b>
+                    à l'intérieur de la surface du jeu sérieux.
+                    <br> Les points d'intérêts sont fondamentaux dans le design de jeux situés : ils assurent le lien
+                    entre la position physique de l'utilisateur et l'état du jeu.
                 </div>
                 <ul>
-                    <li> <b>Les POI sont créés en cliquant sur la carte.</b> Vous pouvez ensuite changer le rayon d'activation du POI</li>
+                    <li> <b>Les POI sont créés en cliquant sur la carte.</b> Vous pouvez ensuite changer le rayon
+                        d'activation du POI</li>
                 </ul>
             </div>
         </div>
         <div class="card">
-            <poi-from-map id="poimap" activity="POIMAP" lat="48.088275" long="-0.756458"></poi-from-map>
+            <poi-from-map id="resourceConstructor" activity="POIMAP" lat="48.088275" long="-0.756458"></poi-from-map>
         </div>
         <div class="poiDiv">
-            <list-generic-resource share-url='/poi' id='poiList' resource-type='poi' url='/poi'></list-generic-resource>
+            <list-generic-resource share-url='/poi' id='resourceList' resource-type='poi' url='/poi'></list-generic-resource>
             <map-display id="gmap"></map-display>
 
         </div>
     </template>
     <script>
-    Polymer({
+        Polymer({
 
-        is: 'poi-view',
-        ready: function() {
-            this.$.poimap.addEventListener('resource-operation', this.updateMedia.bind(this))
-            this.$.poiList.addEventListener('resource-operation', this.updateMedia.bind(this))
-            this.$.poiList.addEventListener('change-poi-map', this.updateMap.bind(this))
-        },
-        updateMedia: function(message) {
-            switch (message.detail.info.operation) {
-                case 'create':
-                    this.$.poiList.requestElements()
-                    break
-                case 'update':
-                    this.$.poiList.requestElements()
-                    break
+            is: 'poi-view',
+            behaviors: [
+                Window.PageviewBehavior
+            ],
 
-                case 'delete':
-                    this.$.poiList.requestElements()
-                    break
-
-            }
-        },
-        updateMap: function(event) {
-            var data = event.detail
-            if (data.show) {
-                this.$.gmap.showPOI(data.resource)
-            } else {
-                this.$.gmap.removePOI(data.resource)
-            }
-        },
-    });
+            ready: function () {
+                this.$.resourceList.addEventListener('change-poi-map', this.updateMap.bind(this))
+            },
+            updateMap: function (event) {
+                var data = event.detail
+                if (data.show) {
+                    this.$.gmap.showPOI(data.resource)
+                } else {
+                    this.$.gmap.removePOI(data.resource)
+                }
+            },
+        });
     </script>
 </dom-module>
