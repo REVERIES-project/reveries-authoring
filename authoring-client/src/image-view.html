@@ -47,17 +47,19 @@ This code may only be used under the "Do whatever you want with code license"
             this.addEventListener('resource-operation', this.updateMedia.bind(this))
 
         },
+        updateItems:function(){
+            this.$.resourceList.requestElements()
+        },
         updateImages: function(message) {
-            this.$.mediaviewer.requestElements()
+            this.$.resourceList.requestElements()
             this.fire('resource-operation', { info: JSON.parse(message.detail.xhr.responseText) })
 
         },
         updateMedia: function(message) {
-            console.log(message)
             switch (message.detail.info.operation) {
 
                 case 'delete':
-                    this.$.mediaviewer.requestElements()
+                    this.$.resourceList.requestElements()
                     break
 
             }
