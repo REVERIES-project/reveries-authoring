@@ -93,7 +93,7 @@ This code may only be used under the "Do whatever you want with code license"
     <template>
         <create-resource id="creator" resource-url="/unitGame" resource="{{resource}}"></create-resource>
         <resource-picker-dialog page resource-viewer="startMediaViewer" id="startingMediaPicker"></resource-picker-dialog>
-        <resource-picker-dialog mcq freetext folia  id="situatedQuestionPicker"></resource-picker-dialog>
+        <resource-picker-dialog mcq freetext folia id="situatedQuestionPicker"></resource-picker-dialog>
         <resource-picker-dialog page id="poiPAMediaPicker"></resource-picker-dialog>
         <resource-picker-dialog page media-id="{{startMediaId}}" media-name="{{startMediaName}}" id="cluePOIMediaPicker"></resource-picker-dialog>
         <resource-picker-dialog page resource-viewer="feedbackMediaViewer" id="feedbackMediaPicker"></resource-picker-dialog>
@@ -121,40 +121,16 @@ This code may only be used under the "Do whatever you want with code license"
                     <div class="title">POI et guidance</div>
                     <paper-button style="margin-top:10px;" on-click="setPOI" raised>Choisir un POI</paper-button>
                     <label class="subtitle" id="label1">Guidance :</label>
-                    <paper-radio-group attr-for-selected="name" selected="map" id="selectGuidance" allow-empty-selection>
+                    <paper-radio-group attr-for-selected="name" selected="map" id="selectGuidance"
+                        allow-empty-selection>
                         <paper-radio-button disabled="[[!poiActive]]" name="map">Carte interactive</paper-radio-button>
                         <paper-radio-button disabled="[[!poiActive]]" name="ping">Radar</paper-radio-button>
                     </paper-radio-group>
-                    <label class="subtitle" id="label2">Validation de l'arrivée au POI:</label>
-                    <paper-radio-group attr-for-selected="name" selected="gps" allow-empty-selection selectable={{poiSet}} id="selectReach" aria-labelledby="label2">
-                        <paper-radio-button disabled="[[!poiActive]]" checked={{QRactive}} name="QR">Scan du QR code</paper-radio-button>
-                        <paper-radio-button disabled="[[!poiActive]]" name="gps">GPS</paper-radio-button>
-                    </paper-radio-group>
-                    <paper-button class="heading" toggles active={{showQR}} raised disabled="[[!QRactive]]">Imprimer QR-code</paper-button>
-                    <iron-collapse tabindex="0" opened="{{showQR}}">
-                        <template is="dom-if" if="[[poiid]]" restamp>
-                            <div class="content">
-                                <img style="width:400px" src='/qrcode/[[poiid]]'>
-                            </div>
-                        </template>
-                    </iron-collapse>
                 </div>
-                <generic-resource-viewer is-picker input-name="poi" style="height:10%" active="{{poiActive}}" poi-id={{poiid}} poi is-temp
-                    class="resourceViewer" id="poiViewer"></generic-resource-viewer>
+                <generic-resource-viewer is-picker input-name="poi" style="height:10%" active="{{poiActive}}" poi-id={{poiid}}
+                    poi is-temp class="resourceViewer" id="poiViewer"></generic-resource-viewer>
             </div>
 
-            <iron-collapse opened='[[active]]'>
-
-                <div class="topLevel">
-                    <div class="contain">
-                        <div class="title">POI Post action</div>
-                        <label class="subtitle" id="label2">Bon QR-code scanné :</label>
-                        <paper-input label="QR code correct message" value={{poiReachedMessage}} name="poiReachedMessage"></paper-input>
-                        <label class="subtitle" id="labelpoi">Mauvais QR-Code scanné :</label>
-                        <paper-input label="QR code incorrect message" value={{poiIncorrectMessage}} name="poiIncorrectMessage"></paper-input>
-                    </div>
-                </div>
-            </iron-collapse>
 
             <div class="topLevel">
                 <div class="contain">
@@ -162,14 +138,18 @@ This code may only be used under the "Do whatever you want with code license"
                     <div class="subtitle">Objet d'inventaire acquis durant l'unité de jeu :</div>
                     <paper-button on-click="setPOIInventory" raised>Choisir un objet d'inventaire (optionnel)</paper-button>
                     <div class="subtitle">L'objet est acquis quand :</div>
-                    <paper-radio-group id="inventoryStep" allow-empty-selection aria-labelledby="label2" attr-for-selected="value">
-                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="uginstructions">L'unité de jeu commence</paper-radio-button>
-                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="guidance">Le POI est atteint</paper-radio-button>
-                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="questions">Les activités situées sont terminées</paper-radio-button>
+                    <paper-radio-group id="inventoryStep" allow-empty-selection aria-labelledby="label2"
+                        attr-for-selected="value">
+                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="uginstructions">L'unité
+                            de jeu commence</paper-radio-button>
+                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="guidance">Le POI
+                            est atteint</paper-radio-button>
+                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="questions">Les
+                            activités situées sont terminées</paper-radio-button>
                     </paper-radio-group>
                 </div>
-                <generic-resource-viewer is-picker input-name="inventoryItem" active={{rewardActive}} is-temp inventory class="resourceViewer"
-                    id="poiInventoryResourceViewer"></generic-resource-viewer>
+                <generic-resource-viewer is-picker input-name="inventoryItem" active={{rewardActive}} is-temp inventory
+                    class="resourceViewer" id="poiInventoryResourceViewer"></generic-resource-viewer>
             </div>
             <div class="topLevel">
                 <div class="contain">
@@ -186,9 +166,13 @@ This code may only be used under the "Do whatever you want with code license"
                     <label class="subtitle">Feedback optionnel à l'issu de l'unité de jeu :</label>
                     <paper-button on-click="setFeedbackMedia" raised>Choisir un document de feedback</paper-button>
                 </div>
-                <generic-resource-viewer is-picker is-temp input-name="feedbackMedia" image page video class="resourceViewer" id="feedbackMediaViewer"></generic-resource-viewer>
+                <generic-resource-viewer is-picker is-temp input-name="feedbackMedia" image page video class="resourceViewer"
+                    id="feedbackMediaViewer"></generic-resource-viewer>
+
             </div>
-            <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+            <div class="topLevelView" style="background-color: white;padding:20px;margin-top:-5px;">
+                    <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+            </div>
         </form>
     </template>
     <script>
@@ -201,8 +185,6 @@ This code may only be used under the "Do whatever you want with code license"
                     this.updating = true
                     this.itemId = unitGame._id
                     this.label = unitGame.label
-                    this.poiIncorrectMessage = unitGame.poiIncorrectMessage
-                    this.poiReachedMessage = unitGame.poiReachedMessage
                     if (unitGame.startMedia) {
                         this.$.startMediaViewer.setPage(unitGame.startMedia)
                     }
@@ -218,7 +200,7 @@ This code may only be used under the "Do whatever you want with code license"
                         }
                     }
                     if (unitGame.identificationActivity) {
-                            this.push('currentActivities', unitGame.identificationActivity)
+                        this.push('currentActivities', unitGame.identificationActivity)
                     }
 
                     if (unitGame.feedbackMedia) {
@@ -237,28 +219,17 @@ This code may only be used under the "Do whatever you want with code license"
                     if (unitGame.poiGuidType === 'ping') {
                         this.$.selectGuidance.selected = 'ping'
                     }
-
-                    if (unitGame.poiQRValidation) {
-                        this.$.selectReach.selected = 'QR'
-                    }
-                    if (unitGame.poiGPSValidation) {
-                        this.$.selectReach.selected = 'gps'
-
-                    }
                 },
 
                 ready: function () {
                     this.addEventListener('resourcePicked', this.setPickedResource.bind(this))
                     // this.$.startingMediaPicker.addEventListener('resourcePicked', this.setResource.bind(this))
-                    this.actPA = [];
                     this.currentActivities = [];
                     this.activityCount = null;
-                    this.updating = false
 
                 },
                 setPickedResource: function (evt) {
-                    if (evt && evt.detail && evt.detail.resourceType && evt.detail.resourceItem && evt.detail
-                        .resourceViewer) {
+                    if (evt && evt.detail && evt.detail.resourceType && evt.detail.resourceItem) {
                         switch (evt.detail.resourceType) {
                             case "image":
                                 this.$[evt.detail.resourceViewer].setImage(evt.detail.resourceItem)
@@ -288,7 +259,7 @@ This code may only be used under the "Do whatever you want with code license"
 
                 _reset: function () {
                     this.updating = false
-                    while(this.currentActivities.length){
+                    while (this.currentActivities.length) {
                         this.pop('currentActivities')
                     }
                     this.$.startMediaViewer.removeResource()

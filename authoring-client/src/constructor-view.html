@@ -11,9 +11,9 @@ This code may only be used under the "Do whatever you want with code license"
     <template>
         <style include="common-styles">
             .outer {
-            display: inline-flex;
-            flex-wrap: wrap;
-        }
+                display: inline-flex;
+                flex-wrap: wrap;
+            }
 
             map-display {
                 --custom-map-display: {
@@ -21,15 +21,16 @@ This code may only be used under the "Do whatever you want with code license"
                     height: 400px;
                 }
             }
-
         </style>
         <div class="card">
             <div class="topLevelInfo">
                 <h2>Unités de jeu</h2>
                 <div>
                     Les unités de jeux sont les composants
-                    <b>les plus complexes dans MOGGLE.</b> Une unité de jeu définit, suivant un pattern préétabli, une activité
-                    complète. La création d'une unité de jeu se fait suivant plusieurs étapes, chaque étape étant représenté
+                    <b>les plus complexes dans MOGGLE.</b> Une unité de jeu définit, suivant un pattern préétabli, une
+                    activité
+                    complète. La création d'une unité de jeu se fait suivant plusieurs étapes, chaque étape étant
+                    représenté
                     par un cadre ci dessous.
                     <ul>
                         <li>Choix d'une page de départ</li>
@@ -42,43 +43,24 @@ This code may only be used under the "Do whatever you want with code license"
                 </div>
             </div>
         </div>
-        <unit-activity-constructor id="unitGame"></unit-activity-constructor>
+        <unit-activity-constructor id="resourceConstructor"></unit-activity-constructor>
         <div class="card">
-            <list-generic-resource share-url='/unitgame' id='unitgameList' class="ugList" resource-type='unitgame' url='/unitgame'></list-generic-resource>
+            <list-generic-resource share-url='/unitgame' id='resourceList' class="ugList" resource-type='unitgame' url='/unitgame'></list-generic-resource>
             <div class="outer">
-                    <map-display class="mymap" id="gmap"></map-display>
-                </div>
-    
+                <map-display class="mymap" id="gmap"></map-display>
+            </div>
+
         </div>
     </template>
     <script>
         Polymer({
 
             is: 'constructor-view',
+            behaviors: [
+                Window.PageviewBehavior
+            ],
             ready: function () {
-                //  this.$.gameResource.addEventListener('addItem',this.addNewItem.bind(this))
-                this.$.unitGame.addEventListener('resource-operation', this.updateMedia.bind(this))
-                this.$.unitgameList.addEventListener('resource-operation', this.updateMedia.bind(this))
-                this.$.unitgameList.addEventListener('change-poi-map', this.updateMap.bind(this))
-
-            },
-            updateMedia: function (message) {
-                switch (message.detail.info.operation) {
-                    case 'create':
-                        this.$.unitgameList.requestElements()
-                        break
-                    case 'update':
-                        this.$.unitgameList.requestElements()
-                        break
-                    case 'edit':
-                        this.$.unitGame.edit(message.detail.info.resource)
-                        break
-
-                    case 'delete':
-                        this.$.unitgameList.requestElements()
-                        break
-
-                }
+                this.$.resourceList.addEventListener('change-poi-map', this.updateMap.bind(this))
             },
             updateMap: function (event) {
                 var data = event.detail
@@ -87,10 +69,6 @@ This code may only be used under the "Do whatever you want with code license"
                 } else {
                     this.$.gmap.removePOI(data.resource)
                 }
-            },
-
-            clearList: function () {
-                this.$.uploader.clear();
             }
         });
     </script>
