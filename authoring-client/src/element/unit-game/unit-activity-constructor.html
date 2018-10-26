@@ -31,8 +31,6 @@ This code may only be used under the "Do whatever you want with code license"
             @apply(--shadow-elevation-2dp);
         }
 
-
-
         paper-input {
             width: 90%;
             margin: 10px;
@@ -44,8 +42,6 @@ This code may only be used under the "Do whatever you want with code license"
             margin: 10px;
             margin-left: 0;
         }
-
-
 
         .contain {
             width: 50%;
@@ -123,8 +119,8 @@ This code may only be used under the "Do whatever you want with code license"
                     <label class="subtitle" id="label1">Guidance :</label>
                     <paper-radio-group attr-for-selected="name" selected="map" id="selectGuidance"
                         allow-empty-selection>
-                        <paper-radio-button disabled="[[!poiActive]]" name="map">Carte interactive</paper-radio-button>
-                        <paper-radio-button disabled="[[!poiActive]]" name="ping">Radar</paper-radio-button>
+                        <paper-radio-button disabled="[[!poiActive]]" name="poiMapGuidance">Carte interactive</paper-radio-button>
+                        <paper-radio-button disabled="[[!poiActive]]" name="poiRadarGuidance">Radar</paper-radio-button>
                     </paper-radio-group>
                 </div>
                 <generic-resource-viewer is-picker input-name="poi" style="height:10%" active="{{poiActive}}" poi-id={{poiid}}

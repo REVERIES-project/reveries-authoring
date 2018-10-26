@@ -16,7 +16,7 @@ var gameSchema = mongoose.Schema({
     // if there is one, the user must reach it to start 
     // situated activities
     POI: { type: Schema.Types.ObjectId, ref: 'POI' },
-    poiGuidType: String,
+    poiMapGuidance:{type : Boolean,default:false},
     poiReachedMessage: String,
 
     // default fields for each resource type

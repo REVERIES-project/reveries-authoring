@@ -35,7 +35,7 @@ module.exports = function(app,logger) {
 		game.startMedia = req.body.startMedia
 		game.feedbackMedia = req.body.feedbackMedia
 		game.POI = req.body.poi
-		game.poiGuidType = poiGuidType
+		game.poiMapGuidance = req.body.poiMapGuidance==="on" 
 
         game.freetextActivities = req.body.freetextActivities
 		game.mcqActivities = req.body.mcqActivities
@@ -68,7 +68,7 @@ module.exports = function(app,logger) {
 					toUpdate.startMedia = req.body.startMedia
 					toUpdate.feedbackMedia = req.body.feedbackMedia
 					toUpdate.POI = req.body.poi
-					toUpdate.poiGuidType = poiGuidType
+					toUpdate.poiGuidType = req.body.poiGuidType
 
                     toUpdate.freetextActivities = req.body.freetextActivities
 					toUpdate.mcqActivities = req.body.mcqActivities
