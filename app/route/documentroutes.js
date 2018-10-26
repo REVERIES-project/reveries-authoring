@@ -814,19 +814,6 @@ module.exports = function (app, gfs, logger) {
 
 
 
-	//Put operation allow to chhane the metadata
-	// limited to share status for the moment 
-	app.put('/staticmedia/:id/share', function (req, res) {
-		if (!req.isAuthenticated()) {
-			res.send({
-				success: false,
-				message: 'Please authenticate'
-			})
-			return
-		}
-		switchStatus(StaticMedia, req, res)
-
-	})
 
 
 
