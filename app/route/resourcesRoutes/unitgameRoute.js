@@ -39,8 +39,7 @@ module.exports = function(app,logger) {
 
         game.freetextActivities = req.body.freetextActivities
 		game.mcqActivities = req.body.mcqActivities
-
-        game.identificationActivities=req.body.situatedfolia
+        game.foliaActivities=req.body.foliaActivities
 
 		if (!req.body.itemId) {
 			game.save(function (err) {
@@ -73,7 +72,7 @@ module.exports = function(app,logger) {
 
                     toUpdate.freetextActivities = req.body.freetextActivities
 					toUpdate.mcqActivities = req.body.mcqActivities
-					toUpdate.identificationActivity=game.identificationActivity
+					toUpdate.foliaActivities=req.body.foliaActivities
 
 					toUpdate.save(function (err) {
 						if (err) {
@@ -120,7 +119,7 @@ module.exports = function(app,logger) {
 			.populate('startMedia')
 			.populate('feedbackMedia')
 			.populate('POI')
-			.populate('identificationActivity')
+			.populate('foliaActivities')
 			.deepPopulate(['inventoryItem','inventoryItem.media','freetextActivities','freetextactivities.media','mcqActivities','mcqActivities.media'])
 			.exec(function (err, games) {
 

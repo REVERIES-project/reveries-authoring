@@ -28,7 +28,7 @@ var gameSchema = mongoose.Schema({
     // Unit games have situated activities that can be of different type
     freetextActivities: [{ type: Schema.Types.ObjectId, ref: 'FreeText' }],
     mcqActivities: [{ type: Schema.Types.ObjectId, ref: 'MCQ' }],
-    identificationActivities:{type:Schema.Types.ObjectId,ref:'Folia'},
+    foliaActivities:[{type:Schema.Types.ObjectId,ref:'Folia'}],
    
     // Unit games have optionnal inventory items
     inventoryItem: { type: Schema.Types.ObjectId, ref: 'InventoryItem' },

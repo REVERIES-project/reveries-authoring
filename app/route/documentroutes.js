@@ -26,6 +26,7 @@ module.exports = function (app, gfs, logger) {
 	var badgeHandler=require('./resourcesRoutes/badgeRoute.js')(app,logger)
 	var poiHandler=require('./resourcesRoutes/poiRoute.js')(app,logger)
 	var youtubeHandler=require('./resourcesRoutes/youtubeRoute.js')(app,logger)
+	var unitGameHandler=require('./resourcesRoutes/unitgameRoute.js')(app,logger)
 
 	
 

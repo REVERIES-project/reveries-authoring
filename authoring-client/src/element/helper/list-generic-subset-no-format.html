@@ -28,7 +28,7 @@ This code may only be used under the "Do whatever you want with code license"
         </style>
         <div class="ug" style="display:flex;flex-direction:row;flex-wrap:wrap;">
             <template is="dom-repeat" id='list' items="[[items]]">
-                <generic-resource-viewer on-resource-removed="resourceRemoved" is-picker is-removable input-name="situated[[item.type]]" class="resourceViewer" resource-type="{{item.type}}"
+                <generic-resource-viewer on-resource-removed="resourceRemoved" is-picker is-removable input-name="[[item.type]]Activities" class="resourceViewer" resource-type="{{item.type}}"
                     item=[[item]]>
                 </generic-resource-viewer>
             </template>
