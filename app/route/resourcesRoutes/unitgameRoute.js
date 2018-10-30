@@ -68,7 +68,7 @@ module.exports = function(app,logger) {
 					toUpdate.startMedia = req.body.startMedia
 					toUpdate.feedbackMedia = req.body.feedbackMedia
 					toUpdate.POI = req.body.poi
-					toUpdate.poiGuidType = req.body.poiGuidType
+					toUpdate.poiMapGuidance = req.body.poiMapGuidance==="on"
 
                     toUpdate.freetextActivities = req.body.freetextActivities
 					toUpdate.mcqActivities = req.body.mcqActivities

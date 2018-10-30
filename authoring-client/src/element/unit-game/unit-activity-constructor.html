@@ -167,7 +167,7 @@ This code may only be used under the "Do whatever you want with code license"
 
             </div>
             <div class="topLevelView" style="background-color: white;padding:20px;margin-top:-5px;">
-                    <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
+                <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
             </div>
         </form>
     </template>
@@ -195,8 +195,10 @@ This code may only be used under the "Do whatever you want with code license"
                             this.push('currentActivities', unitGame.mcqActivities[i])
                         }
                     }
-                    if (unitGame.identificationActivity) {
-                        this.push('currentActivities', unitGame.identificationActivity)
+                    if (unitGame.identificationActivities) {
+                        for (var i = 0; i < unitGame.identificationActivities.length; i++) {
+                            this.push('currentActivities', unitGame.identificationActivities[i])
+                        }
                     }
 
                     if (unitGame.feedbackMedia) {
@@ -263,8 +265,6 @@ This code may only be used under the "Do whatever you want with code license"
                     this.$.poiViewer.removeResource()
                     this.$.poiInventoryResourceViewer.removeResource()
                     this.$.selectGuidance.selected = 'map'
-                    this.$.selectReach.selected = 'gps'
-
                     var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
                     for (var i = 0; i < inputList.length; i++) {
                         inputList[i].value = ""

@@ -52,33 +52,21 @@ This code may only be used under the "Do whatever you want with code license"
                 is: 'unit-game',
                 ready: function () {
                     // TODO refactor with more meaningfull var name
-                    if (this.item && this.item.poiGuidType) {
-                        let guidance = this.item.poiGuidType
-                        if (guidance === "map") {
-                            this.guidance = "carte intéractive"
-                        }
-                        if (guidance === "ping") {
-                            this.guidance = "radar"
-                        }
-                    }
-
-
-                    if (this.item.poiGuidFolia) {
-                        this.validation = "Folia"
-                    }
-
-                    if (this.item.poiGPSValidation) {
-                        this.validation = "GPS"
-                    }
-                    if (this.item.poiQRValidation) {
-                        this.validation = "scan QR-code"
+                    if (this.item && this.item.poiMapGuidance) {
+                            this.guidance = "Carte intéractive"
+                    } 
+                    else {
+                        this.guidance="Radar"
                     }
 
                 },
-                getNumber:function(mcqArray,freetextArray){
+                getNumber:function(mcqArray,freetextArray,identificationArray){
                     var number=0
                     if(mcqArray && mcqArray.length>0){
                         number=number+mcqArray.length
+                    }
+                    if(identificationArray && identificationArray.length>0){
+                        number=number+identificationArray.length
                     }
                     if(freetextArray && freetextArray.length>0){
                         number=number+freetextArray.length
