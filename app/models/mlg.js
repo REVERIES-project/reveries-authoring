@@ -16,7 +16,7 @@ var mlg = mongoose.Schema({
     label: String,
     startpage:  { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
     endPage:  { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
-    unitGames: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
+    unitgameActivities: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
     type: { type: String, default: 'mlg' },
     typeLabel: { type: String, default: 'Mobile learning game' },
     owner: String,

@@ -16,9 +16,6 @@ This code may only be used under the "Do Whatever You Want With Code" license
     <template>
         <style include="common-styles">
         </style>
-        <form is="iron-form" id="mlgform" method="post" action="/mlg">
-            <input hidden type="text" name="mlg" value="{{mlgList}}">
-        </form>
         <div class="card">
             <div class="topLevelInfo">
                 <h1>Voici la dernière étape de la création de jeux sérieux</h1>
@@ -29,41 +26,22 @@ This code may only be used under the "Do Whatever You Want With Code" license
             </div>
         </div>
         <div class="card constructorCard" >
-            <mlg-constructor new-game="{{games}}" id="mlgCreator"></mlg-constructor>
+            <mlg-constructor new-game="{{games}}" id="resourceCreator"></mlg-constructor>
         </div>
         <div class="card">    
-            <list-generic-resource id='mlgList' class="mlglist" share-url="/mlg" resource-type='mlg' url='/mlg'></list-generic-resource>
+            <list-generic-resource id='resourceList' class="mlglist" share-url="/mlg" resource-type='mlg' url='/mlg'></list-generic-resource>
         </div>
     </template>
     <script>
     Polymer({
 
         is: 'mlg-view',
-        ready: function() {
-            this.addEventListener('resource-operation', this.updateMedia.bind(this))
+        behaviors: [
+                Window.PageviewBehavior
+            ],
 
-            //    this.push('games',this.returnItem   )
-        },
         updateUnitGames:function(){
             this.$.mlgCreator.updateUnitGames()
-        },
-        updateMedia: function(message) {
-            switch (message.detail.info.operation) {
-                case 'create':
-                    this.$.mlgList.requestElements()
-                    break
-                case 'update':
-                    this.$.mlgList.requestElements()
-                    break
-
-                case 'delete':
-                    this.$.mlgList.requestElements()
-                    break
-
-                case 'edit':
-                    this.$.mlgCreator.edit(message.detail.info.resource)
-                    break
-            }
         },
 
     })
