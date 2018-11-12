@@ -15,7 +15,7 @@
                         <b>Durée</b> : [[item.duration]]
                     </li>
                     <li>
-                        <b>Unités de jeux</b> : [[item.unitGames.length]]
+                        <b>Unités de jeux</b> : [[item.unitgameActivities.length]]
                     </li>
                     <li>
                         <b>Description</b> : [[item.description]]
@@ -34,10 +34,6 @@
             behaviors: [],
 
             ready: function () {},
-            _checkdiff: function (oldv, newv) {
-                console.log(oldv)
-            },
-            observers: ['_checkdiff(item.difficulty)', '_checkduration(item.duration)'],
             properties: {
                 item: {
                     type: Object,

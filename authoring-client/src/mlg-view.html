@@ -8,7 +8,7 @@ This code may only be used under the "Do Whatever You Want With Code" license
 <link rel="import" href="../bower_components/common-styles/common-styles.html">
 
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
-<link rel="import" href="../src/element/unit-game/mlg-constructor.html">
+<link rel="import" href="../src/element/constructor-elements/mlg-constructor.html">
 <link rel="import" href="../src/element/POI/map-display.html">
 <link rel="import" href="../src/element/helper/list-generic-resource.html">
 
@@ -37,11 +37,12 @@ This code may only be used under the "Do Whatever You Want With Code" license
 
         is: 'mlg-view',
         behaviors: [
-                Window.PageviewBehavior
+                Window.PageviewBehavior,
+                Window.MLGBehavior,
             ],
 
         updateUnitGames:function(){
-            this.$.mlgCreator.updateUnitGames()
+            this.$.resourceCreator.updateUnitGames()
         },
 
     })

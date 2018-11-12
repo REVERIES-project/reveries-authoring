@@ -26,6 +26,7 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
 <link rel="import" href="../src/element/helper/messageNotification.html">
 <link rel="import" href="../src/element/helper/authNotification.html">
 <link rel="import" href="../src/element/behaviors/pageview-behavior.html">
+<link rel="import" href="../src/element/behaviors/unitgame-behavior.html">
 <link rel="import" href="../src/element/tutorial-elements/tutorial-dialog.html">
 
 <dom-module id="my-app">
@@ -235,6 +236,9 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
             setupPage: function (evt) {
                 if (evt.detail.item.updateItems) {
                     evt.detail.item.updateItems()
+                }
+                if (evt.detail.item.updateUnitGames) {
+                    evt.detail.item.updateUnitGames()
                 }
             },
             unitGameSaved: function () {
