@@ -17,8 +17,9 @@ var gameSchema = mongoose.Schema({
     // situated activities
     POI: { type: Schema.Types.ObjectId, ref: 'POI' },
     poiMapGuidance:{type : Boolean,default:false},
-    poiReachedMessage: String,
-
+    poiGuidance:{type:String,default:"map"},
+    qrCorrect: String,
+    qrIncorrect:String,
     // default fields for each resource type
     readonly: String,
     owner: String,

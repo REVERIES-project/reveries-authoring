@@ -28,11 +28,9 @@ This code may only be used under the "Do whatever you want with code license"
                     </div>
                 </template>
 
-                <template is="dom-if" if="{{guidance}}">
                     <div class="activityContent">
-                        <b>Guidance</b> : [[guidance]]
+                        <b>Guidance</b> : [[getGuidance(item.poiGuidance)]]
                     </div>
-                </template>
                 <template is="dom-if" if="{{validation}}">
                     <div class="activityContent">
                         <b>Validation</b> : [[validation]]
@@ -52,14 +50,23 @@ This code may only be used under the "Do whatever you want with code license"
                 is: 'unit-game',
                 ready: function () {
                     // TODO refactor with more meaningfull var name
-                    if (this.item && this.item.poiMapGuidance) {
-                            this.guidance = "Carte intéractive"
-                    } 
-                    else {
-                        this.guidance="Radar"
-                    }
 
                 },
+                getGuidance:function(poiGuidance){
+                    var guidance
+                    if (poiGuidance=='map') {
+                            guidance = "Carte intéractive"
+                    } 
+                    else if (poiGuidance=='qr'){
+                        guidance="QR code"
+                    }
+                    else if(poiGuidance=='radar'){
+                        guidance="Radar"
+                    }
+                    return guidance
+
+                },
+
                 getNumber:function(mcqArray,freetextArray,identificationArray){
                     var number=0
                     if(mcqArray && mcqArray.length>0){

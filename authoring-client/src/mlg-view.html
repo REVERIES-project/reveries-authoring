@@ -26,7 +26,7 @@ This code may only be used under the "Do Whatever You Want With Code" license
             </div>
         </div>
         <div class="card constructorCard" >
-            <mlg-constructor new-game="{{games}}" id="resourceCreator"></mlg-constructor>
+            <mlg-constructor new-game="{{games}}" id="resourceConstructor"></mlg-constructor>
         </div>
         <div class="card">    
             <list-generic-resource id='resourceList' class="mlglist" share-url="/mlg" resource-type='mlg' url='/mlg'></list-generic-resource>
@@ -42,7 +42,7 @@ This code may only be used under the "Do Whatever You Want With Code" license
             ],
 
         updateUnitGames:function(){
-            this.$.resourceCreator.updateUnitGames()
+            this.$.resourceConstructor.updateUnitGames()
         },
 
     })

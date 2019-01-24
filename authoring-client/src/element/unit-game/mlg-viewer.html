@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../bower_components/common-styles/common-styles.html">
+<script src="../../../node_modules/time-elements/dist/time-elements-legacy.js"></script>
 
 <dom-module id="mlg-viewer">
     <template>
@@ -8,6 +9,12 @@
         <div class="resource">
             <div class="resourceBody">
                 <ul>
+                    <li>
+                        <b>Création</b>
+                        <relative-time datetime$="[[item.creationDate]]">
+                            Oops! This browser doesn't support Web Components.
+                        </relative-time>
+                    </li>
                     <li>
                         <b>Difficulté</b> : [[item.difficulty]]
                     </li>

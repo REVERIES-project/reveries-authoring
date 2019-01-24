@@ -146,6 +146,16 @@ This code may only be used under the "Do whatever you want with code license"
                         <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
                     </div>
                 </template>
+                <template is="dom-if" if="{{video}}" restamp>
+                    <div class="mediablock">
+                        <resource-header is-picker=[[isPicker]] resource-url='/file' resource-id=[[item._id]]
+                            resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
+                            resource-label="{{item.label}}"></resource-header>
+                    <video controls="" height="300" width="300" src="/file/[[item._id]]"></video>
+                    <paper-input hidden class="inputfield" name="[[inputName]]" value={{item._id}}></paper-input>
+                     </div>   
+                    </template>
+
                 <template is="dom-if" if="{{youtube}}" restamp>
                     <resource-header is-picker=[[isPicker]] resource-url='/youtube' resource-id=[[item._id]]
                         resource-readonly="[[item.readonly]]" resource-status="[[item.status]]" resource="[[item]]"
@@ -223,7 +233,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.image = false;
                     this.youtube = false;
                     this.user = false
-
+                    this.video=false
                     this.poi = false;
                     this.freetext = false;
                     this.mcq = false;
@@ -250,6 +260,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.folia = false
+                    this.video=false
 
                 },
 
@@ -267,6 +278,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.folia = false
+                    this.video=false
 
                 },
                 isBadge: function () {
@@ -283,6 +295,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = true
                     this.inventory = false
                     this.folia = false
+                    this.video=false
 
                 },
                 isInventory: function () {
@@ -299,6 +312,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = true
                     this.folia = false
+                    this.video=false
 
                 },
 
@@ -317,6 +331,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.folia = false
+                    this.video=false
 
                 },
                 isPoi: function () {
@@ -333,6 +348,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.badge = false
                     this.inventory = false
                     this.folia = false
+                    this.video=false
 
                 },
                 isyoutube: function () {
@@ -349,6 +365,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.inventory = false
                     this.user = false
                     this.folia = false
+                    this.video=false
 
                 },
                 isMcq: function () {
@@ -365,6 +382,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.inventory = false
                     this.badge = false
                     this.folia = false
+                    this.video=false
 
                 },
                 isFreetext: function () {
@@ -381,6 +399,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.inventory = false
                     this.user = false
                     this.folia = false
+                    this.video=false
 
                 },
                 isUnitgame: function () {
@@ -397,6 +416,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.inventory = false
                     this.user = false
                     this.folia = false
+                    this.video=false
 
                 },
 
@@ -415,6 +435,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.inventory = false
                     this.user = false
                     this.folia = false
+                    this.video=false
 
                 },
 
@@ -432,6 +453,8 @@ This code may only be used under the "Do whatever you want with code license"
                     this.inventory = false
                     this.user = false
                     this.folia = false
+                    this.video=false
+
                 },
 
                 isFolia: function () {
@@ -448,8 +471,27 @@ This code may only be used under the "Do whatever you want with code license"
                     this.inventory = false
                     this.user = false
                     this.folia = true
+                    this.video=false
+
                 },
 
+                isVideo: function () {
+                    this.image = false;
+                    this.youtube = false;
+                    this.poi = false;
+                    this.freetext = false;
+                    this.unitgame = false
+                    this.mlg = false
+                    this.tutorial = false
+                    this.mcq = false;
+                    this.page = false;
+                    this.badge = false
+                    this.inventory = false
+                    this.user = false
+                    this.folia = false
+                    this.video=true
+
+                },
 
 
                 setUser: function (newItem) {
@@ -536,6 +578,15 @@ This code may only be used under the "Do whatever you want with code license"
                     this.set('active', true)
 
                 },
+                setVideo: function (newItem) {
+                    this.isVideo();
+                    var oldItem;
+                    this.item = oldItem;
+                    this.item = newItem;
+                    this.set('active', true)
+
+                },
+
 
                 setImage: function (newItem) {
                     this.isImage();
@@ -601,6 +652,9 @@ This code may only be used under the "Do whatever you want with code license"
                     }
                     if (resourceType == 'youtube') {
                         this.setyoutube(this.item)
+                    }
+                    if (resourceType == 'video') {
+                        this.setVideo(this.item)
                     }
 
                     if (resourceType == 'user') {

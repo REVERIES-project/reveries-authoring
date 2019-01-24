@@ -37,6 +37,7 @@
     "gulp-uglify": "^3.0.0",
     "polymer-build": "^1.6.0",
     "polymer-bundler": "^4.0.2",
-    "save-dev": "^2.0.0"
+    "save-dev": "^2.0.0",
+    "time-elements": "^1.2.0"
   }
 }

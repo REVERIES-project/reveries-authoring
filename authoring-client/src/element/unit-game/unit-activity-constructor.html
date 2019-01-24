@@ -117,11 +117,21 @@ This code may only be used under the "Do whatever you want with code license"
                     <div class="title">POI et guidance</div>
                     <paper-button style="margin-top:10px;" on-click="setPOI" raised>Choisir un POI</paper-button>
                     <label class="subtitle" id="label1">Guidance :</label>
-                    <paper-radio-group attr-for-selected="name" selected="map" id="selectGuidance"
-                        allow-empty-selection>
+                    <paper-radio-group attr-for-selected="name" selected="poiMapGuidance" id="selectGuidance">
                         <paper-radio-button disabled="[[!poiActive]]" name="poiMapGuidance">Carte interactive</paper-radio-button>
                         <paper-radio-button disabled="[[!poiActive]]" name="poiRadarGuidance">Radar</paper-radio-button>
+                        <paper-radio-button checked="{{qrchecked}}" disabled="[[!poiActive]]" name="poiQRGuidance">QR-Code {{qrchecked}}</paper-radio-button>
                     </paper-radio-group>
+                    <iron-collapse opened="[[qrchecked]]">
+                        <paper-input name="qrCorrect" label="QR code correct scanné"></paper-input>
+                        <paper-input name="qrIncorrect"  label="QR code incorrect scanné"></paper-input>
+                        <paper-button on-click="toggle">Voir QR code</paper-button>
+
+                    </iron-collapse>
+                    <iron-collapse id="collapse">
+                        <img src='/qrcode/[[poiid]]'>
+                    </iron-collapse>
+
                 </div>
                 <generic-resource-viewer is-picker input-name="poi" style="height:10%" active="{{poiActive}}" poi-id={{poiid}}
                     poi is-temp class="resourceViewer" id="poiViewer"></generic-resource-viewer>
@@ -264,7 +274,7 @@ This code may only be used under the "Do whatever you want with code license"
                     this.$.feedbackMediaViewer.removeResource()
                     this.$.poiViewer.removeResource()
                     this.$.poiInventoryResourceViewer.removeResource()
-                    this.$.selectGuidance.selected = 'map'
+                    // this.$.selectGuidance.selected = 'poiMapGuidance'
                     var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
                     for (var i = 0; i < inputList.length; i++) {
                         inputList[i].value = ""
@@ -298,6 +308,10 @@ This code may only be used under the "Do whatever you want with code license"
                 setPOIInventory: function () {
                     this.$.poiInventoryMediaPicker.open();
                 },
+                toggle:function(){
+                    this.$.collapse.toggle()
+                }
+                ,
 
 
 

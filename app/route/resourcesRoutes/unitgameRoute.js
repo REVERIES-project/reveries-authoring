@@ -30,13 +30,22 @@ module.exports = function(app,logger) {
 		game.creationDate = now
 		game.label = req.body.label
 
-        game.poiReachedMessage = req.body.poiReachedMessage
+		game.qrCorrect = req.body.qrCorrect
+		game.qrIncorrect=req.body.qrIncorrect
 		game.inventoryItem = req.body.inventoryItem
 		game.startMedia = req.body.startMedia
 		game.feedbackMedia = req.body.feedbackMedia
 		game.POI = req.body.poi
 		game.poiMapGuidance = req.body.poiMapGuidance==="on" 
-
+		if(req.body.poiRadarGuidance){
+			game.poiGuidance="radar"
+		}
+		if(req.body.poiQRGuidance){
+			game.poiGuidance="qr"
+		}
+		if(req.body.poiMapGuidance)
+		{game.poiGuidance='map'
+		}
         game.freetextActivities = req.body.freetextActivities
 		game.mcqActivities = req.body.mcqActivities
         game.foliaActivities=req.body.foliaActivities
@@ -63,13 +72,24 @@ module.exports = function(app,logger) {
 				} else {
 					toUpdate.poiReachedMessage = req.body.poiReachedMessage
 					toUpdate.inventoryItem = req.body.inventoryItem
-                    
+					toUpdate.qrCorrect = req.body.qrCorrect
+					toUpdate.qrIncorrect=req.body.qrIncorrect
+			
                     toUpdate.label = req.body.label
 					toUpdate.startMedia = req.body.startMedia
 					toUpdate.feedbackMedia = req.body.feedbackMedia
 					toUpdate.POI = req.body.poi
 					toUpdate.poiMapGuidance = req.body.poiMapGuidance==="on"
-
+					if(req.body.poiRadarGuidance){
+						toUpdate.poiGuidance="radar"
+					}
+					if(req.body.poiQRGuidance){
+						toUpdate.poiGuidance="qr"
+					}
+					if(req.body.poiMapGuidance)
+					{toUpdate.poiGuidance='map'
+					}
+			
                     toUpdate.freetextActivities = req.body.freetextActivities
 					toUpdate.mcqActivities = req.body.mcqActivities
 					toUpdate.foliaActivities=req.body.foliaActivities
