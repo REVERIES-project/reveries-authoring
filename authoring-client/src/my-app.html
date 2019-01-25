@@ -305,9 +305,18 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
             },
 
             observers: [
+                '_statusChanged(status.logged)',
                 '_routePageChanged(route.page)',
             ],
-
+            _statusChanged:function(newStatus){
+                if(newStatus==null){
+                    return
+                }
+                if(!newStatus){
+                    if(this.page!="login")
+                    {this.page="login"}
+                }
+            },
             _routePageChanged: function () {
                 if (this.route.path.indexOf('reset') >= 0) {
                     this.token = this.route.path.slice(12)
