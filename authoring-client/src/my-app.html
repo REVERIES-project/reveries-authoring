@@ -323,7 +323,8 @@ All this belongs to Pierre-Yves Gicquel, please send money directly in case of u
                     return
                 }
                 this.$.tuto.setPage(page)
-
+                this.$.manager.checkStatusOnRefresh()
+                console.log(this.status)
                 this.importHref(
                     this.resolveUrl(page + '-view.html'),
                     () => {

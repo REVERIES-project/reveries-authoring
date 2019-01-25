@@ -33,30 +33,16 @@ This code may only be used under the "Do whatever you want with code license"
             </div>
         </div>
         <div class="card">
-            <list-generic-resource share-url='/file' id='mediaviewer' resource-type='video' url='/listUserAudioVideo'></list-generic-resource>
+            <list-generic-resource share-url='/file' id='resourceList' resource-type='video' url='/listUserAudioVideo'></list-generic-resource>
         </div>
     </template>
     <script>
     Polymer({
 
         is: 'video-view',
-        ready: function() {
-            this.addEventListener('resource-operation', this.updateMedia.bind(this))
-        },
-        updateVideos: function(message) {
-            this.$.mediaviewer.requestElements()
-            this.fire('resource-operation', { info: JSON.parse(message.detail.xhr.responseText) })
-        },
-        updateMedia: function(message) {
-            console.log(message)
-            switch (message.detail.info.operation) {
-
-                case 'delete':
-                    this.$.mediaviewer.requestElements()
-                    break
-
-            }
-        },
+        behaviors: [
+             Window.PageviewBehavior
+            ],
 
     });
     </script>
