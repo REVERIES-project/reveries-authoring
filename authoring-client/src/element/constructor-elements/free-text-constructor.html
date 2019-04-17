@@ -11,6 +11,8 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../remove-ressource/create-resource.html">
 <link rel="import" href="../helper/generic-resource-viewer.html">
 <link rel="import" href="../constructor-helper/save-cancel.html">
+<link rel="import" href="../../../bower_components/paper-slider/paper-slider.html">
+
 
 <link rel="import" href="../../../bower_components/common-styles/common-styles.html">
 <!--
@@ -48,13 +50,16 @@ Builder for free text question resources
                 <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
             </paper-input>
             <paper-textarea name="question" value={{question}} max-rows=0 rows=1 label="Question"></paper-textarea>
-            <paper-input name="responseLabel" class="paddedInput" label="Label du champ réponse" value={{responseLabel}}></paper-input>
             <paper-input name="response" label="Response" value={{response}} required></paper-input>
             <paper-textarea name="correctMessage"  class="paddedInput" label="Message associé à une réponse correcte" value={{correctMessage}}
                 required></paper-textarea>
             <paper-textarea name="wrongMessage"  class="paddedInput" label="Message associé à une réponse incorrecte" value={{wrongMessage}}
                 required></paper-textarea>
-            <paper-button raised on-click="showMediaDialog">Associer un indice (optionnel))</paper-button>
+            <iron-label style="color:#7f7f7f;">
+                Score : [[score]]
+                <paper-slider id="score" name="score" pin snaps max="30" step="1" style="width: 100%;" value="{{score}}"></paper-slider>
+            </iron-label>
+            <paper-button raised on-click="showMediaDialog">Associer un indice (optionnel)</paper-button>
             <generic-resource-viewer input-name="mediaId" is-picker is-temp page class="resourceViewer" id="freetextMediaViewer"></generic-resource-viewer>
             <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
         </form>
@@ -67,6 +72,7 @@ Builder for free text question resources
                 ready: function () {
                     this.changeFreeTextQuestion = null;
                     this.updating = false
+                    this.score = 10
                     this.$.pagePicker.addEventListener('resourcePicked', this.setResource.bind(this))
 
                 },
@@ -82,7 +88,7 @@ Builder for free text question resources
                 },
                 resetFields: function () {
                     this.updating = false
-
+                    this.score = 10
                     var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
                     for (var i = 0; i < inputList.length; i++) {
                         inputList[i].value = ""
@@ -99,7 +105,6 @@ Builder for free text question resources
 
                 edit: function (question) {
                     this.updating = true
-                    this.responseLabel = question.responseLabel
                     this.label = question.label
                     this.question = question.question
                     if (question.media) {
@@ -108,6 +113,7 @@ Builder for free text question resources
                     this.response = question.response
                     this.wrongMessage = question.wrongMessage
                     this.correctMessage = question.correctMessage
+                    this.score = question.score
                     this.itemId = question._id
                 },
                 _submit: function (event) {
@@ -125,6 +131,12 @@ Builder for free text question resources
                         notify: true,
                         reflectToAttribute: true,
                         value: null,
+                    },
+                    score:{
+                        type:String,
+                        notify: true,
+                        reflectToAttribute: true,
+
                     },
                     label: {
                         type: String,
@@ -155,11 +167,6 @@ Builder for free text question resources
                         type: String,
                         notify: true,
                         value: null,
-                    },
-                    responseLabel: {
-                        type: String,
-                        notify: true,
-                        reflectToAttribute: true
                     }
 
                 },

@@ -28,6 +28,7 @@ module.exports = function (app, logger) {
         Mcq.response = req.body.response
         Mcq.wrongMessage = req.body.wrongMessage
         Mcq.correctMessage = req.body.correctMessage
+        Mcq.score = req.body.score
         Mcq.media = req.body.mediaId
         var now = new Date()
         Mcq.creationDate = now
@@ -48,7 +49,7 @@ module.exports = function (app, logger) {
 
             })
         }
-        //update existing MCQ if mediaId
+        //update existing MCQ if mediaId already exists
         if (req.body.itemId && req.body.itemId.length > 0) {
             MCQ.findById(req.body.itemId, function (err, toUpdate) {
                 if (!toUpdate) {
@@ -69,6 +70,7 @@ module.exports = function (app, logger) {
                     toUpdate.response = req.body.response
                     toUpdate.wrongMessage = req.body.wrongMessage
                     toUpdate.correctMessage = req.body.correctMessage
+                    toUpdate.score = req.body.score
                     toUpdate.media = req.body.mediaId
                     logger.log('info', 'Updating MCQ ', JSON.stringify(toUpdate))
 

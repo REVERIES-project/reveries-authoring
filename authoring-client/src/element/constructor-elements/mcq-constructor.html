@@ -11,6 +11,7 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../constructor-helper/save-cancel.html">
 
@@ -56,28 +57,33 @@ Builder for free text question resources
                 <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
             </paper-input>
 
-            <paper-textarea name="question" value={{question}} label="Question" required>
+            <paper-textarea name="question" value={{question}} label="Question" required></paper-textarea>
 
-            </paper-textarea>
+            <template is="dom-if" if="[[!imageMode]]" restamp>
+                    <paper-input name="response" label="Réponse correcte" value={{correctChoice}} required></paper-input>
+            </template>
+            <template is="dom-if" if="[[imageMode]]" restamp>
+                <mcq-distractor image-mode=[[imageMode]] response disabled=[[item.disabled]] distractor-name={{item.distractorName}} distractor-value={{correctChoice}}>
+                </mcq-distractor>
+            </template>
+               
 
             <template is="dom-repeat" items="{{distractorArray}}">
                 <mcq-distractor image-mode=[[imageMode]] disabled=[[item.disabled]] distractor-name={{item.distractorName}} distractor-value={{item.value}}
                     index=[[index]]>
                 </mcq-distractor>
             </template>
-            <template is="dom-if" if="[[!imageMode]]" restamp>
-                <paper-input name="response" label="Réponse correcte" value={{correctChoice}} required>
 
-                </paper-input>
-            </template>
-            <template is="dom-if" if="[[imageMode]]" restamp>
-                <mcq-distractor image-mode=[[imageMode]] response disabled=[[item.disabled]] distractor-name={{item.distractorName}} distractor-value={{correctChoice}}>
-                </mcq-distractor>
-            </template>
+           
+            <paper-button raised on-click="addResponseField">Ajouter un distracteur</paper-button>
 
             <paper-textarea name="correctMessage" class="paddedInput" label="Message pour réponse correcte" value={{correctMessage}} required></paper-textarea>
             <paper-textarea name="wrongMessage" class="paddedInput" label="Message pour réponse incorrecte" value={{wrongMessage}} required></paper-textarea>
-            <paper-button raised on-click="addResponseField">Ajouter un distracteur</paper-button>
+           
+            <iron-label style="color:#7f7f7f;">
+                    Score : [[score]]
+                    <paper-slider id="score" name="score" pin snaps max="30" step="1" style="width: 100%;" value="{{score}}"></paper-slider>
+            </iron-label>
 
             <paper-button raised on-click="showMediaDialog">Associer un indice (optionnel)</paper-button>
             <generic-resource-viewer is-picker input-name="mediaId" is-temp page class="resourceViewer" id="mcqMediaViewer"></generic-resource-viewer>
@@ -93,6 +99,7 @@ Builder for free text question resources
                     //this.$.selectImage.addEventListener('iron-overlay-opened',function(){this.$.selectImage.fit();console.log('opened')}.bind(this))
                     this.updating = false
                     this.addEventListener('remove-distractor', this.removeDistractor.bind(this))
+                    this.score = 10
                     this.distractorArray = [{
                         disabled: true,
                         value: ""
@@ -132,6 +139,7 @@ Builder for free text question resources
                 },
                 resetFields: function () {
                     this.updating = false
+                    this.score = 10
                     var inputList = Polymer.dom(this.root).querySelectorAll('paper-input');
                     for (var i = 0; i < inputList.length; i++) {
                         inputList[i].value = ""
@@ -176,6 +184,7 @@ Builder for free text question resources
                     this.correctChoice = question.response
                     this.wrongMessage = question.wrongMessage
                     this.correctMessage = question.correctMessage
+                    this.score = question.score
                     this.itemId = question._id
                 },
                 _reset: function (event) {
@@ -187,6 +196,12 @@ Builder for free text question resources
                         type: String,
                         notify: true,
                         reflectToAttribute: true,
+                    },
+                    score:{
+                        type:String,
+                        notify: true,
+                        reflectToAttribute: true,
+
                     },
                     itemId: {
                         type: String,

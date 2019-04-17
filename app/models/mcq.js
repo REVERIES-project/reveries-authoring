@@ -16,7 +16,8 @@ var mcqSchema = mongoose.Schema({
     typeLabel: { type: String, default: 'Multiple choice question' },
 
     correctMessage: String,
-    wrongMessage: String
+    wrongMessage: String,
+    score: Number
 })
 
 module.exports = mongoose.model('MCQ', mcqSchema);

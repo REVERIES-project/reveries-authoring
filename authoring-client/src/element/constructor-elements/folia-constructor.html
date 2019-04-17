@@ -9,6 +9,7 @@ This code may only be used under the "Do whatever you want with code license"
 <link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../../bower_components/cosmoz-autocomplete/cosmoz-autocomplete.html">
+<link rel="import" href="../../../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../constructor-helper/save-cancel.html">
 
 <link rel="import" href="../remove-ressource/create-resource.html">
@@ -33,16 +34,19 @@ TODO : Add images of leaf
                 <input id="status" type="hidden" value="Private" name="status" />
             </div>
             <paper-input id="label" name="label" value={{label}} label="Label"></paper-input>
-            <paper-textarea name="question" value={{question}} label="Question ex. Pouvez-vous identifier un chêne?" required>
+            <paper-textarea name="question" value={{question}} label="Question ex. Identifier un chêne avec Folia" required>
 
             </paper-textarea>
 
-            <cosmoz-autocomplete items='[[species]]' placeholder="Choisir une ou plusieurs espèces" multi-selection selected-items="{{targetSpecies}}">
-            </cosmoz-autocomplete>
-            <paper-textarea name="correctMessage" value={{correctMessage}} label="Texte identification réussie" required>
-            </paper-textarea>
-            <paper-textarea name="wrongMessage" value={{wrongMessage}} label="Texte identification ratée" required>
-            </paper-textarea>
+            <cosmoz-autocomplete items='[[species]]' placeholder="Espèces à identifier" multi-selection selected-items="{{targetSpecies}}"></cosmoz-autocomplete>
+            <paper-textarea name="correctMessage" value={{correctMessage}} label="Texte identification réussie" required></paper-textarea>
+            <paper-textarea name="wrongMessage" value={{wrongMessage}} label="Texte identification ratée" required> </paper-textarea>
+            
+            <iron-label style="color:#7f7f7f;">
+                    Score : [[score]]
+                    <paper-slider id="score" name="score" pin snaps max="30" step="1" style="width: 100%;" value="{{score}}"></paper-slider>
+            </iron-label>
+            
             <save-cancel on-save-resource="_submit" on-cancel-edit='_reset' updating=[[updating]]></save-cancel>
         </form>
     </template>
@@ -53,17 +57,24 @@ TODO : Add images of leaf
                 is: 'folia-constructor',
                 ready: function () {
                     this.updating = false
+                    this.score = 10
                 },
                 edit: function (page) {
                     this.updating = true
                     this.n = page.mkdown
                     this.itemId = page._id
                     this.label = page.label
+                    this.question = page.question
+                    this.wrongMessage = page.wrongMessage
+                    this.correctMessage = page.correctMessage
+                    this.score = page.score
+                    this.targetSpecies = page.targetSpecies
                 },
 
                 resetFields: function () {
                     this.updating = false
                     this.label = ""
+                    this.score = 10
                     this.splice("targetSpecies", 0, this.targetSpecies.length)
                     var inputList = Polymer.dom(this.root).querySelectorAll('paper-textarea');
                     for (var i = 0; i < inputList.length; i++) {
@@ -89,6 +100,12 @@ TODO : Add images of leaf
                         notify: true,
                         reflectToAttribute: true,
                     },
+                    score:{
+                        type:String,
+                        notify: true,
+                        reflectToAttribute: true,
+
+                    },
                     label: {
                         type: String,
                         notify: true,
@@ -109,7 +126,6 @@ TODO : Add images of leaf
                         notify: true,
                         reflectToAttribute: true,
                     },
-
                     status: {
                         type: Boolean,
                         observer: '_statusChanged'

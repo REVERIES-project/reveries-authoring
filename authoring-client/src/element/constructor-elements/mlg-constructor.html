@@ -65,15 +65,18 @@ This code may only be used under the "Do whatever you want with code license"
             <paper-input style="width:300px;margin-bottom:10px;" name="label" value="{{mlgName}}" label="Label">
                 <iron-icon src="../../../images/labelFieldIcon.png" suffix></iron-icon>
             </paper-input>
-            <paper-input name="duration" label="Durée" value="{{duration}}">
-                <div suffix style="color:#7f7f7f;">Minutes</div>
-            </paper-input>
             <paper-textarea id="description" name="description" value={{description}} max-rows=0 rows=1 label="Description du jeu"></paper-textarea>
 
             <iron-label style="color:#7f7f7f;">
-                Difficulté : [[difficulty]]
+                Difficulté : [[difficulty]]/10
                 <paper-slider id="difficulty" name="difficulty" pin snaps max="10" step="1" style="width: 100%;" value="{{difficulty}}"></paper-slider>
             </iron-label>
+
+            <iron-label style="color:#7f7f7f;">
+                Durée : [[duration]] Minutes
+                <paper-slider id="duration" name="duration" pin snaps max="60" step="10" style="width: 100%;" value="{{duration}}"></paper-slider>
+            </iron-label>
+            
             <paper-button class="blockButton" raised on-click="showMediaDialog">Page de départ</paper-button>
             <generic-resource-viewer is-temp is-picker input-name="startpage" label="Page de départ" page class="resourceViewer" id="startPage"></generic-resource-viewer>
 

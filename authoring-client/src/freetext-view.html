@@ -31,8 +31,9 @@ This code may only be used under the "Do whatever you want with code license"
             </div>
         </div>
         <div class="card constructorCard">
-            <free-text-constructor id="resourceConstructor" class="topLevelView" label="{{label}}" question="{{question}}" response="{{response}}"
-                correct-message="{{correctMessage}}" wrong-message="{{wrongMessage}}" response-label="{{rLabel}}">
+            <free-text-constructor score="{{score}}" id="resourceConstructor" class="topLevelView" label="{{label}}"
+                question="{{question}}" response="{{response}}" correct-message="{{correctMessage}}" wrong-message="{{wrongMessage}}"
+                response-label="{{rLabel}}">
             </free-text-constructor>
             <div class="topLevelView">
                 <resource-header is-picker resource-label="[[label]]"></resource-header>
@@ -43,16 +44,15 @@ This code may only be used under the "Do whatever you want with code license"
         </div>
         <div class="card">
             <generic-header search="{{keyword}}"></generic-header>
-            <list-generic-resource filter-search=[[keyword]] share-url='/freetextactivity' id='resourceList' resource-type='freetext'
-                url='/freetextactivity'></list-generic-resource>
+            <list-generic-resource filter-search=[[keyword]] share-url='/freetextactivity' id='resourceList'
+                resource-type='freetext' url='/freetextactivity'></list-generic-resource>
         </div>
     </template>
     <script>
         Polymer({
-
             is: 'freetext-view',
             behaviors: [
-             Window.PageviewBehavior
+                Window.PageviewBehavior
             ],
         });
     </script>

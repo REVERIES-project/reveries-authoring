@@ -24,7 +24,7 @@ var mlg = mongoose.Schema({
     status: { type: String, default: 'Public' },
     badge: { type: Schema.Types.ObjectId, ref: 'Badge' },
     difficulty: Number,
-    duration: String,
+    duration: Number,
     description: String,
 });
 mlg.plugin(deepPopulate,{})

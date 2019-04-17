@@ -18,6 +18,7 @@ module.exports = function (app, logger) {
         newFreeText.media = req.body.mediaId
         newFreeText.owner = req.user._id
         newFreeText.status = req.body.status
+        newFreeText.score = req.body.score
         newFreeText.responseLabel = req.body.responseLabel
         var now = new Date()
         newFreeText.creationDate = now
@@ -51,6 +52,7 @@ module.exports = function (app, logger) {
                     toUpdate.correctMessage = req.body.correctMessage
                     toUpdate.media = req.body.mediaIdconsole
                     toUpdate.owner = req.user._id
+                    toUpdate.score = req.body.score
                     toUpdate.status = req.body.status
                     toUpdate.save(function (err) {
                         if (err) {

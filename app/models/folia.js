@@ -12,7 +12,8 @@ var foliaSchema = mongoose.Schema({
   type: { type: String, default: "folia" },
   typeLabel: { type: String, default: "Exercice d'identification" },
   wrongMessage: String,
-  correctMessage: String
+  correctMessage: String,
+  score: Number
 });
 
 module.exports = mongoose.model("Folia", foliaSchema);

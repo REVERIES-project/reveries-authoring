@@ -32,27 +32,68 @@ module.exports = function (app, logger) {
         folia.correctMessage = req.body.correctMessage
         folia.wrongMessage = req.body.wrongMessage
         folia.question = req.body.question
+        folia.score = req.body.score
         var now = new Date()
         folia.creationDate = now
 
-        folia.save(function (err, resource) {
-            if (err) {
-                logger.log('error', 'Error while saving static myoutube media %s', err.message)
-                res.send({
-                    success: false
-                })
-            } else {
-                logger.log('info', 'Youtube media created %s', JSON.stringify(resource))
-                res.send({
-                    success: true,
-                    resource: resource,
-                    operation: 'create'
-                })
+        //save if no itemId
+        if (!req.body.itemId) {
+            folia.save(function (err, resource) {
+                if (err) {
+                    logger.log('error', 'Error while saving static myoutube media %s', err.message)
+                    res.send({
+                        success: false
+                    })
+                } else {
+                    logger.log('info', 'Youtube media created %s', JSON.stringify(resource))
+                    res.send({
+                        success: true,
+                        resource: resource,
+                        operation: 'create'
+                    })
 
-            }
-        })
+                }
+            })
+        }
+
+         //update existing folia if itemId already exists
+         if (req.body.itemId && req.body.itemId.length > 0) {
+            Folia.findById(req.body.itemId, function (err, toUpdate) {
+                if (!toUpdate) {
+                    logger.log('error', 'Err, folia with id ' + req.body.itemId + ' does not exists')
+                } else {
+                    toUpdate.label = req.body.label
+                    toUpdate.owner = req.user._id
+                    toUpdate.status = req.body.status
+                    toUpdate.targetSpecies = req.body.targetSpecies
+                    toUpdate.correctMessage = req.body.correctMessage
+                    toUpdate.wrongMessage = req.body.wrongMessage
+                    toUpdate.question = req.body.question
+                    toUpdate.score = req.body.score
+                    logger.log('info', 'Updating folia ', JSON.stringify(toUpdate))
+
+                    toUpdate.save(function (err) {
+                        if (err) {
+                            logger.log('error', 'Error while updating folia %s', err.message)
+                            res.send({
+                                success: false
+                            })
+                        } else res.send({
+                            success: true,
+                            resource: toUpdate,
+                            operation: 'update'
+                        })
+
+                    })
+
+                }
+
+            })
+        }
 
     })
+
+    // Return the list of folias owned by current user
     app.get('/folia', function (req, res) {
         if (!req.user) {
             res.send({
@@ -86,6 +127,9 @@ module.exports = function (app, logger) {
                 res.send(ressources)
             })
     })
+
+    
+
     app.delete('/folia/:id', function (req, res) {
         if (!req.user._id) {
             res.send({

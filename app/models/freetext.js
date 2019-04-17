@@ -17,7 +17,8 @@ var freeTextSchema = mongoose.Schema({
     media: { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
 
     wrongMessage: String,
-    correctMessage: String
+    correctMessage: String,
+    score: Number
 })
 
 module.exports = mongoose.model('FreeText', freeTextSchema);
