@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var GFS = mongoose.model("GFS", new Schema({}, {strict: false}), "fs.files" );
 
 var mcqSchema = mongoose.Schema({
     label: String,
@@ -11,7 +12,8 @@ var mcqSchema = mongoose.Schema({
     question: String,
     distractors:Array,
     response: String,
-    media: { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
+    media: { type: Schema.Types.ObjectId, refPath: 'mediaModel' },
+    mediaModel:{type:String,enum:['StaticMedia','GFS']},
     type: { type: String, default: 'mcq' },
     typeLabel: { type: String, default: 'Multiple choice question' },
 

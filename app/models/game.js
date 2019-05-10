@@ -33,7 +33,7 @@ var gameSchema = mongoose.Schema({
    
     // Unit games have optionnal inventory items
     inventoryItem: { type: Schema.Types.ObjectId, ref: 'InventoryItem' },
-
+    inventoryStep :String,
     // default value used during construction or deletion of unit game
     typeLabel: { type: String, default: 'Unit game' },
     type: { type: String, default: 'unitgame' },

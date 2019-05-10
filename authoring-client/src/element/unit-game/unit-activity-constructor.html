@@ -146,11 +146,11 @@ This code may only be used under the "Do whatever you want with code license"
                     <div class="subtitle">L'objet est acquis quand :</div>
                     <paper-radio-group id="inventoryStep" allow-empty-selection aria-labelledby="label2"
                         attr-for-selected="value">
-                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="uginstructions">L'unité
+                        <paper-radio-button disabled="[[!rewardActive]]" checked="{{start}}" name="inventoryStep" value="start">L'unité
                             de jeu commence</paper-radio-button>
-                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="guidance">Le POI
+                        <paper-radio-button disabled="[[!rewardActive]]" checked="{{guidance}}" name="inventoryStep" value="guidance">Le POI
                             est atteint</paper-radio-button>
-                        <paper-radio-button disabled="[[!rewardActive]]" name="inventoryStep" value="questions">Les
+                        <paper-radio-button disabled="[[!rewardActive]]" checked="{{activities}}" name="inventoryStep" value="activities">Les
                             activités situées sont terminées</paper-radio-button>
                     </paper-radio-group>
                 </div>
@@ -221,6 +221,20 @@ This code may only be used under the "Do whatever you want with code license"
                     if (unitGame.inventoryItem) {
                         this.$.poiInventoryResourceViewer.setInventory(unitGame.inventoryItem)
                     }
+                    if(unitGame.inventoryStep){
+                        switch(unitGame.inventoryStep){
+                            case "guidance":
+                            this.guidance=true;
+                            break
+                            case "activities":
+                            this.activities=true;
+                            break
+                            case "start":
+                            this.start=true;
+                            break
+
+                        }
+                    }
                     if (unitGame.poiGuidType === 'map') {
                         this.$.selectGuidance.selected = 'map'
                     }
@@ -267,9 +281,13 @@ This code may only be used under the "Do whatever you want with code license"
 
                 _reset: function () {
                     this.updating = false
+                    this.start=false
+                    this.activities=false
+                    this.guidance=false
                     while (this.currentActivities.length) {
                         this.pop('currentActivities')
                     }
+                    this.$.selectGuidance.selected='poiMapGuidance'
                     this.$.startMediaViewer.removeResource()
                     this.$.feedbackMediaViewer.removeResource()
                     this.$.poiViewer.removeResource()

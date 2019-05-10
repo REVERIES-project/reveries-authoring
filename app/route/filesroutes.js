@@ -98,6 +98,7 @@ module.exports = function(app, passport, gfs) {
             }).toArray(function(err, files) {
                 for (var i = 0; i < files.length; i++) {
                     var filedata = files[i]
+                    filedata.type='image'
                     if (filedata.owner && filedata.owner == req.user._id) {
                         filedata.readonly = "readwrite"
                     } else {
@@ -178,6 +179,7 @@ module.exports = function(app, passport, gfs) {
                 for (var i = 0; i < files.length; i++) {
                     var filedata = files[i]
                     filedata.typeLabel = 'Image'
+                    filedata.type='image'
                     filedata.label = filedata.filename
                     filedata.status = filedata.metadata.status
                     if (filedata.metadata.owner && filedata.metadata.owner.toString() == req.user._id.toString()) {

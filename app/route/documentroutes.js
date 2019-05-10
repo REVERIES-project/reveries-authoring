@@ -417,7 +417,7 @@ module.exports = function (app, gfs, logger) {
 	app.get('/qrcode/:id', function (req, res) {
 		//res.header('Content-Type', 'image/png');
 
-		tail = spawn('qrencode', ['-o', '-', '[' + req.params.id + ']', '-s', 30])
+		tail = spawn('qrencode', ['-o', '-', req.params.id, '-s', 30])
 		tail.stdout.on('data', function (data) {
 			console.log('stdout: ' + data)
 			res.write(data, 'utf-8')

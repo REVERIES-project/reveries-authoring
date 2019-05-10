@@ -36,6 +36,7 @@ module.exports = function(app,logger) {
 		game.startMedia = req.body.startMedia
 		game.feedbackMedia = req.body.feedbackMedia
 		game.POI = req.body.poi
+		game.inventoryStep=req.body.inventoryStep
 		game.poiMapGuidance = req.body.poiMapGuidance==="on" 
 		if(req.body.poiRadarGuidance){
 			game.poiGuidance="radar"
@@ -74,7 +75,8 @@ module.exports = function(app,logger) {
 					toUpdate.inventoryItem = req.body.inventoryItem
 					toUpdate.qrCorrect = req.body.qrCorrect
 					toUpdate.qrIncorrect=req.body.qrIncorrect
-			
+					toUpdate.inventoryStep=req.body.inventoryStep
+
                     toUpdate.label = req.body.label
 					toUpdate.startMedia = req.body.startMedia
 					toUpdate.feedbackMedia = req.body.feedbackMedia

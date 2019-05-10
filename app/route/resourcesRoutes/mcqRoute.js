@@ -30,6 +30,13 @@ module.exports = function (app, logger) {
         Mcq.correctMessage = req.body.correctMessage
         Mcq.score = req.body.score
         Mcq.media = req.body.mediaId
+        if(req.body.ressourceType=='image'){
+            Mcq.mediaModel='GFS'
+        }
+        if(req.body.ressourceType=='staticmedia'){
+            Mcq.mediaModel='StaticMedia'
+        }
+
         var now = new Date()
         Mcq.creationDate = now
 
