@@ -1,21 +1,23 @@
 // load the things we need
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var gameSchema = mongoose.Schema({
 
     label: String,
     // The media that are shown at the beginning and end 
     // of the game
-    startMedia: { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
-    feedbackMedia: { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
-    
+    startMedia: { type: Schema.Types.ObjectId, refPath: 'startMediaType',autopopulate: true },
+    startMediaType:{type:String,enum:['StaticMedia','youtube']},
+
+    feedbackMedia: { type: Schema.Types.ObjectId, refPath: 'feedbackMediaType' ,autopopulate: true},
+    feedbackMediaType:{type:String,enum:['StaticMedia','youtube']},
+
 
     // Unit games are associated with one or zero POI
     // if there is one, the user must reach it to start 
     // situated activities
-    POI: { type: Schema.Types.ObjectId, ref: 'POI' },
+    POI: { type: Schema.Types.ObjectId, ref: 'POI' ,autopopulate:true},
     poiMapGuidance:{type : Boolean,default:false},
     poiGuidance:{type:String,default:"map"},
     qrCorrect: String,
@@ -27,12 +29,12 @@ var gameSchema = mongoose.Schema({
     status: { type: String, default: 'Private' },
     
     // Unit games have situated activities that can be of different type
-    freetextActivities: [{ type: Schema.Types.ObjectId, ref: 'FreeText' }],
-    mcqActivities: [{ type: Schema.Types.ObjectId, ref: 'MCQ' }],
-    foliaActivities:[{type:Schema.Types.ObjectId,ref:'Folia'}],
+    freetextActivities: [{ type: Schema.Types.ObjectId, ref: 'FreeText',autopopulate: true }],
+    mcqActivities: [{ type: Schema.Types.ObjectId, ref: 'MCQ',autopopulate:true }],
+    foliaActivities:[{type:Schema.Types.ObjectId,ref:'Folia',autopopulate:true}],
    
     // Unit games have optionnal inventory items
-    inventoryItem: { type: Schema.Types.ObjectId, ref: 'InventoryItem' },
+    inventoryItem: { type: Schema.Types.ObjectId, ref: 'InventoryItem',autopopulate:true },
     inventoryStep :String,
     // default value used during construction or deletion of unit game
     typeLabel: { type: String, default: 'Unit game' },
@@ -41,6 +43,7 @@ var gameSchema = mongoose.Schema({
 });
 
 // generating a hash
-gameSchema.plugin(deepPopulate,{})
+gameSchema.plugin(require('mongoose-autopopulate'));
+
 
 module.exports = mongoose.model('Game', gameSchema);

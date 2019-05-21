@@ -44,6 +44,10 @@ This code may only be used under the "Do whatever you want with code license"
                 <template is="dom-if" if="{{image}}">
                     <paper-tab>Images</paper-tab>
                 </template>
+                <template is="dom-if" if="{{youtube}}">
+                    <paper-tab>Vidéos Youtube</paper-tab>
+                </template>
+
                 <template is="dom-if" if="{{page}}">
                     <paper-tab>Documents multimédias</paper-tab>
                 </template>
@@ -77,6 +81,13 @@ This code may only be used under the "Do whatever you want with code license"
                             url='/listUserImages'></list-generic-resource>
                     </div>
                 </template>
+                <template is="dom-if" if="{{youtube}}" restamp>
+                    <div>
+                        <list-generic-resource lazy picker share-url='/youtube' id='youtube' resource-type='youtube' url='/youtube'></list-generic-resource>
+                    </div>
+                </template>
+
+
                 <template is="dom-if" if="{{page}}" restamp>
                     <div>
                         <list-generic-resource lazy picker share-url='/staticmedia' id='staticmedia' resource-type='page' url='/staticmedia'></list-generic-resource>
@@ -87,7 +98,6 @@ This code may only be used under the "Do whatever you want with code license"
                         <list-generic-resource lazy picker share-url='/listUserAudioVideo' id='video' resource-type='video' url='/listUserAudioVideo'></list-generic-resource>
                     </div>
                 </template>
-
                 <template is="dom-if" if="{{inventory}}" restamp>
                     <div>
                         <list-generic-resource lazy picker share-url='/inventory' id='inventoryList' resource-type='inventory' url='/inventory'></list-generic-resource>
@@ -212,7 +222,10 @@ This code may only be used under the "Do whatever you want with code license"
                         type: Boolean,
                         notify: true,
                     },
-
+                    youtube:{
+                        type:Boolean,
+                        notify:true,
+                    },
                     mcq: {
                         type: Boolean,
                         notify: true,

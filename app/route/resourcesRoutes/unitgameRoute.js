@@ -27,6 +27,23 @@ module.exports = function(app,logger) {
 			game.owner = req.user._id
 		}
 		var now = new Date()
+		let startMediaType=req.body.startMediaType
+		let feedbackMediaType=req.body.feedbackMediaType
+		switch(feedbackMediaType){
+			case 'youtube':
+			break;
+			case 'staticmedia':
+			feedbackMediaType='StaticMedia'
+			break
+		}
+
+		switch(startMediaType){
+			case 'youtube':
+			break;
+			case 'staticmedia':
+			startMediaType='StaticMedia'
+			break
+		}
 		game.creationDate = now
 		game.label = req.body.label
 
@@ -34,7 +51,9 @@ module.exports = function(app,logger) {
 		game.qrIncorrect=req.body.qrIncorrect
 		game.inventoryItem = req.body.inventoryItem
 		game.startMedia = req.body.startMedia
+		game.startMediaType=startMediaType
 		game.feedbackMedia = req.body.feedbackMedia
+		game.feedbackMediaType=feedbackMediaType
 		game.POI = req.body.poi
 		game.inventoryStep=req.body.inventoryStep
 		game.poiMapGuidance = req.body.poiMapGuidance==="on" 
@@ -79,6 +98,8 @@ module.exports = function(app,logger) {
 
                     toUpdate.label = req.body.label
 					toUpdate.startMedia = req.body.startMedia
+					toUpdate.startMediaType=startMediaType
+					toUpdate.feedbackMediaType=feedbackMediaType
 					toUpdate.feedbackMedia = req.body.feedbackMedia
 					toUpdate.POI = req.body.poi
 					toUpdate.poiMapGuidance = req.body.poiMapGuidance==="on"
@@ -138,11 +159,6 @@ module.exports = function(app,logger) {
 			.sort({
 				creationDate: -1
 			})
-			.populate('startMedia')
-			.populate('feedbackMedia')
-			.populate('POI')
-			.populate('foliaActivities')
-			.deepPopulate(['inventoryItem','inventoryItem.media','freetextActivities','freetextactivities.media','mcqActivities','mcqActivities.media'])
 			.exec(function (err, games) {
 
 				for (var i = 0; i < games.length; i++) {

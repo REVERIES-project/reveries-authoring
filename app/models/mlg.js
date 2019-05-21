@@ -1,7 +1,6 @@
 // load the things we need
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 // define the schema for our user model
 /*
@@ -14,19 +13,21 @@ var mapinfoSchema = mongoose.Schema({
 var mlg = mongoose.Schema({
     creationDate:Date,
     label: String,
-    startpage:  { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
-    endPage:  { type: Schema.Types.ObjectId, ref: 'StaticMedia' },
-    unitgameActivities: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
+    startpage:  { type: Schema.Types.ObjectId, refPath: 'startpageType',autopopulate:true  },
+    startpageType:{type:String,enum:['StaticMedia','youtube']},
+    endPage:  { type: Schema.Types.ObjectId, refPath: 'endpageType',autopopulate:true  },
+    endpageType:{type:String,enum:['StaticMedia','youtube']},
+    unitgameActivities: [{ type: Schema.Types.ObjectId, ref: 'Game',autopopulate:true }],
     type: { type: String, default: 'mlg' },
     typeLabel: { type: String, default: 'Mobile learning game' },
     owner: String,
     readonly: String,
     status: { type: String, default: 'Public' },
-    badge: { type: Schema.Types.ObjectId, ref: 'Badge' },
+    badge: { type: Schema.Types.ObjectId, ref: 'Badge',autopopulate:true  },
     difficulty: Number,
     duration: Number,
     description: String,
 });
-mlg.plugin(deepPopulate,{})
+mlg.plugin(require('mongoose-autopopulate'))
 module.exports = mongoose.model('MLG', mlg);
 // generating a hash

@@ -48,9 +48,9 @@ This code may only be used under the "Do whatever you want with code license"
 
         </style>
 
-        <resource-picker-dialog page id="pagePicker"></resource-picker-dialog>
+        <resource-picker-dialog page youtube id="pagePicker"></resource-picker-dialog>
         <resource-picker-dialog badge id="badgePicker"></resource-picker-dialog>
-        <resource-picker-dialog page id="endPagePicker"></resource-picker-dialog>
+        <resource-picker-dialog page youtube id="endPagePicker"></resource-picker-dialog>
 
         <create-resource id="creator" resource-url="/mlg" resource="{{resource}}"></create-resource>
         <form class="topLevel" id="mlgform" is="iron-form" method="post" action="/mlg">
@@ -78,10 +78,10 @@ This code may only be used under the "Do whatever you want with code license"
             </iron-label>
             
             <paper-button class="blockButton" raised on-click="showMediaDialog">Page de départ</paper-button>
-            <generic-resource-viewer is-temp is-picker input-name="startpage" label="Page de départ" page class="resourceViewer" id="startPage"></generic-resource-viewer>
+            <generic-resource-viewer is-temp is-picker input-name="startpage" label="Page de départ" page youtube reference-name="startpageType" class="resourceViewer" id="startPage"></generic-resource-viewer>
 
             <paper-button class="blockButton" raised on-click="showEndPagePicker">Page de fin</paper-button>
-            <generic-resource-viewer is-temp is-picker input-name="endPage" page label="Page de fin" class="resourceViewer" id="endPage"></generic-resource-viewer>
+            <generic-resource-viewer is-temp is-picker input-name="endPage" page youtube label="Page de fin" class="resourceViewer" reference-name="endpageType" id="endPage"></generic-resource-viewer>
 
             <paper-button class="blockButton" raised on-click="showBadgeDialog">Ajouter un badge de récompense</paper-button>
             <generic-resource-viewer is-temp no-header is-picker input-name="badge" label="Badge" badge class="resourceViewer" id="badgeViewer"></generic-resource-viewer>
@@ -127,7 +127,14 @@ This code may only be used under the "Do whatever you want with code license"
                     this.description = item.description
                     this.difficulty = item.difficulty
                     if (item.startpage) {
-                        this.$.startPage.setPage(item.startpage)
+                        switch(item.startpageType){
+                            case 'StaticMedia':
+                            this.$.startPage.setPage(item.startpage)
+                            break
+                            case 'youtube':
+                            this.$.startPage.setyoutube(item.startpage)
+                            break
+                        }
                     }
                     if (item.unitgameActivities && item.unitgameActivities.length > 0) {
                         for (var i = 0; i < item.unitgameActivities.length; i++) {
@@ -135,7 +142,15 @@ This code may only be used under the "Do whatever you want with code license"
                         }
                     }
                     if (item.endPage) {
-                        this.$.endPage.setPage(item.endPage)
+                        switch(item.endpageType){
+                            case 'StaticMedia':
+                            this.$.endPage.setPage(item.endPage)
+                            break
+                            case 'youtube':
+                            this.$.endPage.setyoutube(item.endPage)
+                            break
+                        }
+
                     }
                     if (item.badge) {
                         this.$.badgeViewer.setBadge(item.badge)
@@ -154,7 +169,14 @@ This code may only be used under the "Do whatever you want with code license"
                     }
                 },
                 setEndPage: function (message) {
-                        this.$.endPage.setPage(message.detail.resourceItem)
+                    switch (message.detail.resourceType){
+                        case 'page':
+                            this.$.endPage.setPage(message.detail.resourceItem)
+                            break
+                        case 'youtube':
+                        this.$.endPage.setyoutube(message.detail.resourceItem)
+                        break
+                        }   
                     }
 
                     ,
@@ -163,8 +185,14 @@ This code may only be used under the "Do whatever you want with code license"
                         case "page":
                             this.$.startPage.setPage(message.detail.resourceItem)
                             break
+                            case "youtube":
+                            this.$.startPage.setyoutube(message.detail.resourceItem)
+                            break
+
                         case "badge":
                             this.$.badgeViewer.setBadge(message.detail.resourceItem)
+                            break
+
                     }
                 },
 

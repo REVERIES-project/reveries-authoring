@@ -88,11 +88,11 @@ This code may only be used under the "Do whatever you want with code license"
     </style>
     <template>
         <create-resource id="creator" resource-url="/unitGame" resource="{{resource}}"></create-resource>
-        <resource-picker-dialog page resource-viewer="startMediaViewer" id="startingMediaPicker"></resource-picker-dialog>
+        <resource-picker-dialog page youtube resource-viewer="startMediaViewer" id="startingMediaPicker"></resource-picker-dialog>
         <resource-picker-dialog mcq freetext folia id="situatedQuestionPicker"></resource-picker-dialog>
         <resource-picker-dialog page id="poiPAMediaPicker"></resource-picker-dialog>
         <resource-picker-dialog page media-id="{{startMediaId}}" media-name="{{startMediaName}}" id="cluePOIMediaPicker"></resource-picker-dialog>
-        <resource-picker-dialog page resource-viewer="feedbackMediaViewer" id="feedbackMediaPicker"></resource-picker-dialog>
+        <resource-picker-dialog page youtube resource-viewer="feedbackMediaViewer" id="feedbackMediaPicker"></resource-picker-dialog>
         <resource-picker-dialog inventory resource-viewer="poiInventoryResourceViewer" id="poiInventoryMediaPicker"></resource-picker-dialog>
         <resource-picker-dialog poi resource-viewer="poiViewer" id="poiMediaPicker"></resource-picker-dialog>
         <form class="creator" id="unitActivityForm" is="iron-form">
@@ -109,7 +109,7 @@ This code may only be used under the "Do whatever you want with code license"
                     <div class="subtitle">Page de départ (optionnelle) :</div>
                     <paper-button on-click="setMedia" raised>Assigner un document</paper-button>
                 </div>
-                <generic-resource-viewer is-picker input-name="startMedia" is-temp page class="resourceViewer" id="startMediaViewer"></generic-resource-viewer>
+                <generic-resource-viewer reference="startMedia" reference-name="startMediaType" is-picker input-name="startMedia" is-temp page youtube class="resourceViewer" id="startMediaViewer"></generic-resource-viewer>
             </div>
 
             <div class="topLevel">
@@ -172,7 +172,7 @@ This code may only be used under the "Do whatever you want with code license"
                     <label class="subtitle">Feedback optionnel à l'issu de l'unité de jeu :</label>
                     <paper-button on-click="setFeedbackMedia" raised>Choisir un document de feedback</paper-button>
                 </div>
-                <generic-resource-viewer is-picker is-temp input-name="feedbackMedia" image page video class="resourceViewer"
+                <generic-resource-viewer is-picker is-temp input-name="feedbackMedia" youtube page reference-name="feedbackMediaType" class="resourceViewer"
                     id="feedbackMediaViewer"></generic-resource-viewer>
 
             </div>
@@ -192,7 +192,15 @@ This code may only be used under the "Do whatever you want with code license"
                     this.itemId = unitGame._id
                     this.label = unitGame.label
                     if (unitGame.startMedia) {
-                        this.$.startMediaViewer.setPage(unitGame.startMedia)
+                        switch(unitGame.startMediaType){
+                            case 'StaticMedia':
+                            this.$.startMediaViewer.setPage(unitGame.startMedia)
+                            break
+                            case 'youtube' :
+                            this.$.startMediaViewer.setyoutube(unitGame.startMedia)
+                            break
+                        }
+                       
                     }
                     if (unitGame.freetextActivities) {
                         for (var i = 0; i < unitGame.freetextActivities.length; i++) {
@@ -212,7 +220,15 @@ This code may only be used under the "Do whatever you want with code license"
                     }
 
                     if (unitGame.feedbackMedia) {
-                        this.$.feedbackMediaViewer.setPage(unitGame.feedbackMedia)
+                        switch(unitGame.feedbackMediaType){
+                            case 'StaticMedia':
+                            this.$.feedbackMediaViewer.setPage(unitGame.feedbackMedia)
+                            break
+                            case 'youtube' :
+                            this.$.feedbackMediaViewer.setyoutube(unitGame.feedbackMedia)
+                            break
+                        }
+
                     }
 
                     if (unitGame.POI) {
@@ -253,6 +269,10 @@ This code may only be used under the "Do whatever you want with code license"
                 setPickedResource: function (evt) {
                     if (evt && evt.detail && evt.detail.resourceType && evt.detail.resourceItem) {
                         switch (evt.detail.resourceType) {
+                            case "youtube":
+                                this.$[evt.detail.resourceViewer].setyoutube(evt.detail.resourceItem)
+                                break;
+
                             case "image":
                                 this.$[evt.detail.resourceViewer].setImage(evt.detail.resourceItem)
                                 break;

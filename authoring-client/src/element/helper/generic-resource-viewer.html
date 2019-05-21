@@ -212,6 +212,8 @@ This code may only be used under the "Do whatever you want with code license"
                 <template is="dom-if" if="{{isRemovable}}" restamp>
                     <paper-button id="delete" style="display:inline-flex;align-self: center;" on-click="callRemoveResource">Supprimer</paper-button>
                 </template>
+                <paper-input hidden class="inputfield" name="[[referenceName]]" value=[[item.type]]></paper-input>
+
             </template>
         </div>
     </template>
@@ -709,10 +711,15 @@ This code may only be used under the "Do whatever you want with code license"
                         type: Boolean,
                         notify: true,
                     },
+                    referenceName:{
+                        type:String,
+                        notify:true
+                    },
                     inputName: {
                         type: String,
                         notify: true,
-                    },
+                    }
+                    ,
                     image: {
                         type: Boolean,
                         notify: true,
