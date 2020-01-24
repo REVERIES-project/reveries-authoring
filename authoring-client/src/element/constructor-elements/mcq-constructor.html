@@ -44,7 +44,7 @@ Builder for free text question resources
     </style>
     <template>
         <create-resource id="creator" resource-url="/mcq" resource="{{resource}}"></create-resource>
-        <resource-picker-dialog page image id="pagePicker"></resource-picker-dialog>
+        <resource-picker-dialog page id="pagePicker"></resource-picker-dialog>
         <form class="creator" id="mcqForm" is="iron-form" method="post" action="/mcq">
             <div class="formTitleWithButton">
                 <h3 class="smallh3">Nouveau QCM</h3>
@@ -116,15 +116,7 @@ Builder for free text question resources
                     this.splice('distractorArray', evt.detail.index, 1)
                 },
                 setResource: function (message) {
-                    switch (message.detail.resourceType) {
-                        case "page":
                             this.$.mcqMediaViewer.setPage(message.detail.resourceItem)
-                            break
-                        case "image":
-                            this.$.mcqMediaViewer.setImage(message.detail.resourceItem)
-                            break
-
-                    }
                 },
                 setValues: function () {
                     this.set('mediaId', this.mediaId);
