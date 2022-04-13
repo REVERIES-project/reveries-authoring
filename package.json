@@ -5,7 +5,7 @@
     "install-client": "scripts/installClient.sh "
   },
   "dependencies": {
-    "async": "^2.6.0",
+    "async": "^3.2.2",
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.0.0",
     "bson": "latest",
